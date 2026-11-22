@@ -1,7 +1,7 @@
 # 仓库工作说明
 
-先读 [.chrono-harness/USAGE.md](.chrono-harness/USAGE.md)，用本仓登记的命令检查改动。新任务和日常 PR 使用开发分支，正式版本从 `main` 发布。
+工作前阅读本仓的[公共约定和工具入口](.chrono-harness/USAGE.md)。产品职责见本仓 README。
 
-- 使用本仓固定版本的工具。跨仓协作通过已发布的命令或公开接口进行。
-- PR 状态直接查询 GitHub。等待 CI 或任务时使用完成事件或通知。
-- 安装包和工具缓存放在工作树外。需要长期保留的产物应在清理窗口内提交到 Git 或上传持久存储。
+## 本仓开发
+
+业务实现位于 [`message.py`](message.py)，验收用例位于 [`check.py`](check.py)。修改业务后运行 `python3 -B check.py`。修改 CI 登记后运行 `sh .chrono-harness/ci/install.sh` 和 `sh .chrono-harness/ci/verify.sh`。
