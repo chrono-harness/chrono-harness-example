@@ -5,3 +5,7 @@
 工具来自 [chrono-harness-main 的固定预览版](https://github.com/chrono-harness/chrono-harness-main/releases/tag/v0.1.0-alpha.1)。运行 `sh .chrono-harness/ci/install.sh` 安装。安装包下载到临时目录，用完即删。命令存放在工作树以外的共享目录，工作树仅创建可执行文件的符号链接。可用 CHRONO_EXAMPLE_INSTALL_ROOT 指定共享安装目录。
 
 检查 Python 业务逻辑时运行 `python3 -B check.py`。验证 CI 配置和生成的工作流时运行 `sh .chrono-harness/ci/verify.sh`。
+
+## 本地任务工作树
+
+工作树配置登记了 24 小时删除窗口。任务中的 Python 缓存、工具链接和中间状态都属于任务工作树，已安装的二进制位于共享安装目录。有长期用途的文件应在窗口内提交到 Git 或上传持久存储。运行 `.chrono-harness/bin/chrono-worktree maintain` 执行一轮维护。过期删除依赖宿主继续调用维护命令及当前租约释放。CI 任务随 GitHub 托管运行器回收。

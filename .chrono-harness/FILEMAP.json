@@ -157,6 +157,18 @@
           "to": "test:harness"
         }
       ]
+    },
+    {
+      "path": ".chrono-harness/cleanup.json",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
     }
   ],
   "project_edges": [],
