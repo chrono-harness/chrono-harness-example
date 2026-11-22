@@ -1,6 +1,7 @@
 {
   "schema": "chrono-worktree-config/v2",
   "host_config": ".chrono-harness/config.json",
+  "registration_program": ".chrono-harness/bin/chrono-judge-registration",
   "remote": "origin",
   "git": {
     "program": "/usr/bin/git",
