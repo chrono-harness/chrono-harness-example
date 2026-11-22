@@ -224,41 +224,6 @@
           "to": "test:harness"
         }
       ]
-    },
-    {
-      "path": ".chrono-harness/instructions/catalog.json",
-      "owner": "host",
-      "surface": "documentation",
-      "cost": "unmeasured",
-      "edges": []
-    },
-    {
-      "path": ".chrono-harness/instructions/manifest.json",
-      "owner": "host",
-      "surface": "documentation",
-      "cost": "unmeasured",
-      "edges": []
-    },
-    {
-      "path": ".chrono-harness/instructions/host-context.md",
-      "owner": "host",
-      "surface": "documentation",
-      "cost": "unmeasured",
-      "edges": []
-    },
-    {
-      "path": "docs/licenses/methodology-attribution.md",
-      "owner": "host",
-      "surface": "documentation",
-      "cost": "unmeasured",
-      "edges": []
-    },
-    {
-      "path": "docs/licenses/trureturing-Apache-2.0.txt",
-      "owner": "host",
-      "surface": "documentation",
-      "cost": "unmeasured",
-      "edges": []
     }
   ],
   "project_edges": [],
