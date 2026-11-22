@@ -172,6 +172,7 @@
     },
     {
       "path": "AGENTS.md",
+      "symlink": "CLAUDE.md",
       "owner": "host",
       "surface": "documentation",
       "cost": "unmeasured",
