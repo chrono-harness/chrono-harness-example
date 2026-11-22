@@ -2,9 +2,9 @@
 name: "Example / aggregate"
 on:
   push:
-    branches: ["main","integration/**"]
+    branches: ["dev","main","integration/**"]
   pull_request:
-    branches: ["main"]
+    branches: ["dev","main"]
 permissions:
   contents: read
   actions: read
@@ -31,6 +31,7 @@ jobs:
           sparse-checkout: |
             .chrono-harness/
             .github/workflows/chrono-ci.yml
+            .config/mise/conf.d/
           persist-credentials: true
       - name: Bootstrap registered detector tools
         shell: bash

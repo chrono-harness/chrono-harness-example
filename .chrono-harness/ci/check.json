@@ -19,7 +19,8 @@
       ".chrono-harness/ci/check.json",
       ".chrono-harness/ci/units.json",
       ".chrono-harness/ci/install.sh",
-      ".github/workflows/chrono-ci.yml"
+      ".github/workflows/chrono-ci.yml",
+      ".config/mise/conf.d/chrono-harness.toml"
     ],
     "adoption_base": "f0d9ea1e195b91a73eca6a5add80a0e3c9487f26",
     "operation_timeout_seconds": 600,

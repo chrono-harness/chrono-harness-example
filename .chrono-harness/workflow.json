@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "status": "proposed",
-  "target_branch": "main",
+  "target_branch": "dev",
   "feature_prefix": "feature/",
   "integration_prefix": "integration/",
   "staleness": {
