@@ -6,6 +6,8 @@
 
 业务实现位于 [`message.py`](message.py)，验收用例位于 [`check.py`](check.py)。修改业务后运行 `python3 -B check.py`。修改 CI 登记后运行 `sh .chrono-harness/ci/install.sh` 和 `sh .chrono-harness/ci/verify.sh`。
 
+本仓逐文件登记受 Git 跟踪的输入。升级模板或切换选项时，在同一提交更新 [FILEMAP](.chrono-harness/FILEMAP.json)，登记新增、删除或改名的文件，包括规则选择和随附许可。CI 用变更前后两个提交各自的登记检查实际文件。
+
 日常开发和 PR 使用 `dev`，正式版本从 `main` 发布。
 
 首次检出时，在仓库根目录安装本仓选定的工具。
