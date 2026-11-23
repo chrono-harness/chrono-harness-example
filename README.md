@@ -2,7 +2,9 @@
 
 这是一个独立的 Python 宿主。修改 message.py、check.py 或 message.txt 会触发 example 单元。修改 CI 配置会触发 harness 单元。GitHub Actions 用聚合检查报告结果，执行证据保留 1 天。
 
-模板默认配置全部项目工具。运行 `mise trust` 和 `mise install` 安装本仓所选工具。示例的登记式检查使用其中五个命令，运行 `sh .chrono-harness/ci/install.sh` 会从相应工具仓的固定发行安装这五项，并在工作树内建立链接。可用 CHRONO_EXAMPLE_INSTALL_ROOT 指定工作树外的安装目录。
+模板默认配置全部项目工具。运行 `mise trust` 和 `mise install` 安装本仓所选工具。示例的登记式检查使用其中六个命令，运行 `sh .chrono-harness/ci/install.sh` 会从相应工具仓的固定发行安装这六项，并在工作树内建立链接。可用 CHRONO_EXAMPLE_INSTALL_ROOT 指定工作树外的安装目录。
+
+项目登记标明生产脚本与专属测试的语言。scoped CI 调用本仓安装的项目判官核对配对。
 
 检查 Python 业务逻辑时运行 `python3 -B check.py`。验证 CI 配置和生成的工作流时运行 `sh .chrono-harness/ci/verify.sh`。
 
