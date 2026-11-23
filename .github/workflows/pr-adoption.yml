@@ -1,0 +1,34 @@
+name: Installed PR client
+on:
+  push:
+    branches: [dev]
+permissions:
+  contents: read
+  actions: read
+  checks: read
+  pull-requests: read
+jobs:
+  verify:
+    strategy:
+      matrix:
+        include:
+          - runner: macos-15
+            platform: macos-aarch64
+          - runner: ubuntu-24.04
+            platform: linux-x86_64
+    name: ${{ matrix.platform }}
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@924e7c586e33d7d4bae9c14e26c5d22e2beb6e78
+        with:
+          version: 2026.11.12
+          cache: false
+          install_args: http:chrono-pr
+      - name: Read the landed pull request with the installed release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .chrono-harness/ci/pr-adoption.sh
