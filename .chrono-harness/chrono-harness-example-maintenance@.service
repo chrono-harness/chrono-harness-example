@@ -1,0 +1,7 @@
+[Unit]
+Description=Maintain Chrono Harness worktrees in %f
+
+[Service]
+Type=oneshot
+WorkingDirectory=%f
+ExecStart=/usr/bin/env ./.chrono-harness/bin/chrono-worktree maintain

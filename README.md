@@ -32,11 +32,17 @@ launchctl bootstrap "gui/$(id -u)" "$job"
 
 删除或移动主检出前，使用同一组 `label` 和 `job` 变量，运行 `launchctl bootout "gui/$(id -u)/$label"` 和 `rm "$job"`。launchd 在下次用户登录后会加载仍已安装的配置。
 
-在使用 systemd 用户服务的 Linux 开发机上，以下命令创建当前用户会话的小时定时器。重新建立用户服务会话后需要重新运行。卸载时运行 `systemctl --user stop "$unit.timer"`。
+在使用 systemd 用户服务的 Linux 开发机上，从主检出安装小时定时器。每个检出有独立的实例名。用户服务下次启动时会自动加载已启用的定时器，错过的维护会在恢复后补跑一次。
 
 ```sh
 root=$(pwd -P)
-unit=chrono-harness-example-maintenance-$(printf %s "$root" | sha256sum | cut -c1-16)
-systemd-run --user --unit="$unit" --on-calendar=hourly \
-  --working-directory="$root" "$root/.chrono-harness/bin/chrono-worktree" maintain
+units=${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user
+install -d "$units"
+install -m 0644 .chrono-harness/chrono-harness-example-maintenance@.service \
+  .chrono-harness/chrono-harness-example-maintenance@.timer "$units/"
+timer=$(systemd-escape --path --template=chrono-harness-example-maintenance@.timer "$root")
+systemctl --user daemon-reload
+systemctl --user enable --now "$timer"
 ```
+
+删除或移动主检出前，运行 `systemctl --user disable --now "$timer"`。同一用户的其他检出可继续使用这两个单元文件。

@@ -195,6 +195,30 @@
       ]
     },
     {
+      "path": ".chrono-harness/chrono-harness-example-maintenance@.service",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
+    },
+    {
+      "path": ".chrono-harness/chrono-harness-example-maintenance@.timer",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
+    },
+    {
       "path": "AGENTS.md",
       "symlink": "CLAUDE.md",
       "owner": "host",
