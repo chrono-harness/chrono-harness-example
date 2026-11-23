@@ -15,7 +15,7 @@ def verify(rendered):
     answers = yaml.safe_load((host / ".chrono-harness/template-answers.yml").read_text())
     source = answers["_src_path"]
     tag = answers["_commit"]
-    if source != "gh:chrono-harness/chrono-harness-template" or not re.fullmatch(r"v\d+\.\d+\.\d+(?:-alpha\.\d+)?", tag):
+    if source != "gh:chrono-harness/chrono-harness-copier" or not re.fullmatch(r"v\d+\.\d+\.\d+(?:-alpha\.\d+)?", tag):
         raise ValueError("expected a tagged chrono-harness template release")
     remote = "https://github.com/" + source.removeprefix("gh:") + ".git"
     ref = "refs/tags/" + tag
