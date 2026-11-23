@@ -171,6 +171,30 @@
       ]
     },
     {
+      "path": ".chrono-harness/retention.json",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
+    },
+    {
+      "path": ".chrono-harness/maintenance.launchd.plist",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
+    },
+    {
       "path": "AGENTS.md",
       "symlink": "CLAUDE.md",
       "owner": "host",
