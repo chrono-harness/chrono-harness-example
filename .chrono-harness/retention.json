@@ -8,6 +8,9 @@
     ],
     "lifecycle-state-original": [
       ".chrono-harness/state/automatic-cleanup-v2/"
+    ],
+    "check-original": [
+      ".chrono-harness/state/"
     ]
   },
   "keep_seconds": 0,
