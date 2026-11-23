@@ -14,7 +14,7 @@
 
 ### 为开发机的主检出启用定时清理
 
-在长期保留的主检出中先运行 `sh .chrono-harness/ci/install.sh`。本机用户的定时器每小时调用一次 `.chrono-harness/bin/chrono-worktree maintain`。机器开机、用户调度服务在运行且目录可写时，即使无人再运行开发命令，维护也会检查到期工作树。活跃租约和待保全的工作由清理程序处理。
+在长期保留的主检出中先运行 `sh .chrono-harness/ci/install.sh`。本机用户的定时器每小时运行一次 `.chrono-harness/maintain.sh`。它调用本地 `chrono-pr pr-reminders` 删除主检出中已满 30 天的 PR 提醒，再调用 `chrono-worktree maintain` 回收工作树和原件。SQLite 的空表留在主检出，工作树中的提醒库随工作树一起删除。两项清理都会运行，任一失败会使该次定时任务报告失败。机器开机、用户调度服务在运行且目录可写时，即使无人再运行开发命令，维护也会检查到期工作树。活跃租约和待保全的工作由清理程序处理。
 
 在 macOS 中将本仓的 launchd 配置安装到当前用户。以下命令从主检出根目录执行。每个路径拥有独立标签。
 
@@ -25,7 +25,6 @@ job="$HOME/Library/LaunchAgents/$label.plist"
 mkdir -p "$HOME/Library/LaunchAgents"
 cp .chrono-harness/maintenance.launchd.plist "$job"
 plutil -replace Label -string "$label" "$job"
-plutil -replace Program -string "$root/.chrono-harness/bin/chrono-worktree" "$job"
 plutil -replace WorkingDirectory -string "$root" "$job"
 launchctl bootstrap "gui/$(id -u)" "$job"
 ```
