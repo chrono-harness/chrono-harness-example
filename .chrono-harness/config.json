@@ -133,6 +133,15 @@
         "--version"
       ],
       "expected_version": null
+    },
+    {
+      "id": "chrono-judge-projects",
+      "program": ".chrono-harness/bin/chrono-judge-projects",
+      "resolution": "PATH-once",
+      "version_argv": [
+        "--version"
+      ],
+      "expected_version": "chrono-judge-projects 0.1.0"
     }
   ],
   "semantic_fields": [],

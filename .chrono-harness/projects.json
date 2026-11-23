@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "status": "proposed",
   "owners": [
     "host",
@@ -23,7 +23,8 @@
             "message.py"
           ]
         }
-      }
+      },
+      "language": "python"
     },
     {
       "id": "example",
@@ -38,7 +39,8 @@
             "check.py"
           ]
         }
-      }
+      },
+      "language": "python"
     },
     {
       "id": "installer",
@@ -52,7 +54,8 @@
             ".chrono-harness/ci/install.sh"
           ]
         }
-      }
+      },
+      "language": "shell"
     },
     {
       "id": "harness",
@@ -66,7 +69,8 @@
             ".chrono-harness/ci/verify.sh"
           ]
         }
-      }
+      },
+      "language": "shell"
     }
   ]
 }
