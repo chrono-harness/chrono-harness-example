@@ -1,9 +1,10 @@
-_commit: v0.1.0-alpha.37
+_commit: v0.1.0-alpha.116
 _src_path: gh:chrono-harness/chrono-harness-template
 dev_branch: dev
 features:
 - cache
 - ci
+- diagnostics
 - distribution
 - harness
 - host-bootstrap
@@ -23,7 +24,10 @@ features:
 - worktree
 - verus
 generate_check: false
+manage_roadmap: true
 project_guide: ''
+publisher_workflow: Release
+release_plan: {}
 repository: chrono-harness/chrono-harness-example
 required_check: Example / aggregate
 
