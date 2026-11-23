@@ -29,9 +29,9 @@ if [ -n "${CHRONO_EXAMPLE_INSTALL_ROOT:-}" ]; then
     case "$MISE_DATA_DIR/" in "$(pwd -P)/"*) echo 'Choose an install directory outside the checkout' >&2; exit 2;; esac
     export MISE_DATA_DIR
 fi
-"$mise" install http:chrono-pr http:chrono-harness http:chrono-ci http:chrono-judge-ci http:chrono-worktree http:chrono-judge-registration http:chrono-judge-projects http:chrono-judge-filemap http:chrono-judge-routes
+"$mise" install http:chrono-diagnostics http:chrono-pr http:chrono-harness http:chrono-ci http:chrono-judge-ci http:chrono-worktree http:chrono-judge-registration http:chrono-judge-projects http:chrono-judge-filemap http:chrono-judge-routes
 mkdir -p .chrono-harness/bin
-for tool in chrono-pr chrono-harness chrono-ci chrono-judge-ci chrono-worktree chrono-judge-registration chrono-judge-projects chrono-judge-filemap chrono-judge-routes; do
+for tool in chrono-diagnostics chrono-pr chrono-harness chrono-ci chrono-judge-ci chrono-worktree chrono-judge-registration chrono-judge-projects chrono-judge-filemap chrono-judge-routes; do
     target=$("$mise" which "$tool")
     link=.chrono-harness/bin/$tool
     if [ -L "$link" ]; then
