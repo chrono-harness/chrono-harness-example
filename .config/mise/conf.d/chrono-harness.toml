@@ -31,11 +31,11 @@ macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-distribu
 
 
 [tools."http:chrono-harness"]
-version = "0.1.0-alpha.4"
+version = "0.1.0-alpha.5"
 bin = "chrono-harness"
 [tools."http:chrono-harness".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-runner/releases/download/v0.1.0-alpha.4/chrono-harness-linux-x86_64", checksum = "sha256:2a48ab3b48cec4f53ed54af36e66344b76656bd6aa452ba3108fdd6c1afe6ac3" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-runner/releases/download/v0.1.0-alpha.4/chrono-harness-macos-aarch64", checksum = "sha256:d2f8526cdde4b4351187effd5f5e8251cec970a7d0d2cbfc9070bec7d518bdc2" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-runner/releases/download/v0.1.0-alpha.5/chrono-harness-linux-x86_64", checksum = "sha256:38763f4c27426939ff24a713dca4a4bca13f11e9920af0e038c8945c340fbedb" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-runner/releases/download/v0.1.0-alpha.5/chrono-harness-macos-aarch64", checksum = "sha256:ed475e34a8d739036df189e33fa440694823454f117ddb6cdecf1a679a077663" }
 
 
 [tools."http:chrono-host-bootstrap"]
@@ -119,11 +119,11 @@ macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-re
 
 
 [tools."http:chrono-judge-routes"]
-version = "0.1.0-alpha.16"
+version = "0.1.0-alpha.20"
 bin = "chrono-judge-routes"
 [tools."http:chrono-judge-routes".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-routes/releases/download/v0.1.0-alpha.16/chrono-judge-routes-linux-x86_64", checksum = "sha256:119ad103cdc4daed89349c8aad149383d2379332a1be6d182751b9b051d2f945" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-routes/releases/download/v0.1.0-alpha.16/chrono-judge-routes-macos-aarch64", checksum = "sha256:75d03eea2eedb04744b78c593518203851a7726ad6639d73167eca1ccc9afaac" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-routes/releases/download/v0.1.0-alpha.20/chrono-judge-routes-linux-x86_64", checksum = "sha256:3ad1404544e0b1631b47ca08b5e8ba7c422a375dfbb7fad61aebbd3481231807" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-routes/releases/download/v0.1.0-alpha.20/chrono-judge-routes-macos-aarch64", checksum = "sha256:c0b44dd2963bfcad7fe6573ee9eaba4275600d0e1d0c31f705d87ba5d07944a3" }
 
 [tools."http:chrono-judge-workflow"]
 version = "0.1.0-alpha.1"
