@@ -144,6 +144,15 @@
       "expected_version": "chrono-judge-projects 0.1.0"
     },
     {
+      "id": "chrono-judge-registration",
+      "program": ".chrono-harness/bin/chrono-judge-registration",
+      "resolution": "PATH-once",
+      "version_argv": [
+        "--version"
+      ],
+      "expected_version": "chrono-judge-registration 0.1.0"
+    },
+    {
       "id": "chrono-judge-filemap",
       "program": ".chrono-harness/bin/chrono-judge-filemap",
       "resolution": "PATH-once",
