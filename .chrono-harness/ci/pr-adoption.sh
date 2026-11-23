@@ -8,7 +8,11 @@ merged=$(gh api --method GET "repos/$GITHUB_REPOSITORY/pulls" \
   --jq '[.[] | select(.merged_at != null)][0] | [.number,.head.sha,.merge_commit_sha] | @tsv')
 read -r number expected landed <<< "$merged"
 test -n "$number" && test -n "$expected" && test -n "$landed"
-"$release" pr-status --pr "$number" --head-sha "$expected" |
-  jq -e --arg expected "$expected" --arg landed "$landed" --argjson number "$number" \
+result=$("$release" pr-status --pr "$number" --head-sha "$expected") || {
+  rc=$?
+  jq '{pr, pr_state, expected_head, observed_head, merge_commit, outcome, error, checks}' <<< "$result" >&2
+  exit "$rc"
+}
+jq -e --arg expected "$expected" --arg landed "$landed" --argjson number "$number" \
   '.schema == "chrono-pr-result/v3" and .pr == $number and .pr_state == "MERGED"
-   and .observed_head == $expected and .merge_commit == $landed and .command_exit_code == 0'
+   and .observed_head == $expected and .merge_commit == $landed and .command_exit_code == 0' <<< "$result"
