@@ -1,7 +1,7 @@
 [Unit]
-Description=Maintain Chrono Harness worktrees in %f
+Description=Maintain Chrono Harness worktrees and PR reminders in %f
 
 [Service]
 Type=oneshot
 WorkingDirectory=%f
-ExecStart=/usr/bin/env ./.chrono-harness/bin/chrono-worktree maintain
+ExecStart=/bin/sh .chrono-harness/maintain.sh

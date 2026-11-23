@@ -6,14 +6,14 @@
 	<string>org.chrono-harness.example-maintenance</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>chrono-worktree</string>
-		<string>maintain</string>
+		<string>/bin/sh</string>
+		<string>.chrono-harness/maintain.sh</string>
 	</array>
 	<key>WorkingDirectory</key>
 	<string>.</string>
 	<key>StartInterval</key>
 	<integer>3600</integer>
 	<key>Program</key>
-	<string>chrono-worktree</string>
+	<string>/bin/sh</string>
 </dict>
 </plist>
