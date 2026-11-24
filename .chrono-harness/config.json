@@ -19,7 +19,7 @@
       ".chrono-harness/bin/chrono-harness",
       "check"
     ],
-    "profile": ".chrono-harness/ci/check.json",
+    "profile": ".chrono-harness/config.json",
     "inputs": {
       "local": {
         "operation": "prepare.check.local",
