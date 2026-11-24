@@ -2,6 +2,8 @@
 
 组件的用途、开发仓库和示例见 [Chrono Harness 用户与开发者入口](https://github.com/chrono-harness/chrono-harness-main)。
 
+提交 Issue、命名分支和交付 PR 时，遵循[协作规范](https://github.com/chrono-harness/chrono-harness-main/blob/dev/docs/contributing.md)。
+
 本仓是 Python 业务示例。业务代码和登记检查分别由 example 与 harness 单元验证。
 
 ## 本仓开发
