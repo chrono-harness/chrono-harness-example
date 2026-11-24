@@ -82,7 +82,7 @@
         "id": "worktree-policy",
         "presence": "present",
         "location": ".chrono-harness/worktree.json",
-        "sha256": "d13833f437f39c45e384782adc20adb0dbab614fae2cad62004ab78a8f869ad3"
+        "sha256": "1799414fa31f37888416d54b797b901dac921ac4b6005adec0020c80935d2770"
       },
       {
         "id": "ci-units-policy",
