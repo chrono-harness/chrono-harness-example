@@ -20,7 +20,7 @@
     {
       "id": "filemap",
       "executable": ".chrono-harness/bin/chrono-judge-filemap",
-      "sha256": "64ebcf91e31b33377bc029edc3ab281b6c24c8799a593e4b4dbee3ec85ac03ba",
+      "sha256": "8150581aeaed4045ee513d9aa5dd45decc8b674c7de34714a8a9f3ebd4818b44",
       "argv": [
         "--protocol",
         "chrono-judge/v1"

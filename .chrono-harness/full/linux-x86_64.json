@@ -5,7 +5,7 @@
   "runner": {
     "path": ".chrono-harness/bin/chrono-harness",
     "version": "0.1.0",
-    "sha256": "cb4d25d83b6a10fe2b2bad2ebd48ba47048c0b686f10d2b0c97a5c16b2b92b6b"
+    "sha256": "2fdbde26913c6830fc2bc655f9cb613de7dfb18d40c018f7a18ff4c25b32f832"
   },
   "registries": {
     "judges": ".chrono-harness/full/judges-linux-x86_64.json",
