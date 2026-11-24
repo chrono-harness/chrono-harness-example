@@ -505,6 +505,42 @@
           "to": "judge:workflow"
         }
       ]
+    },
+    {
+      "path": ".chrono-harness/ci/full-round.py",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
+    },
+    {
+      "path": ".chrono-harness/ci/full-detector.sh",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/full-round.yml",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
     }
   ],
   "project_edges": [
@@ -514,52 +550,7 @@
       "kind": "runtime-input"
     },
     {
-      "from": "environment:CHRONO_CI_DETECTION",
-      "to": "judge:registration",
-      "kind": "runtime-input"
-    },
-    {
-      "from": "environment:CHRONO_CI_NEEDS",
-      "to": "judge:registration",
-      "kind": "runtime-input"
-    },
-    {
-      "from": "environment:CHRONO_WORKFLOW_REVISION",
-      "to": "judge:registration",
-      "kind": "runtime-input"
-    },
-    {
       "from": "environment:GH_TOKEN",
-      "to": "judge:registration",
-      "kind": "runtime-input"
-    },
-    {
-      "from": "environment:GITHUB_EVENT_NAME",
-      "to": "judge:registration",
-      "kind": "runtime-input"
-    },
-    {
-      "from": "environment:GITHUB_EVENT_PATH",
-      "to": "judge:registration",
-      "kind": "runtime-input"
-    },
-    {
-      "from": "environment:GITHUB_JOB",
-      "to": "judge:registration",
-      "kind": "runtime-input"
-    },
-    {
-      "from": "environment:GITHUB_REPOSITORY",
-      "to": "judge:registration",
-      "kind": "runtime-input"
-    },
-    {
-      "from": "environment:GITHUB_RUN_ATTEMPT",
-      "to": "judge:registration",
-      "kind": "runtime-input"
-    },
-    {
-      "from": "environment:GITHUB_RUN_ID",
       "to": "judge:registration",
       "kind": "runtime-input"
     },

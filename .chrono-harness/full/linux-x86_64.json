@@ -5,7 +5,7 @@
   "runner": {
     "path": ".chrono-harness/bin/chrono-harness",
     "version": "0.1.0",
-    "sha256": "cb4d25d83b6a10fe2b2bad2ebd48ba47048c0b686f10d2b0c97a5c16b2b92b6b"
+    "sha256": "f75c90ebd9a624bada54aff11505c04b28efae8178a18c5d8b773596c76b041f"
   },
   "registries": {
     "judges": ".chrono-harness/full/judges-linux-x86_64.json",
@@ -46,7 +46,18 @@
           "--repository-env",
           "GITHUB_REPOSITORY"
         ]
-      }
+      },
+      "inherit_environment": [
+        "GITHUB_EVENT_NAME",
+        "GITHUB_EVENT_PATH",
+        "CHRONO_WORKFLOW_REVISION",
+        "GITHUB_REPOSITORY",
+        "CHRONO_CI_DETECTION",
+        "CHRONO_CI_NEEDS",
+        "GITHUB_RUN_ID",
+        "GITHUB_RUN_ATTEMPT",
+        "GITHUB_JOB"
+      ]
     }
   },
   "protocol": {
@@ -64,17 +75,8 @@
       "HOME",
       "TMPDIR",
       "CHRONO_CHECK_SOURCE",
-      "GITHUB_EVENT_NAME",
-      "GITHUB_EVENT_PATH",
-      "CHRONO_WORKFLOW_REVISION",
-      "GITHUB_REPOSITORY",
       "GH_TOKEN",
-      "SSH_AUTH_SOCK",
-      "CHRONO_CI_DETECTION",
-      "CHRONO_CI_NEEDS",
-      "GITHUB_RUN_ID",
-      "GITHUB_RUN_ATTEMPT",
-      "GITHUB_JOB"
+      "SSH_AUTH_SOCK"
     ],
     "values": {},
     "inputs": [
@@ -88,7 +90,7 @@
         "id": "ci-units-policy",
         "presence": "present",
         "location": ".chrono-harness/ci/units.json",
-        "sha256": "14c149e79b78feb893faf5b9af7abcce99ad84c63787e9e616f41715318eeef2"
+        "sha256": "c7aab3005478972becbc2cc9ea387c4adf115e3f2648c0746e5fb92ae59c2e3e"
       },
       {
         "id": "python-executable",
@@ -100,7 +102,7 @@
         "id": "ci-executable",
         "presence": "present",
         "location": ".chrono-harness/bin/chrono-ci",
-        "sha256": "5bce03f8f201743598c3a453c3660cd89d19e8c8b31661240ea58a02ac480fe5"
+        "sha256": "6392ead03251272fe8e82b1ef97a0ed6f547c73c2cabb3d43e3bfd671dc10bb0"
       }
     ]
   },
@@ -146,15 +148,6 @@
         "inputs": [
           "tool:chrono-ci",
           "environment:CHRONO_CHECK_SOURCE",
-          "environment:GITHUB_EVENT_NAME",
-          "environment:GITHUB_EVENT_PATH",
-          "environment:CHRONO_WORKFLOW_REVISION",
-          "environment:GITHUB_REPOSITORY",
-          "environment:CHRONO_CI_DETECTION",
-          "environment:CHRONO_CI_NEEDS",
-          "environment:GITHUB_RUN_ID",
-          "environment:GITHUB_RUN_ATTEMPT",
-          "environment:GITHUB_JOB",
           "environment:GH_TOKEN",
           "input:ci-executable"
         ]
@@ -547,6 +540,34 @@
       "owner": "host",
       "kind": "python-cache",
       "tracked": false
+    },
+    {
+      "path": ".chrono-harness/startup/",
+      "owner": "host",
+      "kind": "one-day-ci-handoff",
+      "tracked": false
     }
-  ]
+  ],
+  "execution_units": {
+    "units": {
+      "example": {
+        "tests": [
+          "test:example"
+        ],
+        "report_path": ".chrono-harness/state/example/check.json"
+      },
+      "harness": {
+        "tests": [
+          "test:harness"
+        ],
+        "report_path": ".chrono-harness/state/harness/check.json"
+      }
+    },
+    "shared_operations": {},
+    "report_path": ".chrono-harness/state/collection/check.json",
+    "collection_limits": {
+      "manifest_bytes": 1048576,
+      "report_bytes": 67108864
+    }
+  }
 }

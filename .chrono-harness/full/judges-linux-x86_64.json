@@ -20,7 +20,7 @@
     {
       "id": "filemap",
       "executable": ".chrono-harness/bin/chrono-judge-filemap",
-      "sha256": "64ebcf91e31b33377bc029edc3ab281b6c24c8799a593e4b4dbee3ec85ac03ba",
+      "sha256": "8150581aeaed4045ee513d9aa5dd45decc8b674c7de34714a8a9f3ebd4818b44",
       "argv": [
         "--protocol",
         "chrono-judge/v1"
@@ -37,7 +37,7 @@
     {
       "id": "projects",
       "executable": ".chrono-harness/bin/chrono-judge-projects",
-      "sha256": "499eecd4085c41352a29aea254a8e32e9631c792c0eda3120eb36129c49efafd",
+      "sha256": "0516a00a0f1ccff16ce1e0c4ee7f9b9f505839973221eb0bbef0049ce56a2692",
       "argv": [
         "--protocol",
         "chrono-judge/v1"
@@ -56,7 +56,7 @@
     {
       "id": "routes",
       "executable": ".chrono-harness/bin/chrono-judge-routes",
-      "sha256": "b94fccec431961742a25cbf87ea2a970ea9946b886e27a8c5c66db4929848407",
+      "sha256": "1226a775a1165223c776144c5088960ef4332dfc50960fa4e09f3c01427a596b",
       "argv": [
         "--protocol",
         "chrono-judge/v1"

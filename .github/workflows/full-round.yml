@@ -1,0 +1,47 @@
+name: Retain full check context
+on:
+  workflow_dispatch:
+    inputs:
+      context:
+        description: Exact local context JSON from the worktree that started the change
+        type: string
+        required: true
+permissions: {}
+jobs:
+  context:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Preserve the submitted original
+        id: original
+        env:
+          FULL_CONTEXT: ${{ inputs.context }}
+        run: |
+          python3 - <<'PYTHON'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import re
+
+          raw = os.environ["FULL_CONTEXT"].encode("utf-8")
+          context = json.loads(raw)
+          if context["schema_version"] != 2 or context["operation"] != "validate.delta":
+              raise ValueError("expected full check context schema 2")
+          for field in ("base", "candidate"):
+              if not re.fullmatch(r"(?:[a-f0-9]{40}|[a-f0-9]{64})", context[field]):
+                  raise ValueError(f"invalid fixed {field}")
+          if context["base"] != context["dev_tip"]:
+              raise ValueError("the development tip differs from the base")
+          Path("context.json").write_bytes(raw)
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              print("name=full-round-" + context["candidate"] + "-" + context["base"], file=output)
+          print("Context SHA-256", hashlib.sha256(raw).hexdigest())
+          PYTHON
+      - name: Retain this round for one day
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ${{ steps.original.outputs.name }}
+          path: context.json
+          retention-days: 1
+          if-no-files-found: error
