@@ -80,7 +80,7 @@ def produce():
     env["CHRONO_CHECK_SOURCE"] = "ci"
     # Capture against the binary search path published for the remaining jobs.
     paths = Path(os.environ["GITHUB_PATH"]).read_text().splitlines()
-    env["PATH"] = os.pathsep.join(dict.fromkeys(paths[::-1] + os.environ["PATH"].split(os.pathsep)))
+    env["PATH"] = os.pathsep.join(paths[::-1] + [os.environ["PATH"]])
     # Both endpoint captures run against actual registered files and installations.
     with tempfile.TemporaryDirectory(dir=os.environ["RUNNER_TEMP"]) as temp:
         roots = {}
