@@ -458,7 +458,7 @@
     },
     {
       "id": "git",
-      "program": "/usr/bin/git",
+      "program": "git",
       "resolution": "PATH-once",
       "version_argv": [
         "--version"
