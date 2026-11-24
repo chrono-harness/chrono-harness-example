@@ -17,6 +17,18 @@ jq -e --arg expected "$expected" --arg landed "$landed" --argjson number "$numbe
   '.schema == "chrono-pr-result/v3" and .pr == $number and .pr_state == "MERGED"
    and .observed_head == $expected and .merge_commit == $landed and .command_exit_code == 0' <<< "$result"
 
+# An agent watching an older head must stop as soon as the original PR reports a different head.
+case "$expected" in
+  0*) other="1${expected:1}" ;;
+  *) other="0${expected:1}" ;;
+esac
+watch_exit=0
+watch_result=$("$release" pr-watch --pr "$number" --head-sha "$other" </dev/null) || watch_exit=$?
+test "$watch_exit" -eq 4
+jq -e --arg expected "$other" --arg observed "$expected" --argjson number "$number" '
+  .pr == $number and .expected_head == $expected and .observed_head == $observed
+  and .outcome == "stale" and .command_exit_code == 4' <<< "$watch_result"
+
 # Exercise the installed client on a disposable checkout-local reminder database.
 fixture=$(mktemp -d)
 cleanup_fixture() {
