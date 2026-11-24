@@ -33,6 +33,9 @@ fi
 mkdir -p .chrono-harness/bin
 for tool in chrono-diagnostics chrono-pr chrono-harness chrono-ci chrono-judge-ci chrono-worktree chrono-judge-registration chrono-judge-projects chrono-judge-filemap chrono-judge-routes; do
     target=$("$mise" which "$tool")
+    if [ -n "${GITHUB_PATH:-}" ]; then
+        dirname "$target" >> "$GITHUB_PATH"
+    fi
     link=.chrono-harness/bin/$tool
     if [ -L "$link" ]; then
         if [ "$(readlink "$link")" = "$target" ]; then continue; fi
