@@ -40,9 +40,9 @@ fi
 if [ "${GITHUB_ACTIONS:-}" = true ]; then
     export MISE_TRUSTED_CONFIG_PATHS="$PWD"
 fi
-"$mise" install http:chrono-diagnostics http:chrono-pr http:chrono-harness http:chrono-ci http:chrono-judge-ci http:chrono-worktree http:chrono-judge-registration http:chrono-judge-projects http:chrono-judge-filemap http:chrono-judge-routes
+"$mise" install http:chrono-diagnostics http:chrono-pr http:chrono-harness http:chrono-ci http:chrono-judge-ci http:chrono-worktree http:chrono-judge-registration http:chrono-judge-projects http:chrono-judge-filemap http:chrono-judge-routes http:chrono-judge-workflow http:chrono-judge-mixed http:chrono-judge-cost
 mkdir -p .chrono-harness/bin
-for tool in chrono-diagnostics chrono-pr chrono-harness chrono-ci chrono-judge-ci chrono-worktree chrono-judge-registration chrono-judge-projects chrono-judge-filemap chrono-judge-routes; do
+for tool in chrono-diagnostics chrono-pr chrono-harness chrono-ci chrono-judge-ci chrono-worktree chrono-judge-registration chrono-judge-projects chrono-judge-filemap chrono-judge-routes chrono-judge-workflow chrono-judge-mixed chrono-judge-cost; do
     target=$("$mise" which "$tool")
     if [ -n "${GITHUB_PATH:-}" ]; then
         dirname "$target" >> "$GITHUB_PATH"

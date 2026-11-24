@@ -352,6 +352,54 @@
       "surface": "product",
       "cost": "unmeasured",
       "edges": []
+    },
+    {
+      "path": ".chrono-harness/full/macos-aarch64.json",
+      "owner": "host",
+      "surface": "registration",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
+    },
+    {
+      "path": ".chrono-harness/full/judges-macos-aarch64.json",
+      "owner": "host",
+      "surface": "registration",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
+    },
+    {
+      "path": ".chrono-harness/full/linux-x86_64.json",
+      "owner": "host",
+      "surface": "registration",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
+    },
+    {
+      "path": ".chrono-harness/full/judges-linux-x86_64.json",
+      "owner": "host",
+      "surface": "registration",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
     }
   ],
   "project_edges": [],
