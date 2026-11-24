@@ -102,7 +102,7 @@
         "id": "ci-executable",
         "presence": "present",
         "location": ".chrono-harness/bin/chrono-ci",
-        "sha256": "0db31fce7924d6c482974675c4fe68e3244efcb5ac2af9aab11a2e38ac9a391e"
+        "sha256": "6392ead03251272fe8e82b1ef97a0ed6f547c73c2cabb3d43e3bfd671dc10bb0"
       }
     ]
   },
