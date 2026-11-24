@@ -37,3 +37,16 @@ INSERT INTO reminder VALUES ('example/host', 3, 'live', unixepoch() + 86400);
 SQL
 "$release" pr-reminders --host-root "$fixture" | jq -e '[.pull_requests[].pr] == [3]'
 test "$(sqlite3 "$database" 'SELECT group_concat(number) FROM reminder')" = 3
+
+# Use an actual completed push so this job can verify the installed watch command
+# without waiting on its own run, which cannot finish until this script returns.
+push_run=$(gh api --method GET "repos/$GITHUB_REPOSITORY/actions/workflows/chrono-ci.yml/runs" \
+  -f event=push -f branch=dev -f status=success -F per_page=1 \
+  --jq '.workflow_runs[0] | [.id,.head_sha] | @tsv')
+read -r run_number push_head <<< "$push_run"
+test -n "$run_number" && test -n "$push_head"
+"$release" run-watch --run "$run_number" --head-sha "$push_head" </dev/null |
+  jq -e --arg sha "$push_head" --argjson id "$run_number" '
+    .schema == "chrono-run-result/v1" and .outcome == "passed" and
+    .run.databaseId == $id and .run.headSha == $sha and .run.event == "push" and
+    .run.status == "completed" and .run.conclusion == "success" and (.run.jobs | length > 0)'
