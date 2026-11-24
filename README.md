@@ -6,7 +6,7 @@
 
 项目登记标明生产脚本与专属测试的语言。scoped CI 调用本仓安装的 projects 判官核对配对并执行选中的计划。projects 通过已安装的 routes 校验计划和执行回执。
 
-检查 Python 业务逻辑时运行 `python3 -B check.py`。验证 CI 配置和生成的工作流时运行 `sh .chrono-harness/ci/verify.sh`。
+检查 Python 业务逻辑时运行 `python3 -B check.py`。验证 CI 配置和生成的工作流时运行 `.chrono-harness/bin/chrono-ci verify --host-root . --config .chrono-harness/ci/units.json`。安装目录的测试入口是 `python3 -B .chrono-harness/ci/check-install-location.py`。
 
 ## 本地任务工作树
 

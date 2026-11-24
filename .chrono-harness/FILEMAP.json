@@ -147,18 +147,6 @@
       ]
     },
     {
-      "path": ".chrono-harness/ci/verify.sh",
-      "owner": "host",
-      "surface": "product",
-      "cost": "unmeasured",
-      "edges": [
-        {
-          "kind": "test-execution",
-          "to": "test:harness"
-        }
-      ]
-    },
-    {
       "path": ".github/workflows/chrono-ci.yml",
       "owner": "host",
       "surface": "product",
@@ -396,6 +384,7 @@
     },
     "test:harness": {
       "operations": [
+        "installer.check-location",
         "ci.verify"
       ],
       "timeout_seconds": 600,

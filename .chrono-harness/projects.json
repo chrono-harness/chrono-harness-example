@@ -59,18 +59,30 @@
     },
     {
       "id": "harness",
-      "path": ".chrono-harness/ci/verify.sh",
+      "path": ".chrono-harness/ci/check-install-location.py",
       "tests_for": "installer",
       "actions": {
         "execute": {
-          "operation": "ci.verify",
-          "tool": "bash",
+          "operation": "installer.check-location",
+          "tool": "python3",
           "argv": [
-            ".chrono-harness/ci/verify.sh"
+            "-B",
+            ".chrono-harness/ci/check-install-location.py"
+          ]
+        },
+        "verify-workflow": {
+          "operation": "ci.verify",
+          "tool": "chrono-ci",
+          "argv": [
+            "verify",
+            "--host-root",
+            ".",
+            "--config",
+            ".chrono-harness/ci/units.json"
           ]
         }
       },
-      "language": "shell"
+      "language": "python"
     }
   ]
 }
