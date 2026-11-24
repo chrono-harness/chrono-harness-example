@@ -1,0 +1,30 @@
+name: Portable full developer check
+on:
+  push:
+    branches: [probe/portable-full-developer]
+permissions:
+  contents: read
+jobs:
+  full:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-26, ubuntu-24.04]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          path: acceptance
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: de3e2fd69e971aefa8e94a4fd0a313042758a612
+          fetch-depth: 0
+          persist-credentials: false
+          path: example
+      - name: Install the selected release binaries outside the checkout
+        working-directory: example
+        run: sh .chrono-harness/ci/install.sh
+      - name: Run the captured development and delivery checks
+        run: /usr/bin/python3 acceptance/.github/full-native.py example "$RUNNER_TEMP"
