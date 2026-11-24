@@ -86,8 +86,10 @@ def produce():
         roots = {}
         for role, oid in (("base", base), ("candidate", candidate)):
             root = Path(temp) / role
-            command(["git", "clone", "--quiet", "--no-local", "--no-checkout", str(host), str(root)])
-            command(["git", "fetch", "--quiet", str(host), oid], root)
+            root.mkdir()
+            command(["git", "init", "--quiet"], root)
+            origin_url = command(["git", "remote", "get-url", "origin"]).decode().strip()
+            command(["git", "fetch", "--quiet", "--depth=1", "--no-tags", origin_url, oid], root)
             command(["git", "checkout", "--quiet", "--detach", oid], root)
             endpoint_bins = root / ".chrono-harness/bin"
             endpoint_bins.mkdir(exist_ok=True)
