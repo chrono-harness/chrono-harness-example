@@ -183,4 +183,10 @@ description = "Install this repository's selected tools"
 
 run = ["mise install", "mise exec -- chrono-instructions sync-rules --host-root ."]
 
-
+[tools."http:example-python"]
+version = "3.12.16-20261123"
+strip_components = 1
+bin_path = "bin"
+[tools."http:example-python".platforms]
+linux-x64 = { url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261123/cpython-3.12.16%2B20261123-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz", checksum = "sha256:c85811d35971d06612585a057db3b71806378df6ea8476275fb16aa5c9fe56a0" }
+macos-arm64 = { url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261123/cpython-3.12.16%2B20261123-aarch64-apple-darwin-install_only_stripped.tar.gz", checksum = "sha256:0de87cfc2649849da10a54084f87fd01fa1e653478e32eee92198c213550e15c" }

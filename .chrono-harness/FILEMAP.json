@@ -677,6 +677,36 @@
       "from": "tool:python3",
       "to": "test:harness",
       "kind": "test-execution"
+    },
+    {
+      "from": "input:ci-executable",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "input:python-executable",
+      "to": "script:message",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "input:python-executable",
+      "to": "test:example",
+      "kind": "test-execution"
+    },
+    {
+      "from": "input:python-executable",
+      "to": "script:installer",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "input:python-executable",
+      "to": "test:harness",
+      "kind": "test-execution"
+    },
+    {
+      "from": "input:ci-executable",
+      "to": "test:harness",
+      "kind": "test-execution"
     }
   ],
   "cost_models": {

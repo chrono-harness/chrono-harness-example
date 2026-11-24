@@ -89,6 +89,18 @@
         "presence": "present",
         "location": ".chrono-harness/ci/units.json",
         "sha256": "14c149e79b78feb893faf5b9af7abcce99ad84c63787e9e616f41715318eeef2"
+      },
+      {
+        "id": "python-executable",
+        "presence": "present",
+        "location": ".chrono-harness/bin/python3",
+        "sha256": "569e1bb97ea3926c8f30e7e14375646aa3c632b1192732e3668f3c974b5b1801"
+      },
+      {
+        "id": "ci-executable",
+        "presence": "present",
+        "location": ".chrono-harness/bin/chrono-ci",
+        "sha256": "5bce03f8f201743598c3a453c3660cd89d19e8c8b31661240ea58a02ac480fe5"
       }
     ]
   },
@@ -143,7 +155,8 @@
           "environment:GITHUB_RUN_ID",
           "environment:GITHUB_RUN_ATTEMPT",
           "environment:GITHUB_JOB",
-          "environment:GH_TOKEN"
+          "environment:GH_TOKEN",
+          "input:ci-executable"
         ]
       },
       {
@@ -151,7 +164,8 @@
         "consumer": "script:message",
         "kind": "python-execution",
         "inputs": [
-          "tool:python3"
+          "tool:python3",
+          "input:python-executable"
         ]
       },
       {
@@ -159,7 +173,8 @@
         "consumer": "test:example",
         "kind": "python-execution",
         "inputs": [
-          "tool:python3"
+          "tool:python3",
+          "input:python-executable"
         ]
       },
       {
@@ -170,7 +185,8 @@
           "tool:bash",
           "tool:python3",
           "environment:HOME",
-          "environment:PATH"
+          "environment:PATH",
+          "input:python-executable"
         ]
       },
       {
@@ -181,7 +197,9 @@
           "tool:python3",
           "tool:chrono-ci",
           "environment:TMPDIR",
-          "environment:PATH"
+          "environment:PATH",
+          "input:python-executable",
+          "input:ci-executable"
         ]
       },
       {
@@ -429,12 +447,12 @@
   "tools": [
     {
       "id": "python3",
-      "program": "/usr/bin/python3",
+      "program": ".chrono-harness/bin/python3",
       "resolution": "PATH-once",
       "version_argv": [
         "--version"
       ],
-      "expected_version": "Python 3.12.3"
+      "expected_version": "Python 3.12.16"
     },
     {
       "id": "chrono-ci",
