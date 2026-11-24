@@ -707,6 +707,16 @@
       "from": "input:ci-executable",
       "to": "test:harness",
       "kind": "test-execution"
+    },
+    {
+      "from": "script:message",
+      "kind": "test-execution",
+      "to": "test:example"
+    },
+    {
+      "from": "script:installer",
+      "kind": "test-execution",
+      "to": "test:harness"
     }
   ],
   "cost_models": {
