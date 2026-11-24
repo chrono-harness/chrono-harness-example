@@ -15,7 +15,7 @@ origin = root / "origin.git"
 base = root / "dev"
 candidate = root / "integration"
 binaries = seed / ".chrono-harness/bin"
-baseline = "40df221c47d130fa9a3d41bfd27e4f90eb216067"
+baseline = sys.argv[3]
 env = {k: v for k, v in os.environ.items() if k not in ("GH_TOKEN", "GITHUB_TOKEN", "SSH_AUTH_SOCK")}
 env.update(PATH=str(binaries) + os.pathsep + env["PATH"], CHRONO_AGENT_ID="full-release-consumer", CHRONO_CHECK_SOURCE="local")
 git = "/usr/bin/git"
