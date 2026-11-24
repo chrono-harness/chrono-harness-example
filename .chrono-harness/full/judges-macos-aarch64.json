@@ -37,7 +37,7 @@
     {
       "id": "projects",
       "executable": ".chrono-harness/bin/chrono-judge-projects",
-      "sha256": "e70b2e448dfba5cea05bd75344fd0c6f9af586a61bf392ccba28a8d8128f8231",
+      "sha256": "e619d46e4fa8eada434ebd198cdddb36b1eeb8e97f1a15ca7d4f9a43e5443b9a",
       "argv": [
         "--protocol",
         "chrono-judge/v1"
