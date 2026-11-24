@@ -6,7 +6,7 @@
 
 ## 本仓开发
 
-业务实现位于 [`message.py`](message.py)，验收用例位于 [`check.py`](check.py)。修改业务后运行 `python3 -B check.py`。修改 CI 登记后运行 `sh .chrono-harness/ci/install.sh` 和 `sh .chrono-harness/ci/verify.sh`。
+业务实现位于 [`message.py`](message.py)，验收用例位于 [`check.py`](check.py)。修改业务后运行 `python3 -B check.py`。修改 CI 登记后运行 `sh .chrono-harness/ci/install.sh` 和 `.chrono-harness/bin/chrono-ci verify --host-root . --config .chrono-harness/ci/units.json`。安装目录的测试入口是 `python3 -B .chrono-harness/ci/check-install-location.py`。
 
 本仓逐文件登记受 Git 跟踪的输入。升级模板或切换选项时，在同一提交更新 [FILEMAP](.chrono-harness/FILEMAP.json)，登记新增、删除或改名的文件，包括规则选择和随附许可。CI 用变更前后两个提交各自的登记检查实际文件。
 
