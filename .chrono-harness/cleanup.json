@@ -34,5 +34,22 @@
     "keep_seconds": 86400,
     "max_entries": 32,
     "max_bytes": 4194304
+  },
+  "operation_scopes": {
+    "example.program": {
+      "reads": [
+        "path:message.py",
+        "path:message.txt"
+      ],
+      "writes": []
+    },
+    "example.check": {
+      "reads": [
+        "path:check.py",
+        "path:message.py",
+        "path:message.txt"
+      ],
+      "writes": []
+    }
   }
 }

@@ -45,3 +45,5 @@ systemctl --user enable --now "$timer"
 ```
 
 删除或移动主检出前，运行 `systemctl --user disable --now "$timer"`。同一用户的其他检出可继续使用这两个单元文件。
+
+在已登记的任务工作树中，开发者可运行 `chrono-worktree use --operation example.program` 或 `chrono-worktree use --operation example.check`。这两项 Python 操作均以 `-B` 运行并只读，在同一检出可以并行。宿主在 [.chrono-harness/cleanup.json](.chrono-harness/cleanup.json) 登记实际读取的源码与 message.txt。
