@@ -586,7 +586,7 @@
     {
       "from": "environment:PATH",
       "to": "test:harness",
-      "kind": "runtime-input"
+      "kind": "test-execution"
     },
     {
       "from": "environment:SSH_AUTH_SOCK",
@@ -596,7 +596,7 @@
     {
       "from": "environment:TMPDIR",
       "to": "test:harness",
-      "kind": "runtime-input"
+      "kind": "test-execution"
     },
     {
       "from": "input:ci-units-policy",
@@ -621,7 +621,7 @@
     {
       "from": "tool:chrono-ci",
       "to": "test:harness",
-      "kind": "runtime-input"
+      "kind": "test-execution"
     },
     {
       "from": "tool:chrono-judge-filemap",
@@ -671,12 +671,12 @@
     {
       "from": "tool:python3",
       "to": "test:example",
-      "kind": "runtime-input"
+      "kind": "test-execution"
     },
     {
       "from": "tool:python3",
       "to": "test:harness",
-      "kind": "runtime-input"
+      "kind": "test-execution"
     }
   ],
   "cost_models": {
