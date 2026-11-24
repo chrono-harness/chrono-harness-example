@@ -1,6 +1,23 @@
 #!/bin/sh
 set -eu
 
+# Validate mise's storage paths before the first directory creation or download.
+MISE_DATA_DIR=${CHRONO_EXAMPLE_INSTALL_ROOT:-${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}}
+export MISE_DATA_DIR
+python3 - "$MISE_DATA_DIR" "${MISE_INSTALLS_DIR:-$MISE_DATA_DIR/installs}" \
+    "${MISE_INSTALL_STORE_DIR:-${MISE_INSTALLS_DIR:-$MISE_DATA_DIR/installs}}" \
+    "${MISE_DOWNLOADS_DIR:-$MISE_DATA_DIR/downloads}" <<'PYTHON'
+import sys
+from pathlib import Path
+
+checkout = Path.cwd()
+for location in sys.argv[1:]:
+    destination = Path(location).resolve()
+    if destination == checkout or checkout in destination.parents:
+        print(f"Choose a mise storage directory outside the checkout: {destination}", file=sys.stderr)
+        sys.exit(2)
+PYTHON
+
 # Hosted jobs have a fresh filesystem. Fetch mise there when it is absent.
 if command -v mise >/dev/null 2>&1; then
     mise=mise
@@ -22,12 +39,6 @@ else
 fi
 if [ "${GITHUB_ACTIONS:-}" = true ]; then
     export MISE_TRUSTED_CONFIG_PATHS="$PWD"
-fi
-if [ -n "${CHRONO_EXAMPLE_INSTALL_ROOT:-}" ]; then
-    mkdir -p "$CHRONO_EXAMPLE_INSTALL_ROOT"
-    MISE_DATA_DIR=$(CDPATH= cd -- "$CHRONO_EXAMPLE_INSTALL_ROOT" && pwd -P)
-    case "$MISE_DATA_DIR/" in "$(pwd -P)/"*) echo 'Choose an install directory outside the checkout' >&2; exit 2;; esac
-    export MISE_DATA_DIR
 fi
 "$mise" install http:chrono-diagnostics http:chrono-pr http:chrono-harness http:chrono-ci http:chrono-judge-ci http:chrono-worktree http:chrono-judge-registration http:chrono-judge-projects http:chrono-judge-filemap http:chrono-judge-routes
 mkdir -p .chrono-harness/bin

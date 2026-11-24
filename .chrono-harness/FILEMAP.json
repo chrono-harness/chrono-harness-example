@@ -135,6 +135,18 @@
       ]
     },
     {
+      "path": ".chrono-harness/ci/check-install-location.py",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
+    },
+    {
       "path": ".chrono-harness/ci/verify.sh",
       "owner": "host",
       "surface": "product",
