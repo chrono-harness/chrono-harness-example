@@ -1,5 +1,5 @@
 {
-  "schema": "chrono-github-units/v1",
+  "schema": "chrono-github-units/v2",
   "collection": {
     "schema": "chrono-github-ci/v4",
     "workflow_path": ".github/workflows/chrono-ci.yml",
@@ -24,7 +24,7 @@
     ],
     "runner": ".chrono-harness/bin/chrono-harness",
     "generator": ".chrono-harness/bin/chrono-ci",
-    "check_config": ".chrono-harness/ci/check.json",
+    "check_config": ".chrono-harness/config.json",
     "context_path": ".chrono-harness/state/collection/event.json",
     "artifact_directory": ".chrono-harness/state/collection/",
     "push_baselines": [
@@ -92,5 +92,13 @@
       ]
     },
     "evidence_retention_days": 1
-  }
+  },
+  "full_contexts": {
+    "collection": ".chrono-harness/state/collection/full.json",
+    "units": {
+      "example": ".chrono-harness/state/example/full.json",
+      "harness": ".chrono-harness/state/harness/full.json"
+    }
+  },
+  "requirements_program": ".chrono-harness/bin/chrono-judge-ci"
 }

@@ -19,7 +19,7 @@
       ".chrono-harness/bin/chrono-harness",
       "check"
     ],
-    "profile": ".chrono-harness/config.json",
+    "profile": ".chrono-harness/full/linux-x86_64.json",
     "inputs": {
       "local": {
         "operation": "prepare.check.local",
@@ -88,7 +88,7 @@
         "id": "ci-units-policy",
         "presence": "present",
         "location": ".chrono-harness/ci/units.json",
-        "sha256": "14c149e79b78feb893faf5b9af7abcce99ad84c63787e9e616f41715318eeef2"
+        "sha256": "e33269c84bee23111620636d7367b748e97e275983fd47cb4f14ad18c687ff21"
       },
       {
         "id": "python-executable",
@@ -548,5 +548,27 @@
       "kind": "python-cache",
       "tracked": false
     }
-  ]
+  ],
+  "execution_units": {
+    "units": {
+      "example": {
+        "tests": [
+          "test:example"
+        ],
+        "report_path": ".chrono-harness/state/example/check.json"
+      },
+      "harness": {
+        "tests": [
+          "test:harness"
+        ],
+        "report_path": ".chrono-harness/state/harness/check.json"
+      }
+    },
+    "shared_operations": {},
+    "report_path": ".chrono-harness/state/collection/check.json",
+    "collection_limits": {
+      "manifest_bytes": 1048576,
+      "report_bytes": 67108864
+    }
+  }
 }
