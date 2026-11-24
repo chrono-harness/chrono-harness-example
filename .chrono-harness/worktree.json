@@ -5,7 +5,7 @@
   "registration_program": ".chrono-harness/bin/chrono-judge-registration",
   "remote": "origin",
   "git": {
-    "program": "/usr/bin/git",
+    "program": "git",
     "expected_version": null,
     "sha256": null
   },
