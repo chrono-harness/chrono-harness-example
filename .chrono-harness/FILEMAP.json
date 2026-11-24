@@ -356,7 +356,7 @@
     {
       "path": ".chrono-harness/full/macos-aarch64.json",
       "owner": "host",
-      "surface": "registration",
+      "surface": "product",
       "cost": "unmeasured",
       "edges": [
         {
@@ -368,7 +368,7 @@
     {
       "path": ".chrono-harness/full/judges-macos-aarch64.json",
       "owner": "host",
-      "surface": "registration",
+      "surface": "product",
       "cost": "unmeasured",
       "edges": [
         {
@@ -380,7 +380,7 @@
     {
       "path": ".chrono-harness/full/linux-x86_64.json",
       "owner": "host",
-      "surface": "registration",
+      "surface": "product",
       "cost": "unmeasured",
       "edges": [
         {
@@ -392,7 +392,7 @@
     {
       "path": ".chrono-harness/full/judges-linux-x86_64.json",
       "owner": "host",
-      "surface": "registration",
+      "surface": "product",
       "cost": "unmeasured",
       "edges": [
         {
