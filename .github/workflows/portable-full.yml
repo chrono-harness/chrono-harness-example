@@ -19,7 +19,7 @@ jobs:
           path: acceptance
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 6bd95e97809e1330fef6f13c5bdbe4edca32be26
+          ref: b6bbb45408fa3072e6c57e5f505049f06cca1824
           fetch-depth: 0
           persist-credentials: false
           path: example
@@ -27,4 +27,4 @@ jobs:
         working-directory: example
         run: sh .chrono-harness/ci/install.sh
       - name: Run the captured development and delivery checks
-        run: /usr/bin/python3 acceptance/.github/full-native.py example "$RUNNER_TEMP" 1193d2acd5e70788b877edeede0698704492eaae
+        run: /usr/bin/python3 acceptance/.github/full-native.py example "$RUNNER_TEMP" d5684ffa78965e1234f3ce7c3a0d981d7b546802
