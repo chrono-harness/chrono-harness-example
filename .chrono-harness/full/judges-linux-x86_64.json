@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "status": "active",
+  "judges": [
+    {
+      "id": "registration",
+      "executable": ".chrono-harness/bin/chrono-judge-registration",
+      "sha256": "e34525c61fec5d4f183388ce23f79f89e415d1c4815910fdbbe48f03dba3378f",
+      "argv": [
+        "--protocol",
+        "chrono-judge/v1"
+      ],
+      "selector": "every-delta",
+      "after": [],
+      "modes": [
+        "evaluate"
+      ],
+      "version": "0.1.0"
+    },
+    {
+      "id": "filemap",
+      "executable": ".chrono-harness/bin/chrono-judge-filemap",
+      "sha256": "64ebcf91e31b33377bc029edc3ab281b6c24c8799a593e4b4dbee3ec85ac03ba",
+      "argv": [
+        "--protocol",
+        "chrono-judge/v1"
+      ],
+      "selector": "every-delta",
+      "after": [
+        "registration"
+      ],
+      "modes": [
+        "evaluate"
+      ],
+      "version": "0.1.0"
+    },
+    {
+      "id": "projects",
+      "executable": ".chrono-harness/bin/chrono-judge-projects",
+      "sha256": "499eecd4085c41352a29aea254a8e32e9631c792c0eda3120eb36129c49efafd",
+      "argv": [
+        "--protocol",
+        "chrono-judge/v1"
+      ],
+      "selector": "every-delta",
+      "after": [
+        "registration",
+        "filemap",
+        "routes"
+      ],
+      "modes": [
+        "evaluate"
+      ],
+      "version": "0.1.0"
+    },
+    {
+      "id": "routes",
+      "executable": ".chrono-harness/bin/chrono-judge-routes",
+      "sha256": "b94fccec431961742a25cbf87ea2a970ea9946b886e27a8c5c66db4929848407",
+      "argv": [
+        "--protocol",
+        "chrono-judge/v1"
+      ],
+      "selector": "every-delta",
+      "after": [
+        "registration",
+        "filemap"
+      ],
+      "modes": [
+        "evaluate"
+      ],
+      "version": "0.1.0"
+    },
+    {
+      "id": "cost",
+      "executable": ".chrono-harness/bin/chrono-judge-cost",
+      "sha256": "829d3fc705ccf64cdf13dadcb679be194fcf11dc7ee2b930af361c06cbdca734",
+      "argv": [
+        "--protocol",
+        "chrono-judge/v1"
+      ],
+      "selector": "every-delta",
+      "after": [
+        "registration",
+        "filemap"
+      ],
+      "modes": [
+        "evaluate"
+      ],
+      "version": "0.1.0"
+    },
+    {
+      "id": "mixed",
+      "executable": ".chrono-harness/bin/chrono-judge-mixed",
+      "sha256": "e8ffde928c95449ecc40895a2a2351a155dfa3e1b1a9e100f7ac0434c3e17a16",
+      "argv": [
+        "--protocol",
+        "chrono-judge/v1"
+      ],
+      "selector": "every-delta",
+      "after": [
+        "registration",
+        "filemap",
+        "cost"
+      ],
+      "modes": [
+        "evaluate"
+      ],
+      "version": "0.1.0"
+    },
+    {
+      "id": "workflow",
+      "executable": ".chrono-harness/bin/chrono-judge-workflow",
+      "sha256": "ca018839d94feea3c39d5ef24a0e15e606eaae5cd4fbf75aa11fe30d9c1b7286",
+      "argv": [
+        "--protocol",
+        "chrono-judge/v1"
+      ],
+      "selector": "every-delta",
+      "after": [
+        "registration",
+        "filemap",
+        "routes",
+        "projects",
+        "mixed",
+        "cost"
+      ],
+      "modes": [
+        "evaluate"
+      ],
+      "version": "0.1.0"
+    }
+  ],
+  "migration_validator": "workflow"
+}

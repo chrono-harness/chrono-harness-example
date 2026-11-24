@@ -55,11 +55,11 @@ macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-host-rel
 
 
 [tools."http:chrono-inputs"]
-version = "0.1.0-alpha.7"
+version = "0.1.0-alpha.8"
 bin = "chrono-inputs"
 [tools."http:chrono-inputs".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-inputs/releases/download/v0.1.0-alpha.7/chrono-inputs-linux-x86_64", checksum = "sha256:b469969f79c30701204d12cc03d340e075d4c919ee332f4e0ec2847a0d57fc79" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-inputs/releases/download/v0.1.0-alpha.7/chrono-inputs-macos-aarch64", checksum = "sha256:5bd3d64d33aaaa7f24228b6c6c7244beeb28a6390a5a8ec16ff63e34b1857901" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-inputs/releases/download/v0.1.0-alpha.8/chrono-inputs-linux-x86_64", checksum = "sha256:1066fbef3831696bb1c7674144424f869414a1f7dae486c53f03ef34a5fc25c5" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-inputs/releases/download/v0.1.0-alpha.8/chrono-inputs-macos-aarch64", checksum = "sha256:74ff30cd98d8b7218d315ee26e9c53d69b9b097b8029ae5da219673871c01166" }
 
 
 [tools."http:chrono-instructions"]
@@ -111,11 +111,11 @@ macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-pr
 
 
 [tools."http:chrono-judge-registration"]
-version = "0.1.0-alpha.28"
+version = "0.1.0-alpha.29"
 bin = "chrono-judge-registration"
 [tools."http:chrono-judge-registration".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-registration/releases/download/v0.1.0-alpha.28/chrono-judge-registration-linux-x86_64", checksum = "sha256:d4cdf35b4b91dc2012446fd1e272c85e4ffdfd59068abcfe57679d9c46ec3a0b" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-registration/releases/download/v0.1.0-alpha.28/chrono-judge-registration-macos-aarch64", checksum = "sha256:41c6a687ec7b8afbadcaa59a1013222be0dee106e19b08a6e912ff664e76f926" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-registration/releases/download/v0.1.0-alpha.29/chrono-judge-registration-linux-x86_64", checksum = "sha256:e34525c61fec5d4f183388ce23f79f89e415d1c4815910fdbbe48f03dba3378f" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-registration/releases/download/v0.1.0-alpha.29/chrono-judge-registration-macos-aarch64", checksum = "sha256:c6f37c401de0a51e8488342267426ba19ed545c699825134c0da21048ef1d692" }
 
 
 [tools."http:chrono-judge-routes"]
@@ -126,11 +126,11 @@ linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-rout
 macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-routes/releases/download/v0.1.0-alpha.21/chrono-judge-routes-macos-aarch64", checksum = "sha256:21875c39fdd35279a1df6659f41dd4c11ae2bb406afcda22dc75511c5f27394b" }
 
 [tools."http:chrono-judge-workflow"]
-version = "0.1.0-alpha.6"
+version = "0.1.0-alpha.7"
 bin = "chrono-judge-workflow"
 [tools."http:chrono-judge-workflow".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-workflow/releases/download/v0.1.0-alpha.6/chrono-judge-workflow-linux-x86_64", checksum = "sha256:177258e7252acd600522bc7b32063184630a88cdced72147dccf4ceba8347ff5" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-workflow/releases/download/v0.1.0-alpha.6/chrono-judge-workflow-macos-aarch64", checksum = "sha256:2fc5aacd1334503405823d0ff3beda65117c41d07fe3639738daee51bbb358e3" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-workflow/releases/download/v0.1.0-alpha.7/chrono-judge-workflow-linux-x86_64", checksum = "sha256:ca018839d94feea3c39d5ef24a0e15e606eaae5cd4fbf75aa11fe30d9c1b7286" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-workflow/releases/download/v0.1.0-alpha.7/chrono-judge-workflow-macos-aarch64", checksum = "sha256:12def4a873a44524b567017329a9ff18af0bf6d6637bbdb60ee96f336f0c6f5c" }
 
 
 [tools."http:chrono-pr"]
@@ -183,4 +183,10 @@ description = "Install this repository's selected tools"
 
 run = ["mise install", "mise exec -- chrono-instructions sync-rules --host-root ."]
 
-
+[tools."http:example-python"]
+version = "3.12.16-20261123"
+strip_components = 1
+bin_path = "bin"
+[tools."http:example-python".platforms]
+linux-x64 = { url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261123/cpython-3.12.16%2B20261123-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz", checksum = "sha256:c85811d35971d06612585a057db3b71806378df6ea8476275fb16aa5c9fe56a0" }
+macos-arm64 = { url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261123/cpython-3.12.16%2B20261123-aarch64-apple-darwin-install_only_stripped.tar.gz", checksum = "sha256:0de87cfc2649849da10a54084f87fd01fa1e653478e32eee92198c213550e15c" }

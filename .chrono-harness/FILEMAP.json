@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "status": "proposed",
+  "status": "active",
   "files": [
     {
       "path": ".gitignore",
@@ -18,74 +18,139 @@
     },
     {
       "path": "message.py",
-      "owner": "host",
+      "owner": "message",
       "surface": "product",
       "cost": "unmeasured",
       "edges": [
         {
           "kind": "test-execution",
           "to": "test:example"
+        },
+        {
+          "kind": "runtime-input",
+          "to": "script:message"
+        },
+        {
+          "kind": "runtime-input",
+          "to": "script:example"
         }
       ]
     },
     {
       "path": "check.py",
-      "owner": "host",
-      "surface": "product",
+      "owner": "example",
+      "surface": "test",
       "cost": "unmeasured",
       "edges": [
         {
           "kind": "test-execution",
           "to": "test:example"
+        },
+        {
+          "kind": "runtime-input",
+          "to": "script:example"
         }
       ]
     },
     {
       "path": "message.txt",
-      "owner": "host",
+      "owner": "message",
       "surface": "product",
       "cost": "unmeasured",
       "edges": [
         {
           "kind": "test-execution",
           "to": "test:example"
+        },
+        {
+          "kind": "runtime-input",
+          "to": "script:message"
+        },
+        {
+          "kind": "runtime-input",
+          "to": "script:example"
         }
       ]
     },
     {
       "path": ".chrono-harness/config.json",
       "owner": "host",
-      "surface": "product",
+      "surface": "judge-policy",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     },
     {
       "path": ".chrono-harness/projects.json",
       "owner": "host",
-      "surface": "product",
+      "surface": "judge-policy",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     },
     {
       "path": ".chrono-harness/FILEMAP.json",
       "owner": "host",
-      "surface": "product",
+      "surface": "judge-policy",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     },
     {
       "path": ".chrono-harness/judges.json",
       "owner": "host",
-      "surface": "product",
+      "surface": "judge-policy",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     },
     {
       "path": ".chrono-harness/workflow.json",
       "owner": "host",
-      "surface": "product",
+      "surface": "judge-policy",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     },
     {
       "path": ".chrono-harness/worktree.json",
@@ -97,7 +162,7 @@
     {
       "path": ".chrono-harness/ci/check.json",
       "owner": "host",
-      "surface": "product",
+      "surface": "judge-policy",
       "cost": "unmeasured",
       "edges": [
         {
@@ -107,6 +172,14 @@
         {
           "kind": "test-execution",
           "to": "test:harness"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
         }
       ]
     },
@@ -124,7 +197,7 @@
     },
     {
       "path": ".chrono-harness/ci/install.sh",
-      "owner": "host",
+      "owner": "installer",
       "surface": "product",
       "cost": "unmeasured",
       "edges": [
@@ -136,8 +209,8 @@
     },
     {
       "path": ".chrono-harness/ci/check-install-location.py",
-      "owner": "host",
-      "surface": "product",
+      "owner": "harness",
+      "surface": "test",
       "cost": "unmeasured",
       "edges": [
         {
@@ -352,9 +425,300 @@
       "surface": "product",
       "cost": "unmeasured",
       "edges": []
+    },
+    {
+      "path": ".chrono-harness/full/macos-aarch64.json",
+      "owner": "host",
+      "surface": "judge-policy",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
+    },
+    {
+      "path": ".chrono-harness/full/judges-macos-aarch64.json",
+      "owner": "host",
+      "surface": "judge-policy",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
+    },
+    {
+      "path": ".chrono-harness/full/linux-x86_64.json",
+      "owner": "host",
+      "surface": "judge-policy",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
+    },
+    {
+      "path": ".chrono-harness/full/judges-linux-x86_64.json",
+      "owner": "host",
+      "surface": "judge-policy",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     }
   ],
-  "project_edges": [],
+  "project_edges": [
+    {
+      "from": "environment:CHRONO_CHECK_SOURCE",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:CHRONO_CI_DETECTION",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:CHRONO_CI_NEEDS",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:CHRONO_WORKFLOW_REVISION",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:GH_TOKEN",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:GITHUB_EVENT_NAME",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:GITHUB_EVENT_PATH",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:GITHUB_JOB",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:GITHUB_REPOSITORY",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:GITHUB_RUN_ATTEMPT",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:GITHUB_RUN_ID",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:HOME",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:HOME",
+      "to": "script:installer",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:PATH",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:PATH",
+      "to": "script:installer",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:PATH",
+      "to": "test:harness",
+      "kind": "test-execution"
+    },
+    {
+      "from": "environment:SSH_AUTH_SOCK",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:TMPDIR",
+      "to": "test:harness",
+      "kind": "test-execution"
+    },
+    {
+      "from": "input:ci-units-policy",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "input:worktree-policy",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:bash",
+      "to": "script:installer",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:chrono-ci",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:chrono-ci",
+      "to": "test:harness",
+      "kind": "test-execution"
+    },
+    {
+      "from": "tool:chrono-judge-filemap",
+      "to": "judge:filemap",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:chrono-judge-projects",
+      "to": "judge:projects",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:chrono-judge-registration",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:chrono-judge-routes",
+      "to": "judge:routes",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:chrono-worktree",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:git",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:git",
+      "to": "judge:workflow",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:python3",
+      "to": "script:installer",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:python3",
+      "to": "script:message",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:python3",
+      "to": "test:example",
+      "kind": "test-execution"
+    },
+    {
+      "from": "tool:python3",
+      "to": "test:harness",
+      "kind": "test-execution"
+    },
+    {
+      "from": "input:ci-executable",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "input:python-executable",
+      "to": "script:message",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "input:python-executable",
+      "to": "test:example",
+      "kind": "test-execution"
+    },
+    {
+      "from": "input:python-executable",
+      "to": "script:installer",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "input:python-executable",
+      "to": "test:harness",
+      "kind": "test-execution"
+    },
+    {
+      "from": "input:ci-executable",
+      "to": "test:harness",
+      "kind": "test-execution"
+    },
+    {
+      "from": "script:message",
+      "kind": "test-execution",
+      "to": "test:example"
+    },
+    {
+      "from": "script:installer",
+      "kind": "test-execution",
+      "to": "test:harness"
+    }
+  ],
   "cost_models": {
     "unmeasured": {
       "cpu_ms": null,

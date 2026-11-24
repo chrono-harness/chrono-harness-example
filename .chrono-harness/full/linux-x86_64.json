@@ -1,0 +1,552 @@
+{
+  "schema_version": 4,
+  "status": "active",
+  "enforcement": "enabled",
+  "runner": {
+    "path": ".chrono-harness/bin/chrono-harness",
+    "version": "0.1.0",
+    "sha256": "cb4d25d83b6a10fe2b2bad2ebd48ba47048c0b686f10d2b0c97a5c16b2b92b6b"
+  },
+  "registries": {
+    "judges": ".chrono-harness/full/judges-linux-x86_64.json",
+    "projects": ".chrono-harness/projects.json",
+    "filemap": ".chrono-harness/FILEMAP.json",
+    "workflow": ".chrono-harness/workflow.json"
+  },
+  "canonical_check": {
+    "operation": "validate.delta",
+    "argv": [
+      ".chrono-harness/bin/chrono-harness",
+      "check"
+    ],
+    "profile": ".chrono-harness/config.json",
+    "inputs": {
+      "local": {
+        "operation": "prepare.check.local",
+        "tool": "chrono-worktree",
+        "argv": [
+          "check-inputs",
+          "--config",
+          ".chrono-harness/worktree.json"
+        ]
+      },
+      "ci": {
+        "operation": "prepare.check.ci",
+        "tool": "chrono-ci",
+        "argv": [
+          "check-inputs",
+          "--config",
+          ".chrono-harness/ci/units.json",
+          "--event-env",
+          "GITHUB_EVENT_NAME",
+          "--payload-env",
+          "GITHUB_EVENT_PATH",
+          "--revision-env",
+          "CHRONO_WORKFLOW_REVISION",
+          "--repository-env",
+          "GITHUB_REPOSITORY"
+        ]
+      }
+    }
+  },
+  "protocol": {
+    "id": "chrono-judge/v1",
+    "timeout_seconds": 2400,
+    "stdout_limit_bytes": 67108864,
+    "encoding": "UTF-8"
+  },
+  "environment": {
+    "credential_environment": [
+      "GH_TOKEN"
+    ],
+    "inherit": [
+      "PATH",
+      "HOME",
+      "TMPDIR",
+      "CHRONO_CHECK_SOURCE",
+      "GITHUB_EVENT_NAME",
+      "GITHUB_EVENT_PATH",
+      "CHRONO_WORKFLOW_REVISION",
+      "GITHUB_REPOSITORY",
+      "GH_TOKEN",
+      "SSH_AUTH_SOCK",
+      "CHRONO_CI_DETECTION",
+      "CHRONO_CI_NEEDS",
+      "GITHUB_RUN_ID",
+      "GITHUB_RUN_ATTEMPT",
+      "GITHUB_JOB"
+    ],
+    "values": {},
+    "inputs": [
+      {
+        "id": "worktree-policy",
+        "presence": "present",
+        "location": ".chrono-harness/worktree.json",
+        "sha256": "1799414fa31f37888416d54b797b901dac921ac4b6005adec0020c80935d2770"
+      },
+      {
+        "id": "ci-units-policy",
+        "presence": "present",
+        "location": ".chrono-harness/ci/units.json",
+        "sha256": "14c149e79b78feb893faf5b9af7abcce99ad84c63787e9e616f41715318eeef2"
+      },
+      {
+        "id": "python-executable",
+        "presence": "present",
+        "location": ".chrono-harness/bin/python3",
+        "sha256": "569e1bb97ea3926c8f30e7e14375646aa3c632b1192732e3668f3c974b5b1801"
+      },
+      {
+        "id": "ci-executable",
+        "presence": "present",
+        "location": ".chrono-harness/bin/chrono-ci",
+        "sha256": "5bce03f8f201743598c3a453c3660cd89d19e8c8b31661240ea58a02ac480fe5"
+      }
+    ]
+  },
+  "facts_git": {
+    "tool": "git"
+  },
+  "input_closure": {
+    "status": "declared-complete",
+    "unresolved": [],
+    "bindings": [
+      {
+        "id": "judge-registration-git-facts",
+        "consumer": "judge:registration",
+        "kind": "git-facts",
+        "inputs": [
+          "tool:git",
+          "environment:PATH",
+          "environment:HOME"
+        ]
+      },
+      {
+        "id": "judge-workflow-branch-facts",
+        "consumer": "judge:workflow",
+        "kind": "branch-facts",
+        "inputs": [
+          "tool:git"
+        ]
+      },
+      {
+        "id": "judge-registration-local-check-inputs",
+        "consumer": "judge:registration",
+        "kind": "local-check-inputs",
+        "inputs": [
+          "tool:chrono-worktree",
+          "environment:CHRONO_CHECK_SOURCE",
+          "environment:SSH_AUTH_SOCK"
+        ]
+      },
+      {
+        "id": "judge-registration-ci-check-inputs",
+        "consumer": "judge:registration",
+        "kind": "ci-check-inputs",
+        "inputs": [
+          "tool:chrono-ci",
+          "environment:CHRONO_CHECK_SOURCE",
+          "environment:GITHUB_EVENT_NAME",
+          "environment:GITHUB_EVENT_PATH",
+          "environment:CHRONO_WORKFLOW_REVISION",
+          "environment:GITHUB_REPOSITORY",
+          "environment:CHRONO_CI_DETECTION",
+          "environment:CHRONO_CI_NEEDS",
+          "environment:GITHUB_RUN_ID",
+          "environment:GITHUB_RUN_ATTEMPT",
+          "environment:GITHUB_JOB",
+          "environment:GH_TOKEN",
+          "input:ci-executable"
+        ]
+      },
+      {
+        "id": "script-message-python-execution",
+        "consumer": "script:message",
+        "kind": "python-execution",
+        "inputs": [
+          "tool:python3",
+          "input:python-executable"
+        ]
+      },
+      {
+        "id": "test-example-python-execution",
+        "consumer": "test:example",
+        "kind": "python-execution",
+        "inputs": [
+          "tool:python3",
+          "input:python-executable"
+        ]
+      },
+      {
+        "id": "script-installer-shell-execution",
+        "consumer": "script:installer",
+        "kind": "shell-execution",
+        "inputs": [
+          "tool:bash",
+          "tool:python3",
+          "environment:HOME",
+          "environment:PATH",
+          "input:python-executable"
+        ]
+      },
+      {
+        "id": "test-harness-installation-check",
+        "consumer": "test:harness",
+        "kind": "installation-check",
+        "inputs": [
+          "tool:python3",
+          "tool:chrono-ci",
+          "environment:TMPDIR",
+          "environment:PATH",
+          "input:python-executable",
+          "input:ci-executable"
+        ]
+      },
+      {
+        "id": "judge-projects-executable",
+        "consumer": "judge:projects",
+        "kind": "executable",
+        "inputs": [
+          "tool:chrono-judge-projects"
+        ]
+      },
+      {
+        "id": "judge-registration-executable",
+        "consumer": "judge:registration",
+        "kind": "executable",
+        "inputs": [
+          "tool:chrono-judge-registration"
+        ]
+      },
+      {
+        "id": "judge-filemap-executable",
+        "consumer": "judge:filemap",
+        "kind": "executable",
+        "inputs": [
+          "tool:chrono-judge-filemap"
+        ]
+      },
+      {
+        "id": "judge-routes-executable",
+        "consumer": "judge:routes",
+        "kind": "executable",
+        "inputs": [
+          "tool:chrono-judge-routes"
+        ]
+      },
+      {
+        "id": "judge-registration-local-preparation-policy",
+        "consumer": "judge:registration",
+        "kind": "local-preparation-policy",
+        "inputs": [
+          "input:worktree-policy"
+        ]
+      },
+      {
+        "id": "judge-registration-ci-preparation-policy",
+        "consumer": "judge:registration",
+        "kind": "ci-preparation-policy",
+        "inputs": [
+          "input:ci-units-policy"
+        ]
+      }
+    ],
+    "coverage": {
+      "schema": "chrono-input-coverage/v1",
+      "required": [
+        {
+          "consumer": "judge:registration",
+          "domains": [
+            "git-facts",
+            "local-check-inputs",
+            "ci-check-inputs",
+            "executable",
+            "local-preparation-policy",
+            "ci-preparation-policy"
+          ]
+        },
+        {
+          "consumer": "judge:workflow",
+          "domains": [
+            "branch-facts"
+          ]
+        },
+        {
+          "consumer": "script:message",
+          "domains": [
+            "python-execution"
+          ]
+        },
+        {
+          "consumer": "test:example",
+          "domains": [
+            "python-execution"
+          ]
+        },
+        {
+          "consumer": "script:installer",
+          "domains": [
+            "shell-execution"
+          ]
+        },
+        {
+          "consumer": "test:harness",
+          "domains": [
+            "installation-check"
+          ]
+        },
+        {
+          "consumer": "judge:projects",
+          "domains": [
+            "executable"
+          ]
+        },
+        {
+          "consumer": "judge:filemap",
+          "domains": [
+            "executable"
+          ]
+        },
+        {
+          "consumer": "judge:routes",
+          "domains": [
+            "executable"
+          ]
+        }
+      ],
+      "rows": [
+        {
+          "consumer": "judge:registration",
+          "domain": "git-facts",
+          "state": "bound",
+          "bindings": [
+            "judge-registration-git-facts"
+          ],
+          "reason": "The registration judge queries fixed Git objects and checks the bound Git facts producer."
+        },
+        {
+          "consumer": "judge:workflow",
+          "domain": "branch-facts",
+          "state": "bound",
+          "bindings": [
+            "judge-workflow-branch-facts"
+          ],
+          "reason": "The workflow judge reads the candidate, fork and dev tip to check the registered branch."
+        },
+        {
+          "consumer": "judge:registration",
+          "domain": "local-check-inputs",
+          "state": "bound",
+          "bindings": [
+            "judge-registration-local-check-inputs"
+          ],
+          "reason": "The registered local preparation runs worktree check-inputs. SSH_AUTH_SOCK is available only for an authenticated origin when present."
+        },
+        {
+          "consumer": "judge:registration",
+          "domain": "ci-check-inputs",
+          "state": "bound",
+          "bindings": [
+            "judge-registration-ci-check-inputs"
+          ],
+          "reason": "The registered CI preparation binds event coordinates and the checked workflow. GH_TOKEN is an acquisition credential, represented by its presence only."
+        },
+        {
+          "consumer": "script:message",
+          "domain": "python-execution",
+          "state": "bound",
+          "bindings": [
+            "script-message-python-execution"
+          ],
+          "reason": "Python runs message.py and reads the versioned message.txt."
+        },
+        {
+          "consumer": "test:example",
+          "domain": "python-execution",
+          "state": "bound",
+          "bindings": [
+            "test-example-python-execution"
+          ],
+          "reason": "The registered test uses the bound interpreter with -B to read the versioned check, module and data."
+        },
+        {
+          "consumer": "script:installer",
+          "domain": "shell-execution",
+          "state": "bound",
+          "bindings": [
+            "script-installer-shell-execution"
+          ],
+          "reason": "The installer resolves its installation root and starts Python to validate its location."
+        },
+        {
+          "consumer": "test:harness",
+          "domain": "installation-check",
+          "state": "bound",
+          "bindings": [
+            "test-harness-installation-check"
+          ],
+          "reason": "The Python test creates a temporary directory and runs the installer with a stub. The separately registered ci.verify operation checks the generated workflow."
+        },
+        {
+          "consumer": "judge:projects",
+          "domain": "executable",
+          "state": "bound",
+          "bindings": [
+            "judge-projects-executable"
+          ],
+          "reason": "The full check launches the pinned projects judge."
+        },
+        {
+          "consumer": "judge:registration",
+          "domain": "executable",
+          "state": "bound",
+          "bindings": [
+            "judge-registration-executable"
+          ],
+          "reason": "The full check launches the pinned registration judge."
+        },
+        {
+          "consumer": "judge:filemap",
+          "domain": "executable",
+          "state": "bound",
+          "bindings": [
+            "judge-filemap-executable"
+          ],
+          "reason": "The full check launches the pinned filemap judge."
+        },
+        {
+          "consumer": "judge:routes",
+          "domain": "executable",
+          "state": "bound",
+          "bindings": [
+            "judge-routes-executable"
+          ],
+          "reason": "The full check launches the pinned routes judge."
+        },
+        {
+          "consumer": "judge:registration",
+          "domain": "local-preparation-policy",
+          "state": "bound",
+          "bindings": [
+            "judge-registration-local-preparation-policy"
+          ],
+          "reason": "The local input producer reads this worktree policy."
+        },
+        {
+          "consumer": "judge:registration",
+          "domain": "ci-preparation-policy",
+          "state": "bound",
+          "bindings": [
+            "judge-registration-ci-preparation-policy"
+          ],
+          "reason": "The CI input producer reads this collection policy."
+        }
+      ]
+    }
+  },
+  "tools": [
+    {
+      "id": "python3",
+      "program": ".chrono-harness/bin/python3",
+      "resolution": "PATH-once",
+      "version_argv": [
+        "--version"
+      ],
+      "expected_version": "Python 3.12.16"
+    },
+    {
+      "id": "chrono-ci",
+      "program": ".chrono-harness/bin/chrono-ci",
+      "resolution": "PATH-once",
+      "version_argv": [
+        "--version"
+      ],
+      "expected_version": "chrono-ci 0.1.0"
+    },
+    {
+      "id": "git",
+      "program": "/usr/bin/git",
+      "resolution": "PATH-once",
+      "version_argv": [
+        "--version"
+      ],
+      "expected_version": "git version 2.56.1"
+    },
+    {
+      "id": "chrono-worktree",
+      "program": ".chrono-harness/bin/chrono-worktree",
+      "resolution": "PATH-once",
+      "version_argv": [
+        "--version"
+      ],
+      "expected_version": "chrono-worktree 0.1.0"
+    },
+    {
+      "id": "bash",
+      "program": "/bin/bash",
+      "resolution": "PATH-once",
+      "version_argv": [
+        "-c",
+        "echo \"$BASH_VERSION\""
+      ],
+      "expected_version": "5.2.21(1)-release"
+    },
+    {
+      "id": "chrono-judge-projects",
+      "program": ".chrono-harness/bin/chrono-judge-projects",
+      "resolution": "PATH-once",
+      "version_argv": [
+        "--version"
+      ],
+      "expected_version": "chrono-judge-projects 0.1.0"
+    },
+    {
+      "id": "chrono-judge-registration",
+      "program": ".chrono-harness/bin/chrono-judge-registration",
+      "resolution": "PATH-once",
+      "version_argv": [
+        "--version"
+      ],
+      "expected_version": "chrono-judge-registration 0.1.0"
+    },
+    {
+      "id": "chrono-judge-filemap",
+      "program": ".chrono-harness/bin/chrono-judge-filemap",
+      "resolution": "PATH-once",
+      "version_argv": [
+        "--version"
+      ],
+      "expected_version": "chrono-judge-filemap 0.1.0"
+    },
+    {
+      "id": "chrono-judge-routes",
+      "program": ".chrono-harness/bin/chrono-judge-routes",
+      "resolution": "PATH-once",
+      "version_argv": [
+        "--version"
+      ],
+      "expected_version": "chrono-judge-routes 0.1.0"
+    }
+  ],
+  "semantic_fields": [],
+  "artifacts": [
+    {
+      "path": ".chrono-harness/bin/",
+      "owner": "host",
+      "kind": "installed-tools",
+      "tracked": false
+    },
+    {
+      "path": ".chrono-harness/state/",
+      "owner": "host",
+      "kind": "evidence",
+      "tracked": false
+    },
+    {
+      "path": "__pycache__/",
+      "owner": "host",
+      "kind": "python-cache",
+      "tracked": false
+    }
+  ]
+}
