@@ -36,10 +36,17 @@ module.exports = async function syncRoadmap(github, context, plan) {
   let target = plan ? 'v' + plan.version : null
   if (plan?.version_policy === 'next_patch') {
     if (plan.kind !== 'copier') throw new Error('next_patch requires a Copier source product')
-    const latest = judge('template-latest-stable-v1', releases.map(
-      ({tag_name, draft, prerelease, published_at}) => ({tag_name, draft, prerelease, published_at})))
+    const compare = (a, b) => {
+      for (let index = 0; index < 3; index++) {
+        if (a[index] !== b[index]) return a[index] > b[index] ? 1 : -1
+      }
+      return 0
+    }
+    const versions = [...stable.keys()].filter(tag => tag.startsWith('v') && coreVersion.test(tag.slice(1)))
+      .map(tag => tag.slice(1).split('.').map(BigInt)).sort(compare)
+    const latest = versions.at(-1)
     target = 'v' + judge('template-next-version-v1', {
-      floor: plan.version, latest: latest === null ? null : latest.slice(1),
+      floor: plan.version, latest: latest ? latest.join('.') : null,
     })
   }
   const next = target && !stable.has(target) ? target : 'Backlog'
