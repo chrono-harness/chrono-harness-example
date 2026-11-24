@@ -1,0 +1,87 @@
+name: Linux scheduled maintenance inventory
+on:
+  push:
+    branches: ['acceptance/worktree-alpha9-systemd']
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Run the installed timer against the published cleanup program
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+          systemctl --user show-environment >/dev/null
+          root="$RUNNER_TEMP/chrono example"
+          taskdir="$RUNNER_TEMP/idle task"
+          origin="$RUNNER_TEMP/origin.git"
+          git init -q --bare -b dev "$origin"
+          git clone -q --no-local "$GITHUB_WORKSPACE" "$root"
+          cd "$root"
+          git switch -qc dev "$GITHUB_SHA"
+          git remote set-url origin "$origin"
+          jq '.schema="chrono-worktree-config/v3" | del(.registration_program)' .chrono-harness/worktree.json > wt.json
+          mv wt.json .chrono-harness/worktree.json
+          rm .chrono-harness/retention.json
+          jq '.age_policy.reuse_after_seconds=1 | .age_policy.delete_after_seconds=3 | .terminal_history.keep_seconds=30' .chrono-harness/cleanup.json > policy.json
+          mv policy.json .chrono-harness/cleanup.json
+          git -c user.name=loning -c user.email=1593871+loning@users.noreply.github.com commit -qam 'Adopt a three-second window on the isolated example'
+          git push -qu origin dev
+          # Select only the tools this standalone lifecycle actually consumes.
+          sh .chrono-harness/ci/install.sh
+          echo "c9df75b52014b2bb18f75f23031825239ceaf5a4b3b035ea876b673839de6c5e  .chrono-harness/bin/chrono-worktree" | sha256sum -c -
+          .chrono-harness/bin/chrono-worktree start --host-root . --config .chrono-harness/worktree.json --kind feature --name idle --path "$taskdir" > "$RUNNER_TEMP/start.json"
+          (cd "$taskdir" && python3 -m py_compile message.py)
+          pyc=$(find "$taskdir/__pycache__" -maxdepth 1 -type f -name 'message.*.pyc')
+          test -f "$pyc"
+          cp "$pyc" "$RUNNER_TEMP/durable-message.pyc"
+          sha256sum "$RUNNER_TEMP/durable-message.pyc" > "$RUNNER_TEMP/durable-message.sha256"
+          cp "$taskdir/message.txt" "$RUNNER_TEMP/durable-message.txt"
+          units="$XDG_RUNTIME_DIR/systemd/user"
+          install -d "$units"
+          install -m 0644 .chrono-harness/chrono-harness-example-maintenance@.{service,timer} "$units/"
+          timer=$(systemd-escape --path --template=chrono-harness-example-maintenance@.timer "$root")
+          service=${timer%.timer}.service
+          mkdir -p "$units/$timer.d" "$units/$service.d"
+          receipt="$RUNNER_TEMP/maintenance-receipt"
+          output="$RUNNER_TEMP/maintenance-json"
+          mkfifo "$receipt"
+          exec 6<>"$receipt"
+          printf '[Timer]\nOnCalendar=\nOnActiveSec=7s\nOnUnitInactiveSec=7s\nAccuracySec=1s\n' > "$units/$timer.d/window.conf"
+          printf '[Service]\nStandardOutput=append:%s\nStandardError=journal\nExecStopPost=/bin/sh -c \x27echo "$$SERVICE_RESULT" > "%s"\x27\n' "$output" "$receipt" > "$units/$service.d/receipt.conf"
+          systemctl --user daemon-reload
+          trap 'systemctl --user stop "$timer" || true' EXIT
+          systemctl --user start "$timer"
+          observe() {
+            read -r -t 70 result <&6
+            echo "Service result $result"
+            test "$result" = success
+            jq -c '{status,cleanup_failures,inventory:(.complete_inventory|{status,rows,member_enumeration_complete,measurements_complete,publication_complete,errors})}' "$output"
+            journalctl --user -u "$service" --no-pager -n 5 --output=cat
+            jq -ce '.complete_inventory | select(.status == "observed" and .member_enumeration_complete == true and .measurements_complete == true and .publication_complete == true and .errors == []) | {status,rows,window_started_unix_millis,window_finished_unix_millis,member_enumeration_complete,measurements_complete,publication_complete,errors}' "$output"
+            test ! -e "$pyc" && test ! -e "$taskdir/__pycache__" && test ! -e "$taskdir"
+            sha256sum --check "$RUNNER_TEMP/durable-message.sha256"
+            test "$(git worktree list --porcelain | grep -c '^worktree ')" = 1
+            cmp "$RUNNER_TEMP/durable-message.txt" message.txt
+            : > "$output"
+          }
+          observe
+          observe
+          observe
+          systemctl --user stop "$timer"
+          systemctl --user start "$timer"
+          observe
+          systemctl --user stop "$timer"
+          mv .chrono-harness/bin/chrono-worktree .chrono-harness/bin/chrono-worktree.held
+          systemctl --user start "$timer"
+          read -r -t 70 result <&6
+          test "$result" = exit-code
+          printf 'Verified 3 consecutive completions, stopped/restarted completion, and failure %s.\n' "$result"
+          journalctl --user -u "$service" --no-pager --output=cat | tail -c 1200
