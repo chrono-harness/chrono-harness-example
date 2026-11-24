@@ -91,7 +91,7 @@
   "tools": [
     {
       "id": "python3",
-      "program": "/usr/bin/python3",
+      "program": "python3",
       "resolution": "PATH-once",
       "version_argv": [
         "--version"
@@ -109,7 +109,7 @@
     },
     {
       "id": "git",
-      "program": "/usr/bin/git",
+      "program": "git",
       "resolution": "PATH-once",
       "version_argv": [
         "--version"
@@ -127,7 +127,7 @@
     },
     {
       "id": "bash",
-      "program": "/bin/bash",
+      "program": "bash",
       "resolution": "PATH-once",
       "version_argv": [
         "--version"
