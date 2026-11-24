@@ -8,11 +8,11 @@ macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-cache/re
 
 
 [tools."http:chrono-ci"]
-version = "0.1.0-alpha.5"
+version = "0.1.0-alpha.8"
 bin = "chrono-ci"
 [tools."http:chrono-ci".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-ci/releases/download/v0.1.0-alpha.5/chrono-ci-linux-x86_64", checksum = "sha256:5bce03f8f201743598c3a453c3660cd89d19e8c8b31661240ea58a02ac480fe5" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-ci/releases/download/v0.1.0-alpha.5/chrono-ci-macos-aarch64", checksum = "sha256:869c4351395440a855cade9f7cae662e95656611f04e261e24f4ed997b47b71d" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-ci/releases/download/v0.1.0-alpha.8/chrono-ci-linux-x86_64", checksum = "sha256:6392ead03251272fe8e82b1ef97a0ed6f547c73c2cabb3d43e3bfd671dc10bb0" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-ci/releases/download/v0.1.0-alpha.8/chrono-ci-macos-aarch64", checksum = "sha256:4c28c97205a71b515227a4c5ab02b2034673c8c1bac742297490072b1e343ba9" }
 
 
 [tools."http:chrono-diagnostics"]
@@ -31,11 +31,11 @@ macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-distribu
 
 
 [tools."http:chrono-harness"]
-version = "0.1.0-alpha.28"
+version = "0.1.0-alpha.29"
 bin = "chrono-harness"
 [tools."http:chrono-harness".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-runner/releases/download/v0.1.0-alpha.28/chrono-harness-linux-x86_64", checksum = "sha256:a6b5e0faa1199b6ec38ce1e42f9ca5a34328da30cf81cdd576ed36c84ee0244b" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-runner/releases/download/v0.1.0-alpha.28/chrono-harness-macos-aarch64", checksum = "sha256:6aaa6d3111c62c5317d139290ae6d78d6504c47de3995ccf50c5d6ca2f374a48" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-runner/releases/download/v0.1.0-alpha.29/chrono-harness-linux-x86_64", checksum = "sha256:f75c90ebd9a624bada54aff11505c04b28efae8178a18c5d8b773596c76b041f" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-runner/releases/download/v0.1.0-alpha.29/chrono-harness-macos-aarch64", checksum = "sha256:8ab9418fb9e5559e8b6cd8531676a21d41971eeca39e16d49799948b495d0514" }
 
 
 [tools."http:chrono-host-bootstrap"]
@@ -55,11 +55,11 @@ macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-host-rel
 
 
 [tools."http:chrono-inputs"]
-version = "0.1.0-alpha.7"
+version = "0.1.0-alpha.8"
 bin = "chrono-inputs"
 [tools."http:chrono-inputs".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-inputs/releases/download/v0.1.0-alpha.7/chrono-inputs-linux-x86_64", checksum = "sha256:b469969f79c30701204d12cc03d340e075d4c919ee332f4e0ec2847a0d57fc79" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-inputs/releases/download/v0.1.0-alpha.7/chrono-inputs-macos-aarch64", checksum = "sha256:5bd3d64d33aaaa7f24228b6c6c7244beeb28a6390a5a8ec16ff63e34b1857901" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-inputs/releases/download/v0.1.0-alpha.8/chrono-inputs-linux-x86_64", checksum = "sha256:1066fbef3831696bb1c7674144424f869414a1f7dae486c53f03ef34a5fc25c5" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-inputs/releases/download/v0.1.0-alpha.8/chrono-inputs-macos-aarch64", checksum = "sha256:74ff30cd98d8b7218d315ee26e9c53d69b9b097b8029ae5da219673871c01166" }
 
 
 [tools."http:chrono-instructions"]
@@ -103,19 +103,19 @@ macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-mi
 
 
 [tools."http:chrono-judge-projects"]
-version = "0.1.0-alpha.13"
+version = "0.1.0-alpha.14"
 bin = "chrono-judge-projects"
 [tools."http:chrono-judge-projects".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-projects/releases/download/v0.1.0-alpha.13/chrono-judge-projects-linux-x86_64", checksum = "sha256:499eecd4085c41352a29aea254a8e32e9631c792c0eda3120eb36129c49efafd" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-projects/releases/download/v0.1.0-alpha.13/chrono-judge-projects-macos-aarch64", checksum = "sha256:e70b2e448dfba5cea05bd75344fd0c6f9af586a61bf392ccba28a8d8128f8231" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-projects/releases/download/v0.1.0-alpha.14/chrono-judge-projects-linux-x86_64", checksum = "sha256:0516a00a0f1ccff16ce1e0c4ee7f9b9f505839973221eb0bbef0049ce56a2692" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-projects/releases/download/v0.1.0-alpha.14/chrono-judge-projects-macos-aarch64", checksum = "sha256:e619d46e4fa8eada434ebd198cdddb36b1eeb8e97f1a15ca7d4f9a43e5443b9a" }
 
 
 [tools."http:chrono-judge-registration"]
-version = "0.1.0-alpha.28"
+version = "0.1.0-alpha.29"
 bin = "chrono-judge-registration"
 [tools."http:chrono-judge-registration".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-registration/releases/download/v0.1.0-alpha.28/chrono-judge-registration-linux-x86_64", checksum = "sha256:d4cdf35b4b91dc2012446fd1e272c85e4ffdfd59068abcfe57679d9c46ec3a0b" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-registration/releases/download/v0.1.0-alpha.28/chrono-judge-registration-macos-aarch64", checksum = "sha256:41c6a687ec7b8afbadcaa59a1013222be0dee106e19b08a6e912ff664e76f926" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-registration/releases/download/v0.1.0-alpha.29/chrono-judge-registration-linux-x86_64", checksum = "sha256:e34525c61fec5d4f183388ce23f79f89e415d1c4815910fdbbe48f03dba3378f" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-registration/releases/download/v0.1.0-alpha.29/chrono-judge-registration-macos-aarch64", checksum = "sha256:c6f37c401de0a51e8488342267426ba19ed545c699825134c0da21048ef1d692" }
 
 
 [tools."http:chrono-judge-routes"]
@@ -126,11 +126,11 @@ linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-rout
 macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-routes/releases/download/v0.1.0-alpha.23/chrono-judge-routes-macos-aarch64", checksum = "sha256:e2754362c7737dfec3e999d3d91ac816b6a1dcd97b03d8ab47556c55366370ed" }
 
 [tools."http:chrono-judge-workflow"]
-version = "0.1.0-alpha.6"
+version = "0.1.0-alpha.7"
 bin = "chrono-judge-workflow"
 [tools."http:chrono-judge-workflow".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-workflow/releases/download/v0.1.0-alpha.6/chrono-judge-workflow-linux-x86_64", checksum = "sha256:177258e7252acd600522bc7b32063184630a88cdced72147dccf4ceba8347ff5" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-workflow/releases/download/v0.1.0-alpha.6/chrono-judge-workflow-macos-aarch64", checksum = "sha256:2fc5aacd1334503405823d0ff3beda65117c41d07fe3639738daee51bbb358e3" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-workflow/releases/download/v0.1.0-alpha.7/chrono-judge-workflow-linux-x86_64", checksum = "sha256:ca018839d94feea3c39d5ef24a0e15e606eaae5cd4fbf75aa11fe30d9c1b7286" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-workflow/releases/download/v0.1.0-alpha.7/chrono-judge-workflow-macos-aarch64", checksum = "sha256:12def4a873a44524b567017329a9ff18af0bf6d6637bbdb60ee96f336f0c6f5c" }
 
 
 [tools."http:chrono-pr"]
@@ -147,7 +147,6 @@ bin = "chrono-test-git"
 [tools."http:chrono-test-git".platforms]
 linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-test-git/releases/download/v0.1.0-alpha.2/chrono-test-git-linux-x86_64", checksum = "sha256:85a0b3491bf6fff74d8d7a5eea06203855707a234c6320abbaeb265c46def353" }
 macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-test-git/releases/download/v0.1.0-alpha.2/chrono-test-git-macos-aarch64", checksum = "sha256:5129b7ac91bdfa47a6b38f524b19aecdd37c69e43b5c9080ad29f16ab649d1ae" }
-
 
 [tools."http:chrono-test-git-profile"]
 version = "0.1.0-alpha.2"
@@ -168,7 +167,6 @@ macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-worktree
 version = "1.95.0"
 profile = "minimal"
 
-
 [tools."http:verus"]
 version = "0.2026.04.24.f8e1704"
 strip_components = 1
@@ -185,4 +183,10 @@ description = "Install this repository's selected tools"
 
 run = ["mise install", "mise exec -- chrono-instructions sync-rules --host-root ."]
 
-
+[tools."http:example-python"]
+version = "3.12.16-20261123"
+strip_components = 1
+bin_path = "bin"
+[tools."http:example-python".platforms]
+linux-x64 = { url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261123/cpython-3.12.16%2B20261123-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz", checksum = "sha256:c85811d35971d06612585a057db3b71806378df6ea8476275fb16aa5c9fe56a0" }
+macos-arm64 = { url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261123/cpython-3.12.16%2B20261123-aarch64-apple-darwin-install_only_stripped.tar.gz", checksum = "sha256:0de87cfc2649849da10a54084f87fd01fa1e653478e32eee92198c213550e15c" }
