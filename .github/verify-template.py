@@ -28,7 +28,9 @@ def verify(rendered):
     if os.readlink(rendered / "AGENTS.md") != os.readlink(host / "AGENTS.md") or os.readlink(host / "AGENTS.md") != "CLAUDE.md":
         raise ValueError("the example has lost its adopted agent guide")
     for path in [".github/roadmap.cjs", ".github/workflows/issue-roadmap.yml",
-                 "docs/licenses/methodology-attribution.md", "docs/licenses/trureturing-Apache-2.0.txt"]:
+                 ".github/PULL_REQUEST_TEMPLATE.md", ".github/ISSUE_TEMPLATE/bug.yml",
+                 ".github/ISSUE_TEMPLATE/documentation.yml", ".github/ISSUE_TEMPLATE/enhancement.yml",
+                 ".github/ISSUE_TEMPLATE/question.yml", "docs/licenses/methodology-attribution.md", "docs/licenses/trureturing-Apache-2.0.txt"]:
         if (rendered / path).read_bytes() != (host / path).read_bytes():
             raise ValueError("installed template file differs: " + path)
     manifest = ".config/mise/conf.d/chrono-harness.toml"

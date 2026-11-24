@@ -6,6 +6,8 @@ on:
       - .github/verify-template.py
       - .github/workflows/template-adoption.yml
       - .chrono-harness/template-answers.yml
+      - .github/ISSUE_TEMPLATE/**
+      - .github/PULL_REQUEST_TEMPLATE.md
       - .github/roadmap.cjs
       - .github/workflows/issue-roadmap.yml
   push:
