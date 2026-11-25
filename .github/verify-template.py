@@ -34,7 +34,15 @@ def verify(rendered):
         if (rendered / path).read_bytes() != (host / path).read_bytes():
             raise ValueError("installed template file differs: " + path)
     manifest = ".config/mise/conf.d/chrono-harness.toml"
-    selected = tomllib.loads((rendered / manifest).read_text())["tools"]
+    rendered_config = tomllib.loads((rendered / manifest).read_text())
+    if answers.get("local_check_retention") is not False:
+        raise ValueError("the example uses its registered worktree maintenance")
+    for root in (host, rendered):
+        if (root / ".chrono-harness/maintain-checks.json").exists():
+            raise ValueError("unexpected standalone retention request in the example")
+        if "harness-maintain-checks" in tomllib.loads((root / manifest).read_text())["tasks"]:
+            raise ValueError("unexpected second maintenance task in the example")
+    selected = rendered_config["tools"]
     installed = tomllib.loads((host / manifest).read_text())["tools"]
     if set(selected) != set(installed):
         raise ValueError("installed tools differ from the host's Copier selection")
