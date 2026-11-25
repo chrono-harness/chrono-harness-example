@@ -8,7 +8,7 @@
 
 [组织协作规范](https://github.com/chrono-harness/chrono-harness-instructions/blob/dev/docs/contributing.md)
 
-首次检出运行 `mise trust` 和 `mise run harness-setup`。工具版本见 [.config/mise/conf.d/chrono-harness.toml](../.config/mise/conf.d/chrono-harness.toml)。
+首次检出运行 `mise trust` 和 `mise run harness-setup`。本仓默认安装策略为 `pinned`。固定配方读取 [.config/mise/conf.d/chrono-harness.toml](../.config/mise/conf.d/chrono-harness.toml)。模板答案 `tool_versions` 可以按工具命令指定精确标签。临时运行 `CHRONO_TOOL_CHANNEL=preview mise run harness-setup` 会为已选组织工具安装各自最新测试版，也可以把 `preview` 换成 `stable` 或精确的 `v` 标签。再次运行普通安装即可恢复本仓选择。本仓 CI 的业务启动器按登记安装检查所需的工具。各分支、标签和 detached HEAD 使用相同规则。
 
 刷新根指南使用 `mise run harness-setup`。`.chrono-harness/rules.json` 可用 `all` 配合 `exclude`，或 `only` 配合 `include` 逐项选择规则 ID，`off` 关闭继承。
 

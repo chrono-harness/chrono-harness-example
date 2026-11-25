@@ -1,6 +1,7 @@
 """Render the example's selected release and exercise its adopted files."""
 import os
 import re
+import shutil
 import subprocess
 import tempfile
 import tomllib
@@ -23,17 +24,25 @@ def verify(rendered):
     if found != ref or not re.fullmatch(r"[0-9a-f]{40}", commit):
         raise ValueError("cannot resolve the selected template tag")
     data = {key: value for key, value in answers.items() if not key.startswith("_")}
+    manifest = ".config/mise/conf.d/chrono-harness.toml"
+    host_config = tomllib.loads((host / manifest).read_text())
+    release_tool = host_config["tools"]["http:chrono-host-release"]
+    data["host_release_artifact"] = {
+        "version": release_tool["version"],
+        "linux_sha256": release_tool["platforms"]["linux-x64"]["checksum"].removeprefix("sha256:"),
+        "macos_sha256": release_tool["platforms"]["macos-arm64"]["checksum"].removeprefix("sha256:"),
+    }
     run_copy(source, rendered, vcs_ref=commit, data=data, defaults=True, quiet=True)
     print(f"Rendered {source}@{tag} from {commit} for {answers['repository']}")
     if os.readlink(rendered / "AGENTS.md") != os.readlink(host / "AGENTS.md") or os.readlink(host / "AGENTS.md") != "CLAUDE.md":
         raise ValueError("the example has lost its adopted agent guide")
-    for path in [".github/roadmap.cjs", ".github/workflows/issue-roadmap.yml",
+    for path in [".chrono-harness/install-tools.sh", ".config/mise/conf.d/.gitignore",
+                 ".github/roadmap.cjs", ".github/workflows/issue-roadmap.yml",
                  ".github/PULL_REQUEST_TEMPLATE.md", ".github/ISSUE_TEMPLATE/bug.yml",
                  ".github/ISSUE_TEMPLATE/documentation.yml", ".github/ISSUE_TEMPLATE/enhancement.yml",
                  ".github/ISSUE_TEMPLATE/question.yml", "docs/licenses/methodology-attribution.md", "docs/licenses/trureturing-Apache-2.0.txt"]:
         if (rendered / path).read_bytes() != (host / path).read_bytes():
             raise ValueError("installed template file differs: " + path)
-    manifest = ".config/mise/conf.d/chrono-harness.toml"
     rendered_config = tomllib.loads((rendered / manifest).read_text())
     if answers.get("local_check_retention") is not False:
         raise ValueError("the example uses its registered worktree maintenance")
@@ -44,8 +53,12 @@ def verify(rendered):
             raise ValueError("unexpected standalone retention request in the example")
         if "harness-maintain-checks" in tomllib.loads((root / manifest).read_text())["tasks"]:
             raise ValueError("unexpected second maintenance task in the example")
+    if host_config["tasks"]["harness-setup"]["run"] != rendered_config["tasks"]["harness-setup"]["run"]:
+        raise ValueError("host setup must use the rendered tool installer")
+    if host_config["settings"]["task"]["run_auto_install"] is not False:
+        raise ValueError("setup must resolve tools before mise installs them")
     selected = rendered_config["tools"]
-    installed = tomllib.loads((host / manifest).read_text())["tools"]
+    installed = host_config["tools"]
     if set(selected) != set(installed):
         raise ValueError("installed tools differ from the host's Copier selection")
     for name in selected:
@@ -55,6 +68,34 @@ def verify(rendered):
         raise ValueError("the example has lost its local usage instructions")
 
 
+def install_diagnostics(rendered):
+    config_dir = rendered / ".config/mise/conf.d"
+    shutil.copyfile(".config/mise/conf.d/chrono-harness.toml", config_dir / "chrono-harness.toml")
+    tools = tomllib.loads((config_dir / "chrono-harness.toml").read_text())["tools"]
+    tool = "http:chrono-diagnostics"
+    version = tools[tool]["version"]
+    disabled = ",".join(name for name in tools if name != tool)
+    env = {**os.environ, "MISE_DISABLE_TOOLS": disabled, "MISE_TRUSTED_CONFIG_PATHS": str(rendered)}
+    env.pop("CHRONO_TOOL_CHANNEL", None)
+    command = ["sh", ".chrono-harness/install-tools.sh"]
+    receipt = config_dir / "zz-chrono-harness-resolved.toml"
+    subprocess.run(command, cwd=rendered, env={**env, "CHRONO_TOOL_CHANNEL": "v" + version}, check=True)
+    observed = tomllib.loads(receipt.read_text())["tools"]
+    if set(observed) != {tool} or observed[tool]["version"] != version:
+        raise ValueError("the exact override did not resolve the selected diagnostics release")
+    trace = subprocess.run(
+        ["mise", "exec", "--", "chrono-diagnostics", "trace-events-v1", "--sink-only", "example"],
+        input='"finish"\n"ok"\n', capture_output=True, text=True, cwd=rendered, env=env, check=True,
+    )
+    if trace.stdout.splitlines() != ['"ready"', '"flush"', '{"finished":[]}']:
+        raise ValueError("the installed diagnostics did not deliver its terminal reply")
+    subprocess.run(command, cwd=rendered, env=env, check=True)
+    if receipt.exists():
+        raise ValueError("the pinned install retained an earlier override")
+    print(f"Installed and exercised chrono-diagnostics v{version}, then restored the host pin")
+
+
 if __name__ == "__main__":
     with tempfile.TemporaryDirectory() as destination:
         verify(Path(destination))
+        install_diagnostics(Path(destination))
