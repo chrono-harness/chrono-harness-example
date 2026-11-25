@@ -19,7 +19,7 @@ jobs:
           path: acceptance
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 1a8c81c82ffe78d1dec3127ad839b891c88977c6
+          ref: fdecb6f801a58de25c7d1251dd6c61f40542d53b
           fetch-depth: 0
           persist-credentials: false
           path: example
