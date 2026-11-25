@@ -3,5 +3,6 @@ Description=Drain Chrono Harness maintenance events in %f
 
 [Service]
 Type=oneshot
+Environment="PATH=%f/.chrono-harness/bin:/usr/local/bin:/usr/bin:/bin"
 WorkingDirectory=%f
 ExecStart=/usr/bin/env %f/.chrono-harness/bin/chrono-worktree maintenance-service

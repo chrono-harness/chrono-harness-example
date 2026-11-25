@@ -23,5 +23,10 @@
 			<integer>384</integer>
 		</dict>
 	</dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/REPOSITORY/.chrono-harness/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+	</dict>
 </dict>
 </plist>

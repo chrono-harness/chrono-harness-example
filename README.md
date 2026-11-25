@@ -25,7 +25,7 @@ git show a2ef667c0424b61321b2b724ea3c2916b2155fca:.chrono-harness/config.json
 
 ### 为主检出启用事件触发的维护
 
-在主检出运行 `sh .chrono-harness/ci/install.sh`，并创建用户私有的 `.chrono-harness/state/`。工作树和 runner 在业务完成后向同一 Unix 数据报套接字发送事件。系统激活一个持有协调者排他租约的维护者，按登记的窗口处置工作树、原件和已启用的日志。宿主还登记了两个独立消费者，`chrono-pr pr-reminders` 清理已满 30 天的本地提醒，`chrono-distribution maintain` 回收已满 24 小时且读者已释放的安装下载。某项失败后，其余操作继续，维护报告保存各项真实结果。
+在主检出运行 `sh .chrono-harness/ci/install.sh`，在交互 shell 执行 `export PATH="$PWD/.chrono-harness/bin:$PATH"`，并创建用户私有的 `.chrono-harness/state/`。工作树和 runner 在业务完成后向同一 Unix 数据报套接字发送事件。系统激活一个持有协调者排他租约的维护者，按登记的窗口处置工作树、原件和已启用的日志。宿主还登记了两个独立消费者，`chrono-pr pr-reminders` 清理已满 30 天的本地提醒，`chrono-distribution maintain` 回收已满 24 小时且读者已释放的安装下载。某项失败后，其余操作继续，维护报告保存各项真实结果。
 
 到期只改变清理资格。之后首个业务事件或显式运行 `.chrono-harness/bin/chrono-worktree maintain` 时会再次检查；机器空闲时没有固定回收时限。请在窗口内将有价值的产物移入 Git 或其他持久存储。服务未安装时业务 stderr 会报告 `wake-failed`；`requested` 表示数据报已发出，原始维护报告记录实际处置。
 
@@ -43,6 +43,7 @@ fi
 cp .chrono-harness/maintenance.launchd.plist "$job"
 plutil -replace Label -string "$label" "$job"
 plutil -replace WorkingDirectory -string "$root" "$job"
+plutil -replace EnvironmentVariables.PATH -string "$root/.chrono-harness/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" "$job"
 plutil -replace ProgramArguments.0 -string "$root/.chrono-harness/bin/chrono-worktree" "$job"
 plutil -replace Sockets.Maintenance.SockPathName -string "$root/.chrono-harness/state/maintenance.sock" "$job"
 launchctl bootstrap "gui/$(id -u)" "$job"
