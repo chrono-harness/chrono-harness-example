@@ -521,7 +521,15 @@
       "expected_version": "chrono-judge-routes 0.1.0"
     }
   ],
-  "semantic_fields": [],
+  "semantic_fields": [
+    {
+      "path": ".chrono-harness/FILEMAP.json",
+      "pointers": [
+        "/files/*/surface"
+      ],
+      "on": "modify-delete-existing"
+    }
+  ],
   "artifacts": [
     {
       "path": ".chrono-harness/bin/",
