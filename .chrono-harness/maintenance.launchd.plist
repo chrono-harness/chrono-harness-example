@@ -6,14 +6,22 @@
 	<string>org.chrono-harness.example-maintenance</string>
 	<key>ProgramArguments</key>
 	<array>
-		<string>/bin/sh</string>
-		<string>.chrono-harness/maintain.sh</string>
+		<string>/REPOSITORY/.chrono-harness/bin/chrono-worktree</string>
+		<string>maintenance-service</string>
 	</array>
 	<key>WorkingDirectory</key>
-	<string>.</string>
-	<key>StartInterval</key>
-	<integer>3600</integer>
-	<key>Program</key>
-	<string>/bin/sh</string>
+	<string>/REPOSITORY</string>
+	<key>Sockets</key>
+	<dict>
+		<key>Maintenance</key>
+		<dict>
+			<key>SockType</key>
+			<string>dgram</string>
+			<key>SockPathName</key>
+			<string>/REPOSITORY/.chrono-harness/state/maintenance.sock</string>
+			<key>SockPathMode</key>
+			<integer>384</integer>
+		</dict>
+	</dict>
 </dict>
 </plist>

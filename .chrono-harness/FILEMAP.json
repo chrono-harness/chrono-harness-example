@@ -207,7 +207,7 @@
       ]
     },
     {
-      "path": ".chrono-harness/chrono-harness-example-maintenance@.timer",
+      "path": ".chrono-harness/chrono-harness-example-maintenance@.socket",
       "owner": "host",
       "surface": "product",
       "cost": "unmeasured",
@@ -295,7 +295,7 @@
       "edges": []
     },
     {
-      "path": ".chrono-harness/maintain.sh",
+      "path": ".chrono-harness/maintenance.json",
       "owner": "host",
       "surface": "product",
       "cost": "unmeasured",

@@ -1,9 +1,0 @@
-[Unit]
-Description=Hourly Chrono Harness maintenance in %f
-
-[Timer]
-OnCalendar=hourly
-Persistent=true
-
-[Install]
-WantedBy=timers.target

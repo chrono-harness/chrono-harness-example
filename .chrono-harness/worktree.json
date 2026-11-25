@@ -31,5 +31,23 @@
       "integration": "integration"
     }
   },
-  "automatic_cleanup": ".chrono-harness/cleanup.json"
+  "automatic_cleanup": ".chrono-harness/cleanup.json",
+  "maintenance_operations": {
+    "pr-reminders": {
+      "program": ".chrono-harness/bin/chrono-pr",
+      "args": [
+        "pr-reminders"
+      ]
+    },
+    "distribution-downloads": {
+      "program": ".chrono-harness/bin/chrono-distribution",
+      "args": [
+        "maintain",
+        "--host-root",
+        ".",
+        "--keep-seconds",
+        "86400"
+      ]
+    }
+  }
 }
