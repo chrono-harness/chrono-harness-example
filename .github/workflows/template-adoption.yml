@@ -7,6 +7,7 @@ on:
       - .chrono-harness/install-tools.sh
       - .config/mise/conf.d/.gitignore
       - .config/mise/conf.d/chrono-harness.toml
+      - .config/mise/conf.d/selected-chrono-harness.toml
       - .github/workflows/template-adoption.yml
       - .chrono-harness/template-answers.yml
       - .github/ISSUE_TEMPLATE/**

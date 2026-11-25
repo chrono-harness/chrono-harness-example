@@ -37,6 +37,7 @@ def verify(rendered):
     if os.readlink(rendered / "AGENTS.md") != os.readlink(host / "AGENTS.md") or os.readlink(host / "AGENTS.md") != "CLAUDE.md":
         raise ValueError("the example has lost its adopted agent guide")
     for path in [".chrono-harness/install-tools.sh", ".config/mise/conf.d/.gitignore",
+                 ".config/mise/conf.d/selected-chrono-harness.toml",
                  ".github/roadmap.cjs", ".github/workflows/issue-roadmap.yml",
                  ".github/PULL_REQUEST_TEMPLATE.md", ".github/ISSUE_TEMPLATE/bug.yml",
                  ".github/ISSUE_TEMPLATE/documentation.yml", ".github/ISSUE_TEMPLATE/enhancement.yml",
@@ -78,10 +79,10 @@ def install_diagnostics(rendered):
     env = {**os.environ, "MISE_DISABLE_TOOLS": disabled, "MISE_TRUSTED_CONFIG_PATHS": str(rendered)}
     env.pop("CHRONO_TOOL_CHANNEL", None)
     command = ["sh", ".chrono-harness/install-tools.sh"]
-    receipt = config_dir / "zz-chrono-harness-resolved.toml"
+    receipt = rendered / ".chrono-harness/state/tool-selection/versions.toml"
     subprocess.run(command, cwd=rendered, env={**env, "CHRONO_TOOL_CHANNEL": "v" + version}, check=True)
-    observed = tomllib.loads(receipt.read_text())["tools"]
-    if set(observed) != {tool} or observed[tool]["version"] != version:
+    observed = tomllib.loads(receipt.read_text())
+    if set(observed) != {"chrono-diagnostics"} or observed["chrono-diagnostics"][0] != version:
         raise ValueError("the exact override did not resolve the selected diagnostics release")
     trace = subprocess.run(
         ["mise", "exec", "--", "chrono-diagnostics", "trace-events-v1", "--sink-only", "example"],
@@ -90,10 +91,10 @@ def install_diagnostics(rendered):
     if trace.stdout.splitlines() != ['"ready"', '"flush"', '{"finished":[]}']:
         raise ValueError("the installed diagnostics did not deliver its terminal reply")
     subprocess.run(command, cwd=rendered, env=env, check=True)
-    selected = tomllib.loads(receipt.read_text())["tools"]
-    if set(selected) != {tool}:
+    selected = tomllib.loads(receipt.read_text())
+    if set(selected) != {"chrono-diagnostics"}:
         raise ValueError("the repository's tool choice was not preserved")
-    stable = selected[tool]["version"]
+    stable = selected["chrono-diagnostics"][0]
     if not re.fullmatch(r"[0-9]+[.][0-9]+[.][0-9]+", stable):
         raise ValueError("expected a stable diagnostics release from the repository policy")
     checked = subprocess.run(
