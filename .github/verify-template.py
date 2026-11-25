@@ -90,9 +90,19 @@ def install_diagnostics(rendered):
     if trace.stdout.splitlines() != ['"ready"', '"flush"', '{"finished":[]}']:
         raise ValueError("the installed diagnostics did not deliver its terminal reply")
     subprocess.run(command, cwd=rendered, env=env, check=True)
-    if receipt.exists():
-        raise ValueError("the pinned install retained an earlier override")
-    print(f"Installed and exercised chrono-diagnostics v{version}, then restored the host pin")
+    selected = tomllib.loads(receipt.read_text())["tools"]
+    if set(selected) != {tool}:
+        raise ValueError("the repository's tool choice was not preserved")
+    stable = selected[tool]["version"]
+    if not re.fullmatch(r"[0-9]+[.][0-9]+[.][0-9]+", stable):
+        raise ValueError("expected a stable diagnostics release from the repository policy")
+    checked = subprocess.run(
+        ["mise", "exec", "--", "chrono-diagnostics", "--version"],
+        capture_output=True, text=True, env=env, cwd=rendered, check=True,
+    )
+    if checked.stdout.strip() != "chrono-diagnostics " + stable:
+        raise ValueError("the installed diagnostics did not report the resolved stable version")
+    print(f"Exercised exact diagnostics v{version}, then installed repository-selected stable v{stable}")
 
 
 if __name__ == "__main__":

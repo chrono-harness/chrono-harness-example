@@ -16,6 +16,8 @@ select_tool() {
     [ -z "$selector" ] || return 0
     case "$1" in
 
+        chrono-diagnostics) selector='stable' ;;
+
         *) selector='pinned' ;;
     esac
 }
