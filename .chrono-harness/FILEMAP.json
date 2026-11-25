@@ -541,6 +541,30 @@
           "to": "test:harness"
         }
       ]
+    },
+    {
+      "path": ".chrono-harness/ci/full.json",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
+    },
+    {
+      "path": ".chrono-harness/ci/qualification-bootstrap.py",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
     }
   ],
   "project_edges": [

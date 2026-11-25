@@ -36,7 +36,7 @@
         "argv": [
           "check-inputs",
           "--config",
-          ".chrono-harness/ci/units.json",
+          ".chrono-harness/ci/full.json",
           "--event-env",
           "GITHUB_EVENT_NAME",
           "--payload-env",

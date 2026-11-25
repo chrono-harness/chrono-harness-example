@@ -1,47 +1,42 @@
-name: Retain full check context
+# chrono-ci: owned github-full-ci/v1
+# chrono-ci: full source ".chrono-harness/ci/full.json"
+name: "Native fixed context on macOS"
 on:
   workflow_dispatch:
     inputs:
       context:
-        description: Exact local context JSON from the worktree that started the change
-        type: string
+        description: Exact full context JSON; provision its referenced evidence through the registered bootstrap
         required: true
-permissions: {}
+        type: string
+permissions:
+  contents: read
 jobs:
-  context:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
+  check:
+    runs-on: "macos-26"
+    timeout-minutes: 15
     steps:
-      - name: Preserve the submitted original
-        id: original
-        env:
-          FULL_CONTEXT: ${{ inputs.context }}
+      - name: Check out supplied candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ fromJSON(inputs.context).candidate }}
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Bootstrap registered tools and evidence
+        shell: bash
         run: |
-          python3 - <<'PYTHON'
-          import hashlib
-          import json
-          import os
-          from pathlib import Path
-          import re
-
-          raw = os.environ["FULL_CONTEXT"].encode("utf-8")
-          context = json.loads(raw)
-          if context["schema_version"] != 2 or context["operation"] != "validate.delta":
-              raise ValueError("expected full check context schema 2")
-          for field in ("base", "candidate"):
-              if not re.fullmatch(r"(?:[a-f0-9]{40}|[a-f0-9]{64})", context[field]):
-                  raise ValueError(f"invalid fixed {field}")
-          if context["base"] != context["dev_tip"]:
-              raise ValueError("the development tip differs from the base")
-          Path("context.json").write_bytes(raw)
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              print("name=full-round-" + context["candidate"] + "-" + context["base"], file=output)
-          print("Context SHA-256", hashlib.sha256(raw).hexdigest())
-          PYTHON
-      - name: Retain this round for one day
+          '/usr/bin/python3' '-B' '.chrono-harness/ci/qualification-bootstrap.py'
+      - name: Canonical full harness check
+        shell: bash
+        env:
+          CHRONO_CHECK_SOURCE: ci
+          CHRONO_WORKFLOW_REVISION: ${{ github.workflow_sha }}
+        run: |
+          '.chrono-harness/bin/chrono-harness' 'check'
+      - name: Preserve original full check evidence
+        if: ${{ always() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: ${{ steps.original.outputs.name }}
-          path: context.json
-          retention-days: 1
+          name: chrono-full-check-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ".chrono-harness/state/native-ok/"
           if-no-files-found: error
+          include-hidden-files: true
