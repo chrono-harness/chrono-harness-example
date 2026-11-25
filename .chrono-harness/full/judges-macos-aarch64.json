@@ -5,7 +5,7 @@
     {
       "id": "registration",
       "executable": ".chrono-harness/bin/chrono-judge-registration",
-      "sha256": "c6f37c401de0a51e8488342267426ba19ed545c699825134c0da21048ef1d692",
+      "sha256": "28d126b400e60a05bb9dfde274cc8124a66bbf7da825328876ca2f01d5435ac1",
       "argv": [
         "--protocol",
         "chrono-judge/v1"
@@ -37,7 +37,7 @@
     {
       "id": "projects",
       "executable": ".chrono-harness/bin/chrono-judge-projects",
-      "sha256": "91999e2ff1a133ff52502c2b3f0db6a25cca814a3cc0da9b498a0876d6fba73f",
+      "sha256": "5797cdea474cac1abbaff132c41869a312a16d32be27995e84678d4d1ee03870",
       "argv": [
         "--protocol",
         "chrono-judge/v1"
