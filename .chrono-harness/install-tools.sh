@@ -22,8 +22,8 @@ select_tool() {
     esac
 }
 case "$(uname -s)-$(uname -m)" in
-    Linux-x86_64) platform=linux-x64; asset=linux-x86_64; seed_sha=271e79ab48a9c7442c8edc1d404e44430711ac486893240246f754255839b785 ;;
-    Darwin-arm64) platform=macos-arm64; asset=macos-aarch64; seed_sha=7a7ac849578b7d53b98baaa7396b4273a97c9a4a9eb4998607681fb769f1a692 ;;
+    Linux-x86_64) platform=linux-x64; asset=linux-x86_64; seed_sha=644b4b574f17af4e7cc1194f107ad2da5556b91965ef359ce0920496b4f24219 ;;
+    Darwin-arm64) platform=macos-arm64; asset=macos-aarch64; seed_sha=62212e36b25f2ce0a97e93ab8a62912f7f6e4c6cc24fe324994843f5aff090c3 ;;
     *) fail 'Unsupported installation platform.' ;;
 esac
 verify() {
@@ -65,7 +65,7 @@ while read -r command repository; do
         downloads=$(mktemp -d "$temp_parent/chrono-install.XXXXXXXX")
         seed=$downloads/chrono-host-release
         curl --disable --proto '=https' --proto-redir '=https' --fail --silent --show-error --location \
-            "https://github.com/chrono-harness/chrono-harness-host-release/releases/download/v0.1.0-alpha.29/chrono-host-release-$asset" -o "$seed"
+            "https://github.com/chrono-harness/chrono-harness-host-release/releases/download/v0.1.1-alpha.1/chrono-host-release-$asset" -o "$seed"
         verify "$seed" "$seed_sha"
         chmod 700 "$seed"
     fi
