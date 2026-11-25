@@ -92,7 +92,7 @@
     {
       "id": "mixed",
       "executable": ".chrono-harness/bin/chrono-judge-mixed",
-      "sha256": "21015a3e85ea75a4fdcf1b9f4c0783bbc0e7c88c0f65c26e530dc5dfe14068c8",
+      "sha256": "0753ac85a48795fb989a22b7db069f9e50917d3546337002f32a6475481512cc",
       "argv": [
         "--protocol",
         "chrono-judge/v1"
