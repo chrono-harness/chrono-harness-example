@@ -1,0 +1,34 @@
+name: Dev installation channel
+on:
+  push:
+    branches: [profile/dev-install-channel]
+permissions:
+  contents: read
+jobs:
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: jdx/mise-action@924e7c586e33d7d4bae9c14e26c5d22e2beb6e78
+        with:
+          version: 2026.11.12
+          cache: false
+          install: false
+      - name: Exercise the released installer with the example checkout
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COPIER_PREVIEW: v0.1.33-alpha.83
+          COPIER_SHA: ec581cfad431c273fb9d3f6c75bdfdd72cd74c08
+          EXAMPLE_DEV_SHA: 2b1ea3e5134659106392a9433ec6e49cf036a654
+        run: |
+          python3 -m venv "$RUNNER_TEMP/copier"
+          "$RUNNER_TEMP/copier/bin/pip" install --disable-pip-version-check copier==9.19.1
+          "$RUNNER_TEMP/copier/bin/python" .github/dev-channel-acceptance.py
