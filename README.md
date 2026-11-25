@@ -19,6 +19,8 @@ git show a2ef667c0424b61321b2b724ea3c2916b2155fca:.chrono-harness/config.json
 
 在选用该配置的开发工作树中，使用 mise 和 `sh .chrono-harness/ci/install.sh` 将发行程序安装到工作树外。验收配方从已登记的基线和候选采集输入，在工作树中运行 `.chrono-harness/bin/chrono-harness check` 签发集成证明，并再次运行同一入口验证交付。每个平台的检查结果、证书摘要和实际执行程序数可查原始作业日志。[固定配置](https://github.com/chrono-harness/chrono-harness-example/tree/a2ef667c0424b61321b2b724ea3c2916b2155fca) · [可复现的完整命令](https://github.com/chrono-harness/chrono-harness-example/blob/3ee748be9379692b4ebbc6a40b4a9ff5ce2e387c/.github/full-native.py) · [双平台落地检查](https://github.com/chrono-harness/chrono-harness-example/actions/runs/45385225764)
 
+在 full 报告的 `tests.executed` 中，`installer.check-location` 的进程 stdout 记录 `rlimit_fsize_bytes`。它是测试进程开始时单个文件允许写入的字节上限，`null` 表示操作系统报告无限制。对照本地与 CI 时可从各自原始回执读取这个值和实际退出码。[实测的输入差异](https://github.com/chrono-harness/chrono-harness-example/issues/206#issuecomment-7171437654)
+
 ## 本地任务工作树
 
 工作树配置登记了 24 小时删除窗口。任务中的 Python 缓存、工具链接和中间状态都属于任务工作树，已安装的二进制位于共享安装目录。有长期用途的文件应在窗口内提交到 Git 或上传持久存储。工作树通过本仓安装链接调用固定版本的登记判官。本次工作树升级同时引入了 `registration_program` 配置项。回退到 bootstrap.1 时，随该工具的版本声明一起回退此配置项。清理程序同时读取本仓的 `.chrono-harness/retention.json`，回收新产生且已无使用方的检查原件、工作树操作报告和维护清单。失败原件的诊断窗口为 24 小时。已有的未登记报告需核对具体使用方后处置。CI 任务随 GitHub 托管运行器回收。
