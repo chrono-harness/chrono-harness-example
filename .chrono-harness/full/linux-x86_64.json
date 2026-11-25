@@ -4,8 +4,8 @@
   "enforcement": "enabled",
   "runner": {
     "path": ".chrono-harness/bin/chrono-harness",
-    "version": "0.1.0",
-    "sha256": "f75c90ebd9a624bada54aff11505c04b28efae8178a18c5d8b773596c76b041f"
+    "version": "0.1.1",
+    "sha256": "dd851654bae69c87098133e8131b58f680289579d9cae7d7f0fce88df56e5ac8"
   },
   "registries": {
     "judges": ".chrono-harness/full/judges-linux-x86_64.json",
