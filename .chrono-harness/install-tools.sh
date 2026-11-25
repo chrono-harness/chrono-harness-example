@@ -47,6 +47,12 @@ enabled() {
     case "$disabled" in *\"http:$1\"*) return 1 ;; *) return 0 ;; esac
 }
 resolved=$config_dir/zz-chrono-harness-resolved.toml
+validate_target() {
+    if [ -L "$resolved" ] || { [ -e "$resolved" ] && [ ! -f "$resolved" ]; }; then
+        fail "Expected a regular installation selection: $resolved"
+    fi
+}
+validate_target
 export MISE_IGNORED_CONFIG_PATHS="${MISE_IGNORED_CONFIG_PATHS:+$MISE_IGNORED_CONFIG_PATHS:}$resolved"
 export MISE_TRUSTED_CONFIG_PATHS="$work${MISE_TRUSTED_CONFIG_PATHS:+:$MISE_TRUSTED_CONFIG_PATHS}"
 while read -r command repository; do
@@ -126,6 +132,7 @@ for command in chrono-cache chrono-ci chrono-diagnostics chrono-distribution chr
     executable=$(mise -C "$work" which "$command")
     verify "$executable" "${expected#sha256:}"
 done
+validate_target
 if [ -s "$manifest" ]; then
     mv -f "$manifest" "$resolved"
 else
