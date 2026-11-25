@@ -23,38 +23,51 @@ git show a2ef667c0424b61321b2b724ea3c2916b2155fca:.chrono-harness/config.json
 
 工作树配置登记了 24 小时删除窗口。任务中的 Python 缓存、工具链接和中间状态都属于任务工作树，已安装的二进制位于共享安装目录。有长期用途的文件应在窗口内提交到 Git 或上传持久存储。工作树通过本仓安装链接调用固定版本的登记判官。本次工作树升级同时引入了 `registration_program` 配置项。回退到 bootstrap.1 时，随该工具的版本声明一起回退此配置项。清理程序同时读取本仓的 `.chrono-harness/retention.json`，回收新产生且已无使用方的检查原件、工作树操作报告和维护清单。失败原件的诊断窗口为 24 小时。已有的未登记报告需核对具体使用方后处置。CI 任务随 GitHub 托管运行器回收。
 
-### 为开发机的主检出启用定时清理
+### 为主检出启用事件触发的维护
 
-在长期保留的主检出中先运行 `sh .chrono-harness/ci/install.sh`。本机用户的定时器每小时运行一次 `.chrono-harness/maintain.sh`。它调用本地 `chrono-pr pr-reminders` 删除主检出中已满 30 天的 PR 提醒，再调用 `chrono-worktree maintain` 回收工作树和原件。SQLite 的空表留在主检出，工作树中的提醒库随工作树一起删除。安装器维护会回收专用目录中已满 24 小时、读者已经释放的下载。需要留存的诊断应在窗口内转存，发布恢复目录中的备份由原操作负责。任一维护失败都会使该次定时任务报告失败。机器开机、用户调度服务在运行且目录可写时，即使无人再运行开发命令，维护也会检查到期工作树。活跃租约和待保全的工作由清理程序处理。 若启用 `.chrono-harness/logging.json`，工作树维护会调用单独安装的 `chrono-diagnostics` 回收过期日志，单项失败写入本轮维护报告。
+在主检出运行 `sh .chrono-harness/ci/install.sh`，在交互 shell 执行 `export PATH="$PWD/.chrono-harness/bin:$PATH"`，并创建用户私有的 `.chrono-harness/state/`。工作树和 runner 在业务完成后向同一 Unix 数据报套接字发送事件。系统激活一个持有协调者排他租约的维护者，按登记的窗口处置工作树、原件和已启用的日志。宿主还登记了两个独立消费者，`chrono-pr pr-reminders` 清理已满 30 天的本地提醒，`chrono-distribution maintain` 回收已满 24 小时且读者已释放的安装下载。某项失败后，其余操作继续，维护报告保存各项真实结果。
 
-在 macOS 中将本仓的 launchd 配置安装到当前用户。以下命令从主检出根目录执行。每个路径拥有独立标签。
+到期只改变清理资格。之后首个业务事件或显式运行 `.chrono-harness/bin/chrono-worktree maintain` 时会再次检查；机器空闲时没有固定回收时限。请在窗口内将有价值的产物移入 Git 或其他持久存储。服务未安装时业务 stderr 会报告 `wake-failed`；`requested` 表示数据报已发出，原始维护报告记录实际处置。
+
+在 macOS 的用户会话中，从主检出运行以下命令。替换已安装的旧 job 时，先卸载同一检出的旧版本。安装路径需满足 Unix 套接字长度限制。
 
 ```sh
 root=$(pwd -P)
 label=org.chrono-harness.example-maintenance.$(printf %s "$root" | shasum -a 256 | cut -c1-16)
 job="$HOME/Library/LaunchAgents/$label.plist"
+install -d -m 0700 "$root/.chrono-harness/state"
 mkdir -p "$HOME/Library/LaunchAgents"
+if launchctl print "gui/$(id -u)/$label" >/dev/null 2>&1; then
+  launchctl bootout "gui/$(id -u)/$label"
+fi
 cp .chrono-harness/maintenance.launchd.plist "$job"
 plutil -replace Label -string "$label" "$job"
 plutil -replace WorkingDirectory -string "$root" "$job"
+plutil -replace EnvironmentVariables.PATH -string "$root/.chrono-harness/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" "$job"
+plutil -replace ProgramArguments.0 -string "$root/.chrono-harness/bin/chrono-worktree" "$job"
+plutil -replace Sockets.Maintenance.SockPathName -string "$root/.chrono-harness/state/maintenance.sock" "$job"
 launchctl bootstrap "gui/$(id -u)" "$job"
 ```
 
-删除或移动主检出前，使用同一组 `label` 和 `job` 变量，运行 `launchctl bootout "gui/$(id -u)/$label"` 和 `rm "$job"`。launchd 在下次用户登录后会加载仍已安装的配置。
+移动或删除主检出前，执行 `launchctl bootout "gui/$(id -u)/$label"` 并移除该 job 文件。
 
-在使用 systemd 用户服务的 Linux 开发机上，从主检出安装小时定时器。每个检出有独立的实例名。用户服务下次启动时会自动加载已启用的定时器，错过的维护会在恢复后补跑一次。
+Linux 使用 systemd 用户 socket。以下命令从主检出运行，先停用该检出已安装的小时定时器，再安装 socket 和 service。
 
 ```sh
 root=$(pwd -P)
 units=${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user
+install -d -m 0700 "$root/.chrono-harness/state"
 install -d "$units"
-install -m 0644 .chrono-harness/chrono-harness-example-maintenance@.service \
-  .chrono-harness/chrono-harness-example-maintenance@.timer "$units/"
-timer=$(systemd-escape --path --template=chrono-harness-example-maintenance@.timer "$root")
+instance=$(systemd-escape --path "$root")
+prefix=chrono-harness-example-maintenance
+if [ -f "$units/$prefix@.timer" ]; then
+  systemctl --user disable --now "$prefix@$instance.timer"
+fi
+install -m 0644 ".chrono-harness/$prefix@.service" ".chrono-harness/$prefix@.socket" "$units/"
 systemctl --user daemon-reload
-systemctl --user enable --now "$timer"
+systemctl --user enable --now "$prefix@$instance.socket"
 ```
 
-删除或移动主检出前，运行 `systemctl --user disable --now "$timer"`。同一用户的其他检出可继续使用这两个单元文件。
+移动或删除主检出前，执行 `systemctl --user disable --now "$prefix@$instance.socket"`，等待该实例正在执行的维护结束。其他检出的实例继续独立运行。
 
 在已登记的任务工作树中，开发者可运行 `chrono-worktree use --operation example.program` 或 `chrono-worktree use --operation example.check`。这两项 Python 操作均以 `-B` 运行并只读，在同一检出可以并行。宿主在 [.chrono-harness/cleanup.json](.chrono-harness/cleanup.json) 登记实际读取的源码与 message.txt。
