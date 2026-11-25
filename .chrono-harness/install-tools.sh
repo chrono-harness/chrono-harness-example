@@ -36,14 +36,32 @@ disabled=$(mise settings get disable_tools)
 enabled() {
     case "$disabled" in *\"http:$1\"*) return 1 ;; *) return 0 ;; esac
 }
-resolved=$config_dir/zz-chrono-harness-resolved.toml
+legacy=$config_dir/zz-chrono-harness-resolved.toml
+projection=$config_dir/selected-chrono-harness.toml
+state=$PWD/.chrono-harness/state
+selection=$state/tool-selection
+resolved=$selection/versions.toml
+data=$work/versions.toml
+: > "$data"
 validate_target() {
-    if [ -L "$resolved" ] || { [ -e "$resolved" ] && [ ! -f "$resolved" ]; }; then
-        fail "Expected a regular installation selection: $resolved"
-    fi
+    for dir in "$PWD/.chrono-harness" "$state" "$selection"; do
+        if [ -L "$dir" ] || { [ -e "$dir" ] && [ ! -d "$dir" ]; }; then
+            fail "Expected an installation state directory: $dir"
+        fi
+    done
+    for file in "$legacy" "$resolved"; do
+        if [ -L "$file" ] || { [ -e "$file" ] && [ ! -f "$file" ]; }; then
+            fail "Expected a regular installation selection: $file"
+        fi
+    done
+    for entry in "$selection"/* "$selection"/.[!.]* "$selection"/..?*; do
+        if [ "$entry" != "$resolved" ] && { [ -e "$entry" ] || [ -L "$entry" ]; }; then
+            fail "Unexpected installation data entry: $entry"
+        fi
+    done
 }
 validate_target
-export MISE_IGNORED_CONFIG_PATHS="${MISE_IGNORED_CONFIG_PATHS:+$MISE_IGNORED_CONFIG_PATHS:}$resolved"
+export MISE_IGNORED_CONFIG_PATHS="${MISE_IGNORED_CONFIG_PATHS:+$MISE_IGNORED_CONFIG_PATHS:}$legacy:$projection"
 export MISE_TRUSTED_CONFIG_PATHS="$work${MISE_TRUSTED_CONFIG_PATHS:+:$MISE_TRUSTED_CONFIG_PATHS}"
 resolve_dynamic() {
     if [ -z "$downloads" ]; then
@@ -104,6 +122,13 @@ while read -r command repository default_selector; do
     fi
     version=$(mise config get --file "$source" "tools.\"http:$command\".version")
     expected=$(mise config get --file "$source" "tools.\"http:$command\".platforms.$platform.checksum")
+    if [ "$selector" != pinned ]; then
+        case $platform in
+            linux-x64) linux=$expected; macos=$(mise config get --file "$source" "tools.\"http:$command\".platforms.macos-arm64.checksum") ;;
+            macos-arm64) macos=$expected; linux=$(mise config get --file "$source" "tools.\"http:$command\".platforms.linux-x64.checksum") ;;
+        esac
+        printf '%s = ["%s", "%s", "%s"]\n' "$command" "$version" "$linux" "$macos" >> "$data"
+    fi
     set -- "$@" "http:$command@$version"
     printf '%s %s\n' "$command" "$expected" >> "$work/checksums"
 done <<'TOOLS'
@@ -138,8 +163,11 @@ while read -r command expected; do
     verify "$executable" "${expected#sha256:}"
 done < "$work/checksums"
 validate_target
-if [ -s "$manifest" ]; then
-    mv -f "$manifest" "$resolved"
+if [ -s "$data" ]; then
+    mkdir -p "$selection"
+    validate_target
+    mv -f "$data" "$selection/"
 else
     rm -f "$resolved"
 fi
+rm -f "$legacy"
