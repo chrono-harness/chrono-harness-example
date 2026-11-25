@@ -1,5 +1,6 @@
 #!/bin/sh
 # Run each local owner even if an earlier maintenance operation fails.
+export PATH="$PWD/.chrono-harness/bin:$PATH"
 status=0
 reminders=$(.chrono-harness/bin/chrono-pr pr-reminders) || {
     status=$?
