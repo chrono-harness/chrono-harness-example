@@ -95,11 +95,11 @@ macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-fi
 
 
 [tools."http:chrono-judge-mixed"]
-version = "0.1.0-alpha.7"
+version = "0.1.0-alpha.8"
 bin = "chrono-judge-mixed"
 [tools."http:chrono-judge-mixed".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-mixed/releases/download/v0.1.0-alpha.7/chrono-judge-mixed-linux-x86_64", checksum = "sha256:e7f847c8007bb079af0d73f5344227924ff4e2888449715ea59a02ab6aa72825" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-mixed/releases/download/v0.1.0-alpha.7/chrono-judge-mixed-macos-aarch64", checksum = "sha256:35db1fba7500218d79b85dd2ded4d85706486b603bd4761bd5a5051d41568d26" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-mixed/releases/download/v0.1.0-alpha.8/chrono-judge-mixed-linux-x86_64", checksum = "sha256:7d27c03979eaf6b2def3f6347db8329532b2040543f023fb50ab222ad0d52b17" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-mixed/releases/download/v0.1.0-alpha.8/chrono-judge-mixed-macos-aarch64", checksum = "sha256:dcf9c648a7b9b897fb295e247b180d69b90d0d3738d90877b48945e3f9c0f712" }
 
 
 [tools."http:chrono-judge-projects"]
