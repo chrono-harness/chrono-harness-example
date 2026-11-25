@@ -4,6 +4,7 @@ import os
 import resource
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -19,6 +20,8 @@ class InstallLocation(unittest.TestCase):
             checkout.mkdir()
             outside = root / "external tools"
             outside.mkdir()
+            # The installer runs its path checks with this test action's registered Python.
+            (root / "python3").symlink_to(sys.executable)
             stub = root / "mise"
             stub.write_text(
                 '#!/bin/sh\n'
