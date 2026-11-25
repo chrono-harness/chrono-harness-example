@@ -119,4 +119,5 @@ with tempfile.TemporaryDirectory(dir=os.environ['RUNNER_TEMP']) as stage_name:
     print(error.stdout, flush=True)
     assert 'Release query sent during outage' in error.stdout, 'release query never reached the failure point'
     assert error.returncode != 0, 'installer succeeded on cached resolution during query failure'
+    assert f'Failed to read releases for {repository}' in error.stdout
     print(f'blocked release query returned {error.returncode} with cached tools on disk', flush=True)
