@@ -40,7 +40,12 @@
           ]
         }
       },
-      "language": "python"
+      "language": "python",
+      "assertion_helpers": {
+        "test:example": [
+          "example.check"
+        ]
+      }
     },
     {
       "id": "installer",
@@ -82,7 +87,12 @@
           ]
         }
       },
-      "language": "python"
+      "language": "python",
+      "assertion_helpers": {
+        "test:harness": [
+          "installer.check-location"
+        ]
+      }
     }
   ]
 }
