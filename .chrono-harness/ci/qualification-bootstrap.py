@@ -8,13 +8,18 @@ env=dict(os.environ)
 env['DEVELOPER_DIR']='/Applications/Xcode_26.5.app/Contents/Developer'
 git=Path(sp.check_output(['/usr/bin/xcrun','--find','git'],env=env,text=True).strip())
 assert hashlib.sha256(git.read_bytes()).hexdigest()=='492bd04fb367c1d51dce2be4eb6d6778829a3623dc4327318dfcdd81bc4fac2e'
-directory=Path(tempfile.mkdtemp(dir=os.environ['RUNNER_TEMP'],prefix='round-git-'))
-shutil.copy2(git,directory/'git')
+business=Path("/private/tmp/chrono-example-23-selector-receipt-verified")
+business.mkdir(mode=0o700)
+directory=business/'installs';directory.mkdir()
+home=business/'home';home.mkdir();tmp=business/'tmp';tmp.mkdir()
 bins=root/'.chrono-harness/bin'
-env['CHRONO_CHECK_SOURCE']='ci'
-env['PATH']=os.pathsep.join([str(directory),str(bins),env['PATH']])
+for f in bins.iterdir():
+    if f.name!='git' and f.is_file(): (directory/f.name).symlink_to(f.resolve(strict=True))
+shutil.copy2(git,directory/'git')
+env.update(CHRONO_CHECK_SOURCE='ci',HOME=str(home),TMPDIR=str(tmp)+'/',PATH=str(directory)+':/usr/bin:/bin')
 with Path(os.environ['GITHUB_ENV']).open('a') as output:
-    print('PATH='+env['PATH'],file=output)
+    for key in ('HOME','TMPDIR','PATH'):
+        print(key+'='+env[key],file=output)
 ctx=json.loads(json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_bytes())['inputs']['context'])
 pair=Path(ctx['retained_inputs'])
 assert pair==Path('.chrono-harness/state/inputs/round-pair.json')

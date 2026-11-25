@@ -569,11 +569,6 @@
   ],
   "project_edges": [
     {
-      "from": "environment:CHRONO_CHECK_SOURCE",
-      "to": "judge:registration",
-      "kind": "runtime-input"
-    },
-    {
       "from": "environment:GH_TOKEN",
       "to": "judge:registration",
       "kind": "runtime-input"
@@ -602,11 +597,6 @@
       "from": "environment:PATH",
       "to": "test:harness",
       "kind": "test-execution"
-    },
-    {
-      "from": "environment:SSH_AUTH_SOCK",
-      "to": "judge:registration",
-      "kind": "runtime-input"
     },
     {
       "from": "environment:TMPDIR",

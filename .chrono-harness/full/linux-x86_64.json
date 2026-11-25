@@ -5,7 +5,7 @@
   "runner": {
     "path": ".chrono-harness/bin/chrono-harness",
     "version": "0.1.0",
-    "sha256": "f75c90ebd9a624bada54aff11505c04b28efae8178a18c5d8b773596c76b041f"
+    "sha256": "1a61516f66cb317277d50192c208b9167165225d5029890e4eadeb5a699c5bb4"
   },
   "registries": {
     "judges": ".chrono-harness/full/judges-linux-x86_64.json",
@@ -56,7 +56,9 @@
         "CHRONO_CI_NEEDS",
         "GITHUB_RUN_ID",
         "GITHUB_RUN_ATTEMPT",
-        "GITHUB_JOB"
+        "GITHUB_JOB",
+        "CHRONO_CHECK_SOURCE",
+        "SSH_AUTH_SOCK"
       ]
     }
   },
@@ -74,9 +76,7 @@
       "PATH",
       "HOME",
       "TMPDIR",
-      "CHRONO_CHECK_SOURCE",
-      "GH_TOKEN",
-      "SSH_AUTH_SOCK"
+      "GH_TOKEN"
     ],
     "values": {},
     "inputs": [
@@ -136,9 +136,7 @@
         "consumer": "judge:registration",
         "kind": "local-check-inputs",
         "inputs": [
-          "tool:chrono-worktree",
-          "environment:CHRONO_CHECK_SOURCE",
-          "environment:SSH_AUTH_SOCK"
+          "tool:chrono-worktree"
         ]
       },
       {
@@ -147,7 +145,6 @@
         "kind": "ci-check-inputs",
         "inputs": [
           "tool:chrono-ci",
-          "environment:CHRONO_CHECK_SOURCE",
           "environment:GH_TOKEN",
           "input:ci-executable"
         ]
