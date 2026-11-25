@@ -37,6 +37,8 @@ def verify(rendered):
     rendered_config = tomllib.loads((rendered / manifest).read_text())
     if answers.get("local_check_retention") is not False:
         raise ValueError("the example uses its registered worktree maintenance")
+    if answers.get("native_check_keep_seconds") != 0:
+        raise ValueError("the Python example does not produce native compilation directories")
     for root in (host, rendered):
         if (root / ".chrono-harness/maintain-checks.json").exists():
             raise ValueError("unexpected standalone retention request in the example")
