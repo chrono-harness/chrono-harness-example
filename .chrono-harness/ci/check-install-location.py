@@ -1,5 +1,7 @@
 """Exercise the installer without downloading any tools."""
+import json
 import os
+import resource
 from pathlib import Path
 import subprocess
 import tempfile
@@ -55,4 +57,8 @@ class InstallLocation(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    soft_limit, _ = resource.getrlimit(resource.RLIMIT_FSIZE)
+    # Darwin and Linux represent infinity differently.
+    file_size_limit = None if soft_limit == resource.RLIM_INFINITY else soft_limit
+    print(json.dumps({"rlimit_fsize_bytes": file_size_limit}), flush=True)
     unittest.main()
