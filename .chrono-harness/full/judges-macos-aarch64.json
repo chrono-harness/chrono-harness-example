@@ -5,7 +5,7 @@
     {
       "id": "registration",
       "executable": ".chrono-harness/bin/chrono-judge-registration",
-      "sha256": "28d126b400e60a05bb9dfde274cc8124a66bbf7da825328876ca2f01d5435ac1",
+      "sha256": "d600800f81fbaff5022090dc317c3397461453b4b6220b9d861f7b3932214f47",
       "argv": [
         "--protocol",
         "chrono-judge/v1"
