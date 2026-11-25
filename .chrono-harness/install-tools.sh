@@ -120,8 +120,18 @@ chrono-test-git chrono-harness/chrono-harness-test-git
 chrono-test-git-profile chrono-harness/chrono-harness-test-git
 chrono-worktree chrono-harness/chrono-harness-worktree
 TOOLS
-# The nested config takes precedence over any previous checkout receipt.
-# mise installs explicit versions and verifies fresh downloads. Also hash cache hits.
+# An explicit mise argument installs the requested release even when a matching prerelease is cached.
+set --
+for command in chrono-cache chrono-ci chrono-diagnostics chrono-distribution chrono-harness chrono-host-bootstrap chrono-host-release chrono-inputs chrono-instructions chrono-judge-ci chrono-judge-cost chrono-judge-filemap chrono-judge-mixed chrono-judge-projects chrono-judge-registration chrono-judge-routes chrono-judge-workflow chrono-pr chrono-test-git chrono-test-git-profile chrono-worktree; do
+    enabled "$command" || continue
+    select_tool "$command"
+    source=$manifest
+    if [ "$selector" = pinned ]; then source=$config_dir/chrono-harness.toml; fi
+    version=$(mise config get --file "$source" "tools.\"http:$command\".version")
+    set -- "$@" "http:$command@$version"
+done
+if [ "$#" -gt 0 ]; then mise -C "$work" install "$@"; fi
+# Install remaining host tools, including Rust and Verus where selected.
 mise -C "$work" install
 for command in chrono-cache chrono-ci chrono-diagnostics chrono-distribution chrono-harness chrono-host-bootstrap chrono-host-release chrono-inputs chrono-instructions chrono-judge-ci chrono-judge-cost chrono-judge-filemap chrono-judge-mixed chrono-judge-projects chrono-judge-registration chrono-judge-routes chrono-judge-workflow chrono-pr chrono-test-git chrono-test-git-profile chrono-worktree; do
     enabled "$command" || continue
