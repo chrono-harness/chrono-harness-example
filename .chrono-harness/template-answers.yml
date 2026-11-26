@@ -40,3 +40,4 @@ tool_versions:
 dependabot_auto_merge: true
 dependabot_updates:
 - {"package-ecosystem": "github-actions", "directory": "/", "schedule": {"interval": "daily"}, "groups": {"github-actions": {"patterns": ["*"]}}}
+- {"package-ecosystem": "pip", "directory": "/.github", "schedule": {"interval": "daily"}}
