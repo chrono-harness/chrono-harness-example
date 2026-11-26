@@ -3,6 +3,13 @@
 use vstd::prelude::*;
 
 verus! {
+/// Keep the deployed source in the emitted library and its checksummed dep-info.
+pub fn installed_script() -> (script: &'static str)
+    ensures script@ == include_str!("install.sh")@,
+{
+    include_str!("install.sh")
+}
+
 proof fn deployed_storage_rows_match_the_install_policy() {
     let script = include_str!("install.sh");
     let rows = "        storage-0) choice=accept ;;\n        storage-1) choice=reject ;;\n";
