@@ -20,7 +20,7 @@ assert baseline == os.environ["GITHUB_SHA"] and not data.is_relative_to(workspac
 assert platform.system() == "Linux" and platform.machine() == "x86_64"
 assert not read("git","status","--porcelain")
 rows = []
-for selector, expected in [("v0.1.3","0.1.3"),("stable","0.1.4"),("v0.1.3","0.1.3")]:
+for selector, expected in [("v0.1.4","0.1.4"),("stable","0.1.5"),("v0.1.4","0.1.4")]:
     subprocess.run(["mise","run","harness-setup"], check=True, env={**os.environ,"CHRONO_TOOL_CHANNEL":selector})
     receipt = (workspace/".chrono-harness/state/tool-selection/versions.toml").read_bytes()
     selection = tomllib.loads(receipt.decode())
@@ -37,6 +37,23 @@ for selector, expected in [("v0.1.3","0.1.3"),("stable","0.1.4"),("v0.1.3","0.1.
     assert (linux,macos) == (assets[asset_name]["digest"],assets["chrono-harness-macos-aarch64"]["digest"])
     assert (digest,len(raw))==(linux,assets[asset_name]["size"])
     assert version_line==f"chrono-harness {expected}"
+    def declarations(files, references):
+        query = {"operation": "source-declarations", "files": files,
+                 "operations": ["verify"], "reference_paths": references}
+        return subprocess.run([str(actual), "compiler-output-v1"],
+                              input=json.dumps(query), text=True, capture_output=True)
+    valid = {"path": "a.rs", "verification": {"role": "program", "roots": [
+        {"path": "root.rs", "operation": "verify"}]}}
+    bad = {"path": "b.rs", "verification": {"role": "program", "roots": [
+        {"path": "root.rs", "operation": "missing"}]}}
+    references = ["valid", "./invalid", "valid"]
+    accepted = declarations([valid, valid], references)
+    assert accepted.returncode == 0 and not accepted.stderr
+    assert json.loads(accepted.stdout) == [True, False, True]
+    refused = declarations([valid, bad], references)
+    assert refused.returncode == 2 and not refused.stdout, refused
+    assert "b.rs: E_VERUS_COVERAGE: proof root operation is not registered" in refused.stderr, refused
+
     assert read("git","rev-parse","HEAD")==baseline
     status = read("git","status","--porcelain")
     assert not status, status
