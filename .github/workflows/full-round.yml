@@ -26,7 +26,6 @@ jobs:
         run: |
           '/usr/bin/python3' '-B' '.chrono-harness/ci/qualification-bootstrap.py'
       - name: Canonical full harness check
-        working-directory: /private/tmp/chrono-example-206-pgit/round/full/feature
         shell: bash
         env:
           CHRONO_CHECK_SOURCE: ci
@@ -38,6 +37,6 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: chrono-full-check-${{ github.run_id }}-${{ github.run_attempt }}
-          path: "/private/tmp/chrono-example-206-pgit/round/full/feature/.chrono-harness/state/native-ok/"
+          path: ".chrono-harness/state/native-ok/"
           if-no-files-found: error
           include-hidden-files: true

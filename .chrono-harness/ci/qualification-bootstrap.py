@@ -5,9 +5,10 @@ import tarfile,urllib.request
 workspace=Path.cwd()
 business=Path("/private/tmp/chrono-example-206-pgit");business.mkdir(mode=0o700)
 root=business/"round/full/feature";root.parent.mkdir(parents=True)
-sp.run(["git","clone","--quiet","--no-local",workspace,root],check=True)
-ctx=json.loads(json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_bytes())["inputs"]["context"])
-sp.run(["git","switch","--detach",ctx["candidate"]],cwd=root,check=True)
+# Keep the hosted workspace entry and the registered workflow paths usable
+# while exposing the same physical business root as the developer run.
+os.rename(workspace,root)
+workspace.symlink_to(root,target_is_directory=True)
 os.chdir(root)
 install_env={k:v for k,v in os.environ.items() if k!="GITHUB_PATH"}
 sp.run(["/bin/sh",".chrono-harness/ci/install.sh"],env=install_env,check=True)

@@ -2,7 +2,7 @@
   "schema": "chrono-github-full-ci/v2",
   "workflow_path": ".github/workflows/full-round.yml",
   "name": "Native fixed context on macOS",
-  "runs_on": "macos-26",
+  "runs_on": "xcode-27",
   "checkout_action": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
   "upload_artifact_action": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
   "include_hidden_files": true,
