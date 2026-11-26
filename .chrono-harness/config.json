@@ -74,7 +74,8 @@
       "CHRONO_CI_NEEDS",
       "GITHUB_RUN_ID",
       "GITHUB_RUN_ATTEMPT",
-      "GITHUB_JOB"
+      "GITHUB_JOB",
+      "RUSTUP_HOME"
     ],
     "values": {},
     "inputs": []
@@ -123,7 +124,7 @@
       "version_argv": [
         "--version"
       ],
-      "expected_version": "chrono-worktree 0.1.1"
+      "expected_version": "chrono-worktree 0.1.2"
     },
     {
       "id": "bash",
@@ -169,6 +170,15 @@
         "--version"
       ],
       "expected_version": "chrono-judge-routes 0.1.0"
+    },
+    {
+      "id": "verus",
+      "program": ".chrono-harness/bin/verus",
+      "resolution": "PATH-once",
+      "version_argv": [
+        "--version"
+      ],
+      "expected_version": null
     }
   ],
   "semantic_fields": [],

@@ -70,9 +70,13 @@ esac
 if [ "${GITHUB_ACTIONS:-}" = true ]; then
     export MISE_TRUSTED_CONFIG_PATHS="$PWD"
 fi
-"$mise" install http:chrono-distribution http:chrono-diagnostics http:chrono-pr http:chrono-harness http:chrono-ci http:chrono-judge-ci http:chrono-worktree http:chrono-judge-registration http:chrono-judge-projects http:chrono-judge-filemap http:chrono-judge-routes
+# Only the harness unit compiles the installed Verus root.
+if [ "${GITHUB_ACTIONS:-}" != true ] || [ "${GITHUB_JOB:-}" = unit_harness ]; then
+    "$mise" install rust
+fi
+"$mise" install http:chrono-distribution http:chrono-diagnostics http:chrono-pr http:chrono-harness http:chrono-ci http:chrono-judge-ci http:chrono-worktree http:chrono-judge-registration http:chrono-judge-projects http:chrono-judge-filemap http:chrono-judge-routes http:verus
 mkdir -p .chrono-harness/bin
-for tool in chrono-distribution chrono-diagnostics chrono-pr chrono-harness chrono-ci chrono-judge-ci chrono-worktree chrono-judge-registration chrono-judge-projects chrono-judge-filemap chrono-judge-routes; do
+for tool in chrono-distribution chrono-diagnostics chrono-pr chrono-harness chrono-ci chrono-judge-ci chrono-worktree chrono-judge-registration chrono-judge-projects chrono-judge-filemap chrono-judge-routes verus; do
     target=$("$mise" which "$tool")
     if [ -n "${GITHUB_PATH:-}" ]; then
         dirname "$target" >> "$GITHUB_PATH"

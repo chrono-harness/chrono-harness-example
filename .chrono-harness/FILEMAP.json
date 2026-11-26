@@ -132,7 +132,16 @@
           "kind": "test-execution",
           "to": "test:harness"
         }
-      ]
+      ],
+      "verification": {
+        "role": "program",
+        "roots": [
+          {
+            "path": ".chrono-harness/ci/installer_storage.rs",
+            "operation": "verify.installer-storage"
+          }
+        ]
+      }
     },
     {
       "path": ".chrono-harness/ci/check-install-location.py",
@@ -430,6 +439,27 @@
           "to": "test:harness"
         }
       ]
+    },
+    {
+      "path": ".chrono-harness/ci/installer_storage.rs",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ],
+      "verification": {
+        "role": "specification",
+        "roots": [
+          {
+            "path": ".chrono-harness/ci/installer_storage.rs",
+            "operation": "verify.installer-storage"
+          }
+        ]
+      }
     }
   ],
   "project_edges": [],
@@ -462,6 +492,7 @@
     },
     "test:harness": {
       "operations": [
+        "verify.installer-storage",
         "installer.check-location",
         "ci.verify"
       ],
