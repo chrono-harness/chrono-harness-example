@@ -5,7 +5,7 @@
     {
       "id": "registration",
       "executable": ".chrono-harness/bin/chrono-judge-registration",
-      "sha256": "d600800f81fbaff5022090dc317c3397461453b4b6220b9d861f7b3932214f47",
+      "sha256": "c6a33d204cb4839445d0e95a681f2c9414bd6d41d56bf3d028c5c5d2755997af",
       "argv": [
         "--protocol",
         "chrono-judge/v1"
@@ -15,7 +15,7 @@
       "modes": [
         "evaluate"
       ],
-      "version": "0.1.0"
+      "version": "0.1.1"
     },
     {
       "id": "filemap",
