@@ -1,0 +1,158 @@
+{
+  "local": {
+    "source": "local",
+    "report": "8e88c5df60fc4d7c67fb8282a4100a97eafbcc5073f7c9145d176a49fa307b70",
+    "base": "c0a3ac6966b4b4087115b450486ad63cf5a070eb",
+    "candidate": "5cd8fd8844d673724d64764661e7d806ac92039e",
+    "sides": {
+      "base": {
+        "filemap_blob": "dac3bb79b7002a916361728e599204dfe07c888c",
+        "filemap_sha256": "d033b78cf582addf4c70bd6d56286d9c93e25dfd446bca644433a980955f4402",
+        "readme_blob": "eb1681ac7620f15f85286b1c07e9054930bdfcd7",
+        "surface": "documentation",
+        "edge_count": 82,
+        "sorted_edges_sha256": "ea2fc51c916c33c105ba80b77923af3378555d1d13aea60b109086e80680cd46"
+      },
+      "candidate": {
+        "filemap_blob": "dac3bb79b7002a916361728e599204dfe07c888c",
+        "filemap_sha256": "d033b78cf582addf4c70bd6d56286d9c93e25dfd446bca644433a980955f4402",
+        "readme_blob": "671cde9299de5a58b4c1d9e0082b99a337f4ac33",
+        "surface": "documentation",
+        "edge_count": 82,
+        "sorted_edges_sha256": "ea2fc51c916c33c105ba80b77923af3378555d1d13aea60b109086e80680cd46"
+      }
+    },
+    "seeds": [
+      {
+        "id": "[\"README.md\",\"delta-path\",\"file:README.md\"]",
+        "node": "file:README.md",
+        "reason": "delta-path",
+        "reference": "README.md"
+      }
+    ],
+    "records": 153,
+    "selection": [],
+    "executed": [],
+    "registration_request": "e49235277ee5715f2298286798c15dc32b46e004fce48d6b21c5be0a066ce404",
+    "filemap_request": "e0ca5c2f493ce627bebe046fc1ca6ba217193de9f89fa76ad1655676d12f41fd",
+    "producer": "8b67295c31801f79b1e1c3a0188a294d5adeda6c941c132e955694acfad56602"
+  },
+  "ci": {
+    "source": "ci",
+    "report": "afb2ba9b86ed0ff6a85b083d03deeb0140bc857191c6efd9975f30719427ab0c",
+    "base": "c0a3ac6966b4b4087115b450486ad63cf5a070eb",
+    "candidate": "5cd8fd8844d673724d64764661e7d806ac92039e",
+    "sides": {
+      "base": {
+        "filemap_blob": "dac3bb79b7002a916361728e599204dfe07c888c",
+        "filemap_sha256": "d033b78cf582addf4c70bd6d56286d9c93e25dfd446bca644433a980955f4402",
+        "readme_blob": "eb1681ac7620f15f85286b1c07e9054930bdfcd7",
+        "surface": "documentation",
+        "edge_count": 82,
+        "sorted_edges_sha256": "ea2fc51c916c33c105ba80b77923af3378555d1d13aea60b109086e80680cd46"
+      },
+      "candidate": {
+        "filemap_blob": "dac3bb79b7002a916361728e599204dfe07c888c",
+        "filemap_sha256": "d033b78cf582addf4c70bd6d56286d9c93e25dfd446bca644433a980955f4402",
+        "readme_blob": "671cde9299de5a58b4c1d9e0082b99a337f4ac33",
+        "surface": "documentation",
+        "edge_count": 82,
+        "sorted_edges_sha256": "ea2fc51c916c33c105ba80b77923af3378555d1d13aea60b109086e80680cd46"
+      }
+    },
+    "seeds": [
+      {
+        "id": "[\"README.md\",\"delta-path\",\"file:README.md\"]",
+        "node": "file:README.md",
+        "reason": "delta-path",
+        "reference": "README.md"
+      }
+    ],
+    "records": 153,
+    "selection": [],
+    "executed": [],
+    "registration_request": "2a5eca289d1606971243d08154463204f75eb357b3cfd53fb77a5650f9153a84",
+    "filemap_request": "e866abffdb94a59fe2c0e2422649e059579a2ceaad81ae7dc14be57bce619b1a",
+    "producer": "8b67295c31801f79b1e1c3a0188a294d5adeda6c941c132e955694acfad56602"
+  },
+  "control": {
+    "source": "local",
+    "report": "efd225af885fc68010b45e8fcb8b4ed65ea55a903c1a517e13cc49b092d8a96f",
+    "base": "269ff19ed03d309f3355608ec3efebe28818d2ac",
+    "candidate": "9c6658ee4a70dddebb8a7aa58cc6879238769323",
+    "sides": {
+      "base": {
+        "filemap_blob": "50cd07c90408f5aa99d02a23a36cafa0da94a896",
+        "filemap_sha256": "78efca054af137dde2947188102a5fd537898daaf9789a7d7159246c5448aca0",
+        "readme_blob": "eb1681ac7620f15f85286b1c07e9054930bdfcd7",
+        "surface": "documentation",
+        "edge_count": 83,
+        "sorted_edges_sha256": "9d07e540f4509b5984e69470c01ef2df531922ae7bd2826eefa6c24261efbc71"
+      },
+      "candidate": {
+        "filemap_blob": "50cd07c90408f5aa99d02a23a36cafa0da94a896",
+        "filemap_sha256": "78efca054af137dde2947188102a5fd537898daaf9789a7d7159246c5448aca0",
+        "readme_blob": "671cde9299de5a58b4c1d9e0082b99a337f4ac33",
+        "surface": "documentation",
+        "edge_count": 83,
+        "sorted_edges_sha256": "9d07e540f4509b5984e69470c01ef2df531922ae7bd2826eefa6c24261efbc71"
+      }
+    },
+    "seeds": [
+      {
+        "id": "[\"README.md\",\"delta-path\",\"file:README.md\"]",
+        "node": "file:README.md",
+        "reason": "delta-path",
+        "reference": "README.md"
+      }
+    ],
+    "records": 153,
+    "selection": [
+      "test:example"
+    ],
+    "executed": [
+      "example.check"
+    ],
+    "registration_request": "962c2b67242282a3f08d8e88701ddbe3a38abf085fbeb30484eeebf4cc0e85cd",
+    "filemap_request": "7b1a3b4c48006afa0be0d349157e50028d56090e40ce213222a779c017ce7e4d",
+    "producer": "8b67295c31801f79b1e1c3a0188a294d5adeda6c941c132e955694acfad56602"
+  },
+  "restored": {
+    "source": "local",
+    "report": "0f2917cdd03fa24b3bc4f9e3b00e1374858403b991a2d2b5f85d445f02ae0518",
+    "base": "c0a3ac6966b4b4087115b450486ad63cf5a070eb",
+    "candidate": "5cd8fd8844d673724d64764661e7d806ac92039e",
+    "sides": {
+      "base": {
+        "filemap_blob": "dac3bb79b7002a916361728e599204dfe07c888c",
+        "filemap_sha256": "d033b78cf582addf4c70bd6d56286d9c93e25dfd446bca644433a980955f4402",
+        "readme_blob": "eb1681ac7620f15f85286b1c07e9054930bdfcd7",
+        "surface": "documentation",
+        "edge_count": 82,
+        "sorted_edges_sha256": "ea2fc51c916c33c105ba80b77923af3378555d1d13aea60b109086e80680cd46"
+      },
+      "candidate": {
+        "filemap_blob": "dac3bb79b7002a916361728e599204dfe07c888c",
+        "filemap_sha256": "d033b78cf582addf4c70bd6d56286d9c93e25dfd446bca644433a980955f4402",
+        "readme_blob": "671cde9299de5a58b4c1d9e0082b99a337f4ac33",
+        "surface": "documentation",
+        "edge_count": 82,
+        "sorted_edges_sha256": "ea2fc51c916c33c105ba80b77923af3378555d1d13aea60b109086e80680cd46"
+      }
+    },
+    "seeds": [
+      {
+        "id": "[\"README.md\",\"delta-path\",\"file:README.md\"]",
+        "node": "file:README.md",
+        "reason": "delta-path",
+        "reference": "README.md"
+      }
+    ],
+    "records": 153,
+    "selection": [],
+    "executed": [],
+    "registration_request": "ea1ad3ccd60dc24e7c43f06ca8abdb8242fbae326104a279619c4c124e8602ba",
+    "filemap_request": "5ef408ee10a0cbb95f8f996f03518aa6a7afccd096a95ee0e4fd6375e9c3202c",
+    "producer": "8b67295c31801f79b1e1c3a0188a294d5adeda6c941c132e955694acfad56602"
+  }
+}
