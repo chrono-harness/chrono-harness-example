@@ -1,0 +1,107 @@
+{
+  "rev": {
+    "base": "487ff7a10c0701cc1ad6a8dd14b2c650e062c612",
+    "head": "f50e1e31b24d4f34ee4be047a3d0013e7f9a0032",
+    "branch": "qualification/206-portable-git-projection"
+  },
+  "art": 15095428549,
+  "digest": "sha256:134acd04d668cc620198e65ab1e90900878aabde7a7af99d5c2df564d3bb5783",
+  "length": 1423355,
+  "reports": [
+    "9f2b6601f746cd1c5ae93917e7051f0ac95d788bac16eae68abe5712530a95b3",
+    "1b9ba0ad7c5743d29ce8657a19fae084a385a5c9c097f7a606cb02cd5bfe7c95"
+  ],
+  "judges": {
+    "registration": {
+      "status": "pass",
+      "calls": 24,
+      "git_differences": [],
+      "output_differences": [],
+      "input_bytes_same": false
+    },
+    "filemap": {
+      "status": "pass",
+      "calls": 17,
+      "git_differences": [],
+      "output_differences": [],
+      "input_bytes_same": false
+    },
+    "cost": {
+      "status": "warn",
+      "calls": 15,
+      "git_differences": [],
+      "output_differences": [],
+      "input_bytes_same": false
+    },
+    "mixed": {
+      "status": "pass",
+      "calls": 15,
+      "git_differences": [],
+      "output_differences": [],
+      "input_bytes_same": false
+    },
+    "routes": {
+      "status": "pass",
+      "calls": 15,
+      "git_differences": [],
+      "output_differences": [
+        "/execution_plan/binding/entry/resolved_paths/paths/0/actual",
+        "/execution_plan/binding/entry/resolved_paths/paths/0/expected",
+        "/execution_plan/binding/operation_state",
+        "/execution_plan/binding/run",
+        "/execution_plan/identity",
+        "/execution_plan/tools/python3/version/child_pid",
+        "/execution_plan/tools/python3/version/launcher_pid",
+        "/execution_plan/tools/python3/version/ownership_fds",
+        "/tools/python3/version/child_pid",
+        "/tools/python3/version/launcher_pid",
+        "/tools/python3/version/ownership_fds"
+      ],
+      "input_bytes_same": false
+    },
+    "projects": {
+      "status": "pass",
+      "calls": 25,
+      "git_differences": [],
+      "output_differences": [
+        "/tests/executed/0/original/length",
+        "/tests/executed/0/original/path",
+        "/tests/executed/0/original/sha256",
+        "/tests/executed/0/receipt/digest",
+        "/tests/executed/0/receipt/plan",
+        "/tests/executed/0/receipt/process/child_pid",
+        "/tests/executed/0/receipt/process/launch_original/path",
+        "/tests/executed/0/receipt/process/launch_original/sha256",
+        "/tests/executed/0/receipt/process/launcher_pid",
+        "/tests/executed/0/receipt/process/ownership_fds",
+        "/tests/operation_state/length",
+        "/tests/operation_state/path",
+        "/tests/operation_state/sha256",
+        "/tests/plan"
+      ],
+      "input_bytes_same": false
+    },
+    "workflow": {
+      "status": "pass",
+      "calls": 34,
+      "git_differences": [
+        "/25/2"
+      ],
+      "output_differences": [
+        "/workflow/branch/current_observation"
+      ],
+      "input_bytes_same": false
+    }
+  },
+  "proc_diff": [
+    "/child_pid",
+    "/launch_original/path",
+    "/launch_original/sha256",
+    "/launcher_pid",
+    "/ownership_fds"
+  ],
+  "environment": true,
+  "effective": true,
+  "context": "1da331ee021bf2c0736d7fcf5794d944fb0dc10e3f3d415ff7e2dadb234a3fc6",
+  "parity": "unestablished"
+}
