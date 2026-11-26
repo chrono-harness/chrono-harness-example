@@ -1,0 +1,36 @@
+name: Fixed README cost receipt
+on:
+  push:
+    branches: [qualification/206-cost-receipt]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  sample:
+    runs-on: macos-26
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Retain the qualification driver
+        run: cp -R .github/qualification/cost "$RUNNER_TEMP/cost-probe"
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 5cd8fd8844d673724d64764661e7d806ac92039e
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Retrieve the retained successful native full report
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api repos/chrono-harness/chrono-harness-example/actions/artifacts/15072297411/zip > "$RUNNER_TEMP/historical-cost.zip"
+      - name: Replay the bound cost request and retain its reporter input
+        run: /usr/bin/python3 "$RUNNER_TEMP/cost-probe/native.py"
+      - name: Preserve the actual sample
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cost-receipt
+          path: ${{ runner.temp }}/cost-sample/
+          retention-days: 1
+          if-no-files-found: warn
