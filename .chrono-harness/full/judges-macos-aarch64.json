@@ -111,7 +111,7 @@
     {
       "id": "workflow",
       "executable": ".chrono-harness/bin/chrono-judge-workflow",
-      "sha256": "5177f03caee8fceb8369c76655f7d19c97eb012bf7fe1d4f677dd9338e826de4",
+      "sha256": "be2336ae1edcdbd89595c7cf28669e78d5f81bcda6b174c4ecc680720a49c0eb",
       "argv": [
         "--protocol",
         "chrono-judge/v1"
@@ -128,7 +128,7 @@
       "modes": [
         "evaluate"
       ],
-      "version": "0.1.2"
+      "version": "0.1.3"
     }
   ],
   "migration_validator": "workflow"
