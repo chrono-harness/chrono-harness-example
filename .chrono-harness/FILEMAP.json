@@ -14,7 +14,7 @@
       "owner": "host",
       "surface": "documentation",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [{"kind":"test-execution","to":"test:example"}]
     },
     {
       "path": "message.py",
