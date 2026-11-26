@@ -37,6 +37,8 @@
           "argv": [
             "-B",
             "-S",
+            "-X",
+            "pycache_prefix=.chrono-harness/state/qualification-pycache",
             "check.py"
           ]
         }

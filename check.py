@@ -1,5 +1,9 @@
 import sys
 startup_modules = tuple(sorted(sys.modules))
+startup_origins = {
+    name: getattr(getattr(sys.modules[name], "__spec__", None), "origin", None)
+    for name in startup_modules
+}
 startup_path = [item.replace(sys.base_prefix, "<python>") for item in sys.path]
 startup_path[0] = "<checkout>" if startup_path[0] == __file__.rsplit("/", 1)[0] else startup_path[0]
 active = True
@@ -49,7 +53,18 @@ business_modules = tuple(sorted(sys.modules))
 import hashlib
 import json
 
+startup_files = {}
+for name, origin in startup_origins.items():
+    if origin in (None, "built-in", "frozen"):
+        startup_files[name] = origin
+    else:
+        relative = Path(origin).relative_to(sys.base_prefix)
+        startup_files[name] = [str(relative), hashlib.sha256(Path(origin).read_bytes()).hexdigest()]
+
 observed = {
+    "configured_cache": sys.pycache_prefix,
+    "cache_present": Path(sys.pycache_prefix).exists(),
+    "startup_origins": startup_files,
     "no_site": sys.flags.no_site,
     "startup_modules": startup_modules,
     "search_path": startup_path,
