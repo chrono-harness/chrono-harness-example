@@ -1,0 +1,31 @@
+name: Fixed README FILEMAP selection receipt
+on:
+  push:
+    branches: [qualification/206-filemap-selection]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  replay:
+    runs-on: macos-26
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Read the fixed native full report and released FILEMAP
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/chrono-harness/chrono-harness-example/actions/artifacts/15072297411/zip > "$RUNNER_TEMP/report.zip"
+          gh release download v0.1.0-alpha.18 -R chrono-harness/chrono-harness-judge-filemap -p chrono-judge-filemap-macos-aarch64 -D "$RUNNER_TEMP"
+          chmod 700 "$RUNNER_TEMP/chrono-judge-filemap-macos-aarch64"
+      - name: Replay the FILEMAP selection for the native report
+        run: /usr/bin/python3 .github/qualification/selection/replay.py "$RUNNER_TEMP/report.zip" "$RUNNER_TEMP/chrono-judge-filemap-macos-aarch64" "$RUNNER_TEMP/selection-receipt"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: ${{ always() }}
+        with:
+          name: filemap-selection-receipt
+          path: ${{ runner.temp }}/selection-receipt/
+          retention-days: 1
+          if-no-files-found: warn
