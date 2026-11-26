@@ -19,7 +19,7 @@ jobs:
           path: acceptance
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 24280ee643d6b8a6424be081a69253e0280ea718
+          ref: 14256b4f180abf18dd3a82b9023c243e2861355e
           fetch-depth: 0
           persist-credentials: false
           path: example
@@ -28,3 +28,50 @@ jobs:
         run: sh .chrono-harness/ci/install.sh
       - name: Run the captured development and delivery checks
         run: /usr/bin/python3 acceptance/.github/full-native.py example "$RUNNER_TEMP" d5684ffa78965e1234f3ce7c3a0d981d7b546802
+      - name: Check both original mixed reports and the workflow certificates
+        run: |
+          /usr/bin/python3 - "$RUNNER_TEMP" <<'PYVERIFY'
+          from pathlib import Path
+          import hashlib
+          import json
+          import sys
+          import zlib
+          
+          root=Path(sys.argv[1])
+          snapshot,=root.glob('full-public-*/integration/.chrono-harness/state')
+          records={}
+          for path in snapshot.glob('run-*.json'):
+              report=json.loads(path.read_bytes())
+              judges={j['id']:j for j in report['judges']}
+              mixed=judges['mixed']
+              process=mixed['process']
+              raw=zlib.decompress(bytes.fromhex(process['stdout_zlib_hex']))
+              assert process['owned_work_joined'] and process['exit_code']==0 and process['stdout_complete']
+              assert hashlib.sha256(raw).hexdigest()==process['stdout_sha256'] and len(raw)==process['stdout_length']
+              response=json.loads(raw)
+              assert response==mixed['response'] and response['judge_id']=='mixed' and response['status']=='warn'
+              changes=response['outputs']['rule_changes']
+              assert set(changes)=={'binding','schema','rule_paths','product_paths','changes','product_changes','mixed','requires_acknowledgement'}
+              assert changes['binding']=={k:report[k] for k in ('base','candidate','candidate_tree','context_digest','registry_digest')}
+              assert changes['schema']=='chrono-rule-changes/v2' and changes['mixed'] and not changes['requires_acknowledgement']
+              rules=changes['rule_paths'];products=changes['product_paths']
+              assert rules==sorted(set(rules))==[r['path'] for r in changes['changes']] and products==sorted(set(products))==[r['path'] for r in changes['product_changes']]
+              for r in changes['changes']:
+                  assert set(r)=={'path','before_surface','after_surface','whole_file','semantic'}
+                  for item in r['semantic']:
+                      assert set(item)=={'pattern','on','identity','before','after'}
+                      for name in ('before','after'):
+                          assert item[name] is None or set(item[name])=={'pointer','value'}
+              for r in changes['product_changes']:
+                  assert set(r)=={'path','before_surface','after_surface'}
+              finding,=response['findings']
+              assert finding['code']=='W_MIXED_JUDGE_PRODUCT' and finding['level']=='warning' and finding['causes']==['/outputs/rule_changes'] and finding['delta_refs']==rules+products
+              opts={'separators':(',',':'),'ensure_ascii':False}
+              assert finding['message']=='Rule and product changes share this DELTA. Rules: '+json.dumps(rules,**opts)+'; products: '+json.dumps(products,**opts)+'. Before/after costs: predecessor outputs.costs (full report: /costs; provenance: /sources/~1costs); unknown coordinates remain unknown.'
+              outcome=judges['workflow']['response']['outputs']['workflow']
+              assert outcome['integration_required'] is True and outcome['integration']['sha256']==hashlib.sha256((snapshot/'integration.json').read_bytes()).hexdigest()
+              mode=outcome['mode'];assert mode not in records
+              records[mode]=dict(candidate=report['candidate'],report=hashlib.sha256(path.read_bytes()).hexdigest(),mixed_stdout=process['stdout_sha256'],certificate=outcome['integration']['sha256'])
+          assert set(records)=={'integration_run','delivery'}
+          print('MIXED_PROTOCOL '+json.dumps(records,sort_keys=True))
+          PYVERIFY
