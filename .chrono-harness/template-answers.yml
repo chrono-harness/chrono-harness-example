@@ -2,38 +2,16 @@ _commit: v0.1.39
 _src_path: gh:chrono-harness/chrono-harness-copier
 dev_branch: dev
 features:
-- cache
-- ci
-- diagnostics
-- distribution
 - harness
-- host-bootstrap
-- host-release
-- inputs
-- instructions
-- judge-ci
-- judge-cost
-- judge-filemap
-- judge-mixed
-- judge-projects
-- registration
-- judge-routes
-- judge-workflow
-- pr
-- test-git
-- worktree
-- verus
 generate_check: false
-github_templates: true
+github_templates: false
 local_check_retention: false
-manage_roadmap: true
+manage_roadmap: false
 native_check_keep_seconds: 0
 project_guide: ''
-publisher_workflow: Release
 release_plan: {}
 repository: chrono-harness/chrono-harness-example
-required_check: Example / aggregate
 strict_host_adapters: {}
-tool_install_channels: pinned
-tool_versions:
-  chrono-diagnostics: stable
+tool_install_channels: stable
+tool_versions: {}
+

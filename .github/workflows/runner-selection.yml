@@ -1,0 +1,25 @@
+name: Linux runner upgrade and rollback
+on:
+  push:
+    branches: [qualification/runner-014-linux-selection]
+permissions:
+  contents: read
+jobs:
+  selection:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@924e7c586e33d7d4bae9c14e26c5d22e2beb6e78
+        with:
+          version: 2026.11.12
+          cache: false
+          install: false
+      - name: Select the exact release, upgrade with stable, and restore the previous release
+        env:
+          MISE_DATA_DIR: ${{ runner.temp }}/runner-qualification/mise-data
+          MISE_TRUSTED_CONFIG_PATHS: ${{ github.workspace }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 .github/qualification/runner-selection.py

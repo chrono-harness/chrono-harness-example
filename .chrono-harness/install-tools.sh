@@ -132,27 +132,7 @@ while read -r command repository default_selector; do
     set -- "$@" "http:$command@$version"
     printf '%s %s\n' "$command" "$expected" >> "$work/checksums"
 done <<'TOOLS'
-chrono-cache chrono-harness/chrono-harness-cache pinned
-chrono-ci chrono-harness/chrono-harness-ci pinned
-chrono-diagnostics chrono-harness/chrono-harness-diagnostics stable
-chrono-distribution chrono-harness/chrono-harness-distribution pinned
-chrono-harness chrono-harness/chrono-harness-runner pinned
-chrono-host-bootstrap chrono-harness/chrono-harness-host-bootstrap pinned
-chrono-host-release chrono-harness/chrono-harness-host-release pinned
-chrono-inputs chrono-harness/chrono-harness-inputs pinned
-chrono-instructions chrono-harness/chrono-harness-instructions pinned
-chrono-judge-ci chrono-harness/chrono-harness-judge-ci pinned
-chrono-judge-cost chrono-harness/chrono-harness-judge-cost pinned
-chrono-judge-filemap chrono-harness/chrono-harness-judge-filemap pinned
-chrono-judge-mixed chrono-harness/chrono-harness-judge-mixed pinned
-chrono-judge-projects chrono-harness/chrono-harness-judge-projects pinned
-chrono-judge-registration chrono-harness/chrono-harness-judge-registration pinned
-chrono-judge-routes chrono-harness/chrono-harness-judge-routes pinned
-chrono-judge-workflow chrono-harness/chrono-harness-judge-workflow pinned
-chrono-pr chrono-harness/chrono-harness-pr pinned
-chrono-test-git chrono-harness/chrono-harness-test-git pinned
-chrono-test-git-profile chrono-harness/chrono-harness-test-git pinned
-chrono-worktree chrono-harness/chrono-harness-worktree pinned
+chrono-harness chrono-harness/chrono-harness-runner stable
 TOOLS
 # An explicit mise argument installs the requested release even when a matching prerelease is cached.
 if [ "$#" -gt 0 ]; then mise -C "$work" install "$@"; fi
