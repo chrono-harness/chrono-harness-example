@@ -9,6 +9,6 @@ proof fn deployed_storage_rows_match_the_install_policy() {
     reveal_strlit(include_str!("install.sh"));
     reveal_strlit("        storage-0) choice=accept ;;\n        storage-1) choice=reject ;;\n");
     // Witness for the two consecutive arms in the generated dispatch function.
-    assert(script@.subrange(523, 523 + rows@.len()) =~= rows@);
+    assert(script@.subrange(523, 523 + rows@.len() as int) =~= rows@);
 }
 }
