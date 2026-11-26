@@ -36,6 +36,7 @@
           "tool": "python3",
           "argv": [
             "-B",
+            "-S",
             "check.py"
           ]
         }

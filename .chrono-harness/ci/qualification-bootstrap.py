@@ -8,7 +8,7 @@ env=dict(os.environ)
 env['DEVELOPER_DIR']='/Applications/Xcode_26.5.app/Contents/Developer'
 git=Path(sp.check_output(['/usr/bin/xcrun','--find','git'],env=env,text=True).strip())
 assert hashlib.sha256(git.read_bytes()).hexdigest()=='492bd04fb367c1d51dce2be4eb6d6778829a3623dc4327318dfcdd81bc4fac2e'
-business=Path("/private/tmp/chrono-example-206-python-source")
+business=Path("/private/tmp/chrono-example-206-python-startup")
 business.mkdir(mode=0o700)
 directory=business/'installs';directory.mkdir()
 home=business/'home';home.mkdir();tmp=business/'tmp';tmp.mkdir()
