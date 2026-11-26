@@ -1,4 +1,4 @@
-_commit: v0.1.43
+_commit: v0.1.44-alpha.137
 _src_path: gh:chrono-harness/chrono-harness-copier
 dev_branch: dev
 features:
@@ -37,3 +37,6 @@ strict_host_adapters: {}
 tool_install_channels: pinned
 tool_versions:
   chrono-diagnostics: stable
+dependabot_auto_merge: true
+dependabot_updates:
+- {"package-ecosystem": "github-actions", "directory": "/", "schedule": {"interval": "daily"}, "groups": {"github-actions": {"patterns": ["*"]}}}

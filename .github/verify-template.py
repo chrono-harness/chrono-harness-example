@@ -38,6 +38,7 @@ def verify(rendered):
         raise ValueError("the example has lost its adopted agent guide")
     for path in [".chrono-harness/install-tools.sh", ".config/mise/conf.d/.gitignore",
                  ".config/mise/conf.d/selected-chrono-harness.toml",
+                 ".github/dependabot.yml", ".github/workflows/dependabot-auto-merge.yml",
                  ".github/roadmap.cjs", ".github/workflows/issue-roadmap.yml",
                  ".github/PULL_REQUEST_TEMPLATE.md", ".github/ISSUE_TEMPLATE/bug.yml",
                  ".github/ISSUE_TEMPLATE/documentation.yml", ".github/ISSUE_TEMPLATE/enhancement.yml",
