@@ -1,0 +1,24 @@
+name: Confirm check and compiler output expiry from a business event
+on:
+  push:
+    branches: ['qualification/75-check-native-event']
+permissions:
+  contents: read
+jobs:
+  installed:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Run the installed tools in an isolated example checkout
+        run: python3 .github/qualify-check-native-event.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: copier-75-event-originals
+          path: ${{ runner.temp }}/copier-75-receipts
+          retention-days: 7
+          if-no-files-found: error
+
