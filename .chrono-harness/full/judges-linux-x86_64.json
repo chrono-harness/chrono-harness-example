@@ -20,7 +20,7 @@
     {
       "id": "filemap",
       "executable": ".chrono-harness/bin/chrono-judge-filemap",
-      "sha256": "8150581aeaed4045ee513d9aa5dd45decc8b674c7de34714a8a9f3ebd4818b44",
+      "sha256": "c44c54cf096dbcfc687d9647252c44d099ea7fc76163d6dc14f78117aed1c33b",
       "argv": [
         "--protocol",
         "chrono-judge/v1"
@@ -32,7 +32,7 @@
       "modes": [
         "evaluate"
       ],
-      "version": "0.1.0"
+      "version": "0.1.1"
     },
     {
       "id": "projects",
