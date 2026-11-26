@@ -3,6 +3,7 @@ on:
   pull_request:
     branches: [dev]
     paths:
+      - .github/requirements.txt
       - .github/verify-template.py
       - .chrono-harness/install-tools.sh
       - .config/mise/conf.d/.gitignore
@@ -33,7 +34,7 @@ jobs:
       - name: Install the pinned Copier tool
         run: |
           python3 -m venv "$RUNNER_TEMP/copier"
-          "$RUNNER_TEMP/copier/bin/pip" install copier==9.19.1
+          "$RUNNER_TEMP/copier/bin/pip" install --requirement .github/requirements.txt
       - name: Render the installed template and verify the selected host files
         env:
           GITHUB_TOKEN: ${{ github.token }}

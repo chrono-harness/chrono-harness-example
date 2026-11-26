@@ -9,3 +9,8 @@ updates:
     schedule:
       interval: daily
     target-branch: dev
+  - directory: /.github
+    package-ecosystem: pip
+    schedule:
+      interval: daily
+    target-branch: dev

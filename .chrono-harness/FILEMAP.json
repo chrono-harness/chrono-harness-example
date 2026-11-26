@@ -178,6 +178,17 @@
       }
     },
     {
+      "path": ".github/requirements.txt",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [],
+      "verification": {
+        "role": "data",
+        "roots": []
+      }
+    },
+    {
       "path": ".github/workflows/chrono-ci.yml",
       "owner": "host",
       "surface": "product",
