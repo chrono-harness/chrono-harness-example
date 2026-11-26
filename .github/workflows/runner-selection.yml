@@ -1,7 +1,7 @@
 name: Linux runner upgrade and rollback
 on:
   push:
-    branches: [qualification/runner-015-linux-selection]
+    branches: [qualification/runner-016-linux-selection]
 permissions:
   contents: read
 jobs:
