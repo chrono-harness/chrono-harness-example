@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           path: example
-          ref: 25e3cbb53780dd3cf125aba556b2af14db2d66a1
+          ref: 9c4041ac679f4c7bd7f7a09103de7532ca2d5036
           persist-credentials: false
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
