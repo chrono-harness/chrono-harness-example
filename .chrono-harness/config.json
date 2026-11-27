@@ -169,7 +169,7 @@
       "version_argv": [
         "--version"
       ],
-      "expected_version": "chrono-judge-routes 0.1.4"
+      "expected_version": "chrono-judge-routes 0.1.6"
     },
     {
       "id": "verus",
