@@ -92,7 +92,7 @@
     {
       "id": "mixed",
       "executable": ".chrono-harness/bin/chrono-judge-mixed",
-      "sha256": "ae99c10521545b4813005018b03aa3adc5e25c6fcc8a08cc6e64b7dd6b433432",
+      "sha256": "2526cb8bee124d0beddcbba6b928bc9dc8141d0a410b52d895675f7b1c1139b8",
       "argv": [
         "--protocol",
         "chrono-judge/v1"
@@ -106,7 +106,7 @@
       "modes": [
         "evaluate"
       ],
-      "version": "0.1.7"
+      "version": "0.1.8"
     },
     {
       "id": "workflow",
