@@ -12,6 +12,8 @@
 
 日常开发和 PR 使用 `dev`，正式版本从 `main` 发布。
 
+为 `profile/full` 采用发行件时，从当前 `origin/profile/full` 建立 `qualify/<产品>-<issue>-<通道>`，将 PR 提交到 `profile/full`。按 README 的完整配置配方，在 macOS 和 Linux 核对候选及落地提交的集成与交付结果。以 `dev` 为基线的 `integration/**` 推送由已登记的开发工作树提交上下文，供分片检查消费。
+
 首次检出时，在仓库根目录安装本仓选定的工具。
 
 ```sh
