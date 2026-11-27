@@ -124,7 +124,7 @@
       "version_argv": [
         "--version"
       ],
-      "expected_version": "chrono-worktree 0.1.7"
+      "expected_version": "chrono-worktree 0.1.8"
     },
     {
       "id": "bash",
