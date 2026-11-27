@@ -32,7 +32,7 @@ project_guide: ''
 publisher_workflow: Release
 release_plan: {}
 repository: chrono-harness/chrono-harness-example
-required_check: Example / aggregate
+required_check: Example / aggregate / pull_request
 strict_host_adapters: {}
 tool_install_channels: pinned
 tool_versions:
