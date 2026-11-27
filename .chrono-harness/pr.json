@@ -3,7 +3,7 @@
   "repository": "chrono-harness/chrono-harness-example",
   "base": "dev",
   "gh": "gh",
-  "required_checks": ["Example / aggregate"],
+  "required_checks": ["Example / aggregate / pull_request"],
   "api_timeout_seconds": 60,
   "watch_timeout_seconds": 3600,
   "watch_interval_seconds": 60,

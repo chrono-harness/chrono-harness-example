@@ -91,6 +91,7 @@
         ".config/mise/conf.d/"
       ]
     },
-    "evidence_retention_days": 1
+    "evidence_retention_days": 1,
+    "aggregate_name_by_event": true
   }
 }

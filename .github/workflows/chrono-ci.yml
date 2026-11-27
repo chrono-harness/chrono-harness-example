@@ -127,7 +127,7 @@ jobs:
           if-no-files-found: error
           retention-days: 1
   aggregate:
-    name: "Example / aggregate"
+    name: "Example / aggregate / ${{ github.event_name }}"
     needs: ["detect","unit_example","unit_harness"]
     if: ${{ always() }}
     runs-on: "ubuntu-24.04"
