@@ -1,0 +1,41 @@
+name: Release process receipt qualification
+on:
+  push:
+    branches: [probe/release-process-110-preview]
+permissions:
+  contents: read
+jobs:
+  receipt:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-26, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: acceptance
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: example
+          ref: dfe243839760fafc4093bf53ff40cb14e5674d37
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: host
+          repository: ChronoAIProject/chrono-harness
+          ref: f178031d634e4d80ea977735abae1b7c8c278cfd
+          persist-credentials: false
+      - name: Install the example's registered programs
+        working-directory: example
+        run: sh .chrono-harness/ci/install.sh
+      - name: Verify observed process, streams and original exit from the release receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -C host apply --index ../acceptance/.github/registered-launcher.patch
+          git -C host -c user.name=Qualification -c user.email=qualification@example.invalid commit -qm 'Exercise the registered launcher operation'
+          python3 acceptance/.github/download-release.py example "$RUNNER_TEMP/chrono-host-release" v0.1.7-alpha.2
+          python3 acceptance/.github/stream_observation.py "$RUNNER_TEMP/chrono-host-release" example/.chrono-harness/bin host "$RUNNER_TEMP/receipt-observation" | sed 's/^/RECEIPT /'
