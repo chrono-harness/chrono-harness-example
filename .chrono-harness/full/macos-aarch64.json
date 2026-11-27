@@ -491,7 +491,7 @@
       "version_argv": [
         "--version"
       ],
-      "expected_version": "chrono-judge-projects 0.1.0"
+      "expected_version": "chrono-judge-projects 0.1.5"
     },
     {
       "id": "chrono-judge-registration",
