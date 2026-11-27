@@ -8,9 +8,29 @@ merged=$(gh api --method GET "repos/$GITHUB_REPOSITORY/pulls" \
   --jq '[.[] | select(.merged_at != null)][0] | [.number,.head.sha,.merge_commit_sha] | @tsv')
 read -r number expected landed <<< "$merged"
 test -n "$number" && test -n "$expected" && test -n "$landed"
+printf 'Reading PR #%s at %s (merge %s)\n' "$number" "$expected" "$landed"
 result=$("$release" pr-status --pr "$number" --head-sha "$expected") || {
   rc=$?
   jq '{pr, pr_state, expected_head, observed_head, merge_commit, outcome, error, checks}' <<< "$result" >&2
+  # The result includes the original GraphQL stdout even when check reduction fails.
+  python3 -c '
+import json, sys
+for receipt in json.load(sys.stdin)["receipts"]:
+    try:
+        reply = json.loads(bytes(receipt["stdout_bytes"]))
+    except (ValueError, UnicodeError):
+        continue
+    print(json.dumps(reply, ensure_ascii=True, separators=(",", ":")))
+' <<< "$result" | jq -c '
+    .data.repository.object as $commit
+    | select($commit != null)
+    | {oid: $commit.oid, contexts: [
+        $commit.statusCheckRollup.contexts.nodes[]?
+        | {type: .__typename, name: (.name // .context), state: (.status // .state),
+           conclusion, id: .databaseId, suite: .checkSuite.databaseId,
+           workflow: .checkSuite.workflowRun.workflow.databaseId,
+           latest: [.checkSuite.checkRuns.nodes[]?.databaseId]}
+      ]}' >&2 || true
   exit "$rc"
 }
 jq -e --arg expected "$expected" --arg landed "$landed" --argjson number "$number" \
