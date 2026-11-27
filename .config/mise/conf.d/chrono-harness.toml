@@ -42,11 +42,11 @@ macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-runner/r
 
 
 [tools."http:chrono-host-bootstrap"]
-version = "0.1.7-alpha.1"
+version = "0.1.7"
 bin = "chrono-host-bootstrap"
 [tools."http:chrono-host-bootstrap".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-host-bootstrap/releases/download/v0.1.7-alpha.1/chrono-host-bootstrap-linux-x86_64", checksum = "sha256:7736a3b1238a0cf5f05c9a265b7d5c818ae9d0c97ca0fcb211e68c793492aab6" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-host-bootstrap/releases/download/v0.1.7-alpha.1/chrono-host-bootstrap-macos-aarch64", checksum = "sha256:2474098f69c3b98f81e2fac116dc6db33b4b2c74c6e908bfa0f7705fad0f5d09" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-host-bootstrap/releases/download/v0.1.7/chrono-host-bootstrap-linux-x86_64", checksum = "sha256:7736a3b1238a0cf5f05c9a265b7d5c818ae9d0c97ca0fcb211e68c793492aab6" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-host-bootstrap/releases/download/v0.1.7/chrono-host-bootstrap-macos-aarch64", checksum = "sha256:2474098f69c3b98f81e2fac116dc6db33b4b2c74c6e908bfa0f7705fad0f5d09" }
 
 
 [tools."http:chrono-host-release"]
