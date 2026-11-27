@@ -74,7 +74,7 @@
     {
       "id": "cost",
       "executable": ".chrono-harness/bin/chrono-judge-cost",
-      "sha256": "853198ca4d01635ec7226292f20c29ba5a17f0cae65c32689253032c267858e7",
+      "sha256": "27242b6afc1ff3530b66b374f8863bf05d8c86955b5f74cf49de4c04c9dbc144",
       "argv": [
         "--protocol",
         "chrono-judge/v1"
@@ -87,7 +87,7 @@
       "modes": [
         "evaluate"
       ],
-      "version": "0.1.3"
+      "version": "0.1.4"
     },
     {
       "id": "mixed",
