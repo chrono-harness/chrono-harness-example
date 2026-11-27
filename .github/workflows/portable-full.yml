@@ -1,7 +1,7 @@
 name: Portable full developer check
 on:
   push:
-    branches: [probe/portable-full-developer]
+    branches: [probe/66-cost-exit-stable]
 permissions:
   contents: read
 jobs:
@@ -19,7 +19,7 @@ jobs:
           path: acceptance
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 62aee3f3ecbd28d6836073d56e25e93d4af9d1cb
+          ref: bffbfbed598cec22ada8a5713d3812ac90c28c51
           fetch-depth: 0
           persist-credentials: false
           path: example
@@ -28,83 +28,7 @@ jobs:
         run: sh .chrono-harness/ci/install.sh
       - name: Run the captured development and delivery checks
         run: /usr/bin/python3 acceptance/.github/full-native.py example "$RUNNER_TEMP" d5684ffa78965e1234f3ce7c3a0d981d7b546802
-      - name: Check both original mixed reports and the workflow certificates
+      - name: Read the original cost report and check the CLI error status
         run: |
-          /usr/bin/python3 - "$RUNNER_TEMP" <<'PYVERIFY'
-          from pathlib import Path
-          import hashlib
-          import json
-          import sys
-          import zlib
-          
-          root=Path(sys.argv[1])
-          snapshot,=root.glob('full-public-*/integration/.chrono-harness/state')
-          records={}
-          for path in snapshot.glob('run-*.json'):
-              report=json.loads(path.read_bytes())
-              judges={j['id']:j for j in report['judges']}
-              mixed=judges['mixed']
-              process=mixed['process']
-              raw=zlib.decompress(bytes.fromhex(process['stdout_zlib_hex']))
-              assert process['owned_work_joined'] and process['exit_code']==0 and process['stdout_complete']
-              assert hashlib.sha256(raw).hexdigest()==process['stdout_sha256'] and len(raw)==process['stdout_length']
-              response=json.loads(raw)
-              assert response==mixed['response'] and response['judge_id']=='mixed' and response['status']=='warn'
-              changes=response['outputs']['rule_changes']
-              assert set(changes)=={'binding','schema','rule_paths','product_paths','changes','product_changes','mixed','requires_acknowledgement'}
-              assert changes['binding']=={k:report[k] for k in ('base','candidate','candidate_tree','context_digest','registry_digest')}
-              assert changes['schema']=='chrono-rule-changes/v2' and changes['mixed'] and not changes['requires_acknowledgement']
-              rules=changes['rule_paths'];products=changes['product_paths']
-              assert rules==sorted(set(rules))==[r['path'] for r in changes['changes']] and products==sorted(set(products))==[r['path'] for r in changes['product_changes']]
-              for r in changes['changes']:
-                  assert set(r)=={'path','before_surface','after_surface','whole_file','semantic'}
-                  for item in r['semantic']:
-                      assert set(item)=={'pattern','on','identity','before','after'}
-                      for name in ('before','after'):
-                          assert item[name] is None or set(item[name])=={'pointer','value'}
-              for r in changes['product_changes']:
-                  assert set(r)=={'path','before_surface','after_surface'}
-              finding,=response['findings']
-              assert finding['code']=='W_MIXED_JUDGE_PRODUCT' and finding['level']=='warning' and finding['causes']==['/outputs/rule_changes'] and finding['delta_refs']==rules+products
-              opts={'separators':(',',':'),'ensure_ascii':False}
-              assert finding['message']=='Rule and product changes share this DELTA. Rules: '+json.dumps(rules,**opts)+'; products: '+json.dumps(products,**opts)+'. Before/after costs: predecessor outputs.costs (full report: /costs; provenance: /sources/~1costs); unknown coordinates remain unknown.'
-              outcome=judges['workflow']['response']['outputs']['workflow']
-              assert outcome['integration_required'] is True and outcome['integration']['sha256']==hashlib.sha256((snapshot/'integration.json').read_bytes()).hexdigest()
-              mode=outcome['mode'];assert mode not in records
-              records[mode]=dict(candidate=report['candidate'],report=hashlib.sha256(path.read_bytes()).hexdigest(),mixed_stdout=process['stdout_sha256'],certificate=outcome['integration']['sha256'])
-          assert set(records)=={'integration_run','delivery'}
-          print('MIXED_PROTOCOL '+json.dumps(records,sort_keys=True))
-          PYVERIFY
-      - name: Check both original cost reports and the workflow certificates
-        run: |
-          /usr/bin/python3 - "$RUNNER_TEMP" <<'PYVERIFY'
-          from pathlib import Path
-          import hashlib,json,sys,zlib
-          state,=Path(sys.argv[1]).glob('full-public-*/integration/.chrono-harness/state')
-          records={}
-          for f in state.glob('run-*.json'):
-              r=json.loads(f.read_bytes());judges={j['id']:j for j in r['judges']}
-              j=judges['cost'];proc=j['process']
-              raw=zlib.decompress(bytes.fromhex(proc['stdout_zlib_hex']))
-              assert proc['stdout_complete'] and proc['exit_code']==0 and proc['owned_work_joined']
-              assert len(raw)==proc['stdout_length'] and hashlib.sha256(raw).hexdigest()==proc['stdout_sha256']
-              response=json.loads(raw);assert response==j['response'] and response['status']=='warn' and any(i['code']=='W_COST_UNKNOWN' for i in response['findings'])
-              c=response['outputs']['costs'];items=c['unknown'];assert items and c['binding']==judges['mixed']['response']['outputs']['rule_changes']['binding'] and c['measured'] is None
-              expected=[]
-              keys=['cpu_ms','wall_ms','peak_rss_bytes','io_bytes']
-              for node in sorted(c['declared_before']):
-                  for side,key in [('base','declared_before'),('candidate','declared_after')]:
-                      entry=c[key][node]
-                      if entry is None:continue
-                      members=entry['costs']
-                      if not members:expected.append(dict(endpoint=side,node=node,reference=None,coordinates=keys,reason='no declared member cost references'))
-                      for m in members:
-                          missing=[k for k in keys if m['value'].get(k) is None]
-                          if missing:expected.append(dict(endpoint=side,node=node,member=m['member'],reference=m['reference'],source=m['source'],reason=m['value'].get('basis'),coordinates=missing))
-              assert items==expected
-              out=judges['workflow']['response']['outputs']['workflow'];cert=hashlib.sha256((state/'integration.json').read_bytes()).hexdigest();assert out['integration']['sha256']==cert
-              mode=out['mode'];assert mode not in records
-              records[mode]=dict(candidate=r['candidate'],report=hashlib.sha256(f.read_bytes()).hexdigest(),cost_stdout=proc['stdout_sha256'],entries=len(items),certificate=cert)
-          assert set(records)=={'integration_run','delivery'}
-          print('COST_PROTOCOL '+json.dumps(records,sort_keys=True))
-          PYVERIFY
+          python3 acceptance/.github/verify-host.py "$RUNNER_TEMP"
+          python3 acceptance/.github/closed-pipe.py example/.chrono-harness/bin/chrono-judge-cost
