@@ -87,11 +87,11 @@ macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-co
 
 
 [tools."http:chrono-judge-filemap"]
-version = "0.1.9-alpha.1"
+version = "0.1.9"
 bin = "chrono-judge-filemap"
 [tools."http:chrono-judge-filemap".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-filemap/releases/download/v0.1.9-alpha.1/chrono-judge-filemap-linux-x86_64", checksum = "sha256:9ac3452500eb0f810092b43b932b1e44ff77a32bd9d0a0d00beff1103759b998" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-filemap/releases/download/v0.1.9-alpha.1/chrono-judge-filemap-macos-aarch64", checksum = "sha256:aa97ea38c3906b9590523ad9eb2ea52a1782a00a2020d22b2854f77f23065b1f" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-filemap/releases/download/v0.1.9/chrono-judge-filemap-linux-x86_64", checksum = "sha256:9ac3452500eb0f810092b43b932b1e44ff77a32bd9d0a0d00beff1103759b998" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-filemap/releases/download/v0.1.9/chrono-judge-filemap-macos-aarch64", checksum = "sha256:aa97ea38c3906b9590523ad9eb2ea52a1782a00a2020d22b2854f77f23065b1f" }
 
 
 [tools."http:chrono-judge-mixed"]
