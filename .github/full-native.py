@@ -81,7 +81,7 @@ for mode in ("integration_run", "delivery"):
         (stage / "example-profile-context.json").write_bytes(context_path.read_bytes())
     assert actual == expected, (actual, expected, verdict)
     assert len(report["judges"]) == 7 and all(j["state"] == "executed" and j["exit_code"] == 0 for j in report["judges"])
-    assert {x["operation"] for x in report["tests"]["executed"]} == {"example.check", "installer.check-location", "ci.verify"}
+    assert {x["operation"] for x in report["tests"]["executed"]} == {"example.check"}
     cert_sha = hashlib.sha256((state / "integration.json").read_bytes()).hexdigest()
     assert verdict["integration_required"] is False
     if mode == "integration_run":

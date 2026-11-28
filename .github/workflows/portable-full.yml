@@ -1,7 +1,7 @@
 name: Portable full developer check
 on:
   push:
-    branches: [probe/portable-full-548-host-decisions]
+    branches: [probe/portable-full-548-rejection]
 permissions:
   contents: read
 jobs:
@@ -19,7 +19,7 @@ jobs:
           path: acceptance
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 468e698fc18f1a5cc767f8e2df26e98a7be9d866
+          ref: 440c8776191f2084c1582625c1cdb920c8fafc60
           fetch-depth: 0
           persist-credentials: false
           path: example
@@ -27,7 +27,7 @@ jobs:
         working-directory: example
         run: sh .chrono-harness/ci/install.sh
       - name: Run the captured development and delivery checks
-        run: /usr/bin/python3 acceptance/.github/full-native.py example "$RUNNER_TEMP" 4a852277abfd651186126d4188c57cfc30d7dd85
+        run: /usr/bin/python3 acceptance/.github/full-native.py example "$RUNNER_TEMP" 949398f8899ccf12162bb151b3213c0121d207a1
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
