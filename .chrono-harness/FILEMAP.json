@@ -541,6 +541,58 @@
           "to": "test:harness"
         }
       ]
+    },
+    {
+      "path": ".chrono-harness/ci/host_decisions.py",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:example"
+        },
+        {
+          "kind": "runtime-input",
+          "to": "script:message"
+        },
+        {
+          "kind": "runtime-input",
+          "to": "script:example"
+        }
+      ]
+    },
+    {
+      "path": ".chrono-harness/ci/installer_storage.rs",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:example"
+        },
+        {
+          "kind": "runtime-input",
+          "to": "script:message"
+        },
+        {
+          "kind": "runtime-input",
+          "to": "script:example"
+        }
+      ]
+    },
+    {
+      "path": ".chrono-harness/ci/archive-context.py",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:example"
+        }
+      ]
     }
   ],
   "project_edges": [
