@@ -3,16 +3,9 @@ on:
   pull_request:
     branches: [dev]
     paths:
-      - .github/requirements.txt
       - .github/verify-template.py
-      - .chrono-harness/install-tools.sh
-      - .config/mise/conf.d/.gitignore
-      - .config/mise/conf.d/chrono-harness.toml
-      - .config/mise/conf.d/selected-chrono-harness.toml
       - .github/workflows/template-adoption.yml
       - .chrono-harness/template-answers.yml
-      - .github/ISSUE_TEMPLATE/**
-      - .github/PULL_REQUEST_TEMPLATE.md
       - .github/roadmap.cjs
       - .github/workflows/issue-roadmap.yml
   push:
@@ -23,19 +16,12 @@ jobs:
   copier:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-      - uses: jdx/mise-action@924e7c586e33d7d4bae9c14e26c5d22e2beb6e78
-        with:
-          version: 2026.11.12
-          cache: false
-          install: false
       - name: Install the pinned Copier tool
         run: |
           python3 -m venv "$RUNNER_TEMP/copier"
-          "$RUNNER_TEMP/copier/bin/pip" install --requirement .github/requirements.txt
+          "$RUNNER_TEMP/copier/bin/pip" install copier==9.19.1
       - name: Render the installed template and verify the selected host files
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
         run: '"$RUNNER_TEMP/copier/bin/python" .github/verify-template.py'

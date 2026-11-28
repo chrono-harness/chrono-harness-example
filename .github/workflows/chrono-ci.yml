@@ -2,7 +2,7 @@
 name: "Example / aggregate"
 on:
   push:
-    branches: ["dev","main","integration/**"]
+    branches: ["integration/**"]
   pull_request:
     branches: ["dev","main"]
 permissions:
@@ -18,11 +18,13 @@ jobs:
     timeout-minutes: 45
     outputs:
       detection: ${{ steps.detect.outputs.detection }}
+      startup_binding: ${{ steps.chrono_startup.outputs.binding }}
+      startup_artifact: ${{ steps.chrono_startup_upload.outputs.artifact-id }}
       unit_example: ${{ steps.detect.outputs.unit_example }}
       unit_harness: ${{ steps.detect.outputs.unit_harness }}
     steps:
       - name: Acquire declared detector source
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.sha }}
           fetch-depth: 2
@@ -34,9 +36,21 @@ jobs:
             .config/mise/conf.d/
           persist-credentials: true
       - name: Bootstrap registered detector tools
+        id: chrono_startup
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          '/bin/sh' '.chrono-harness/ci/install.sh'
+          '/bin/sh' '.chrono-harness/ci/full-detector.sh'
+      - name: Publish registered startup artifact
+        id: chrono_startup_upload
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: full-round-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ".chrono-harness/startup/"
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 1
       - name: Detect required units from fixed Git endpoints
         id: detect
         shell: bash
@@ -54,12 +68,25 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Check out exact candidate
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.sha }}
-          fetch-depth: 2
+          fetch-depth: 0
           filter: blob:none
           persist-credentials: true
+      - name: Download registered startup artifact
+        if: ${{ needs.detect.result == 'success' && needs.detect.outputs.startup_artifact != '' }}
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          artifact-ids: ${{ needs.detect.outputs.startup_artifact }}
+          path: ".chrono-harness/startup/"
+          merge-multiple: true
+      - name: Install registered startup tools
+        shell: bash
+        env:
+          CHRONO_STARTUP_BINDING: ${{ needs.detect.outputs.startup_binding }}
+        run: |
+          'python3' '-B' '.chrono-harness/ci/full-round.py' 'example'
       - name: Bootstrap registered tools
         shell: bash
         run: |
@@ -79,7 +106,7 @@ jobs:
           '.chrono-harness/bin/chrono-ci' production --host-root . --config '.chrono-harness/ci/units.json' --unit 'example' --github-output "$GITHUB_OUTPUT"
       - name: Preserve actual check evidence
         if: ${{ always() }}
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: chrono-unit-example-${{ github.run_id }}-${{ github.run_attempt }}
           path: ".chrono-harness/state/example/"
@@ -95,12 +122,25 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Check out exact candidate
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.sha }}
-          fetch-depth: 2
+          fetch-depth: 0
           filter: blob:none
           persist-credentials: true
+      - name: Download registered startup artifact
+        if: ${{ needs.detect.result == 'success' && needs.detect.outputs.startup_artifact != '' }}
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          artifact-ids: ${{ needs.detect.outputs.startup_artifact }}
+          path: ".chrono-harness/startup/"
+          merge-multiple: true
+      - name: Install registered startup tools
+        shell: bash
+        env:
+          CHRONO_STARTUP_BINDING: ${{ needs.detect.outputs.startup_binding }}
+        run: |
+          'python3' '-B' '.chrono-harness/ci/full-round.py' 'harness'
       - name: Bootstrap registered tools
         shell: bash
         run: |
@@ -120,26 +160,39 @@ jobs:
           '.chrono-harness/bin/chrono-ci' production --host-root . --config '.chrono-harness/ci/units.json' --unit 'harness' --github-output "$GITHUB_OUTPUT"
       - name: Preserve actual check evidence
         if: ${{ always() }}
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: chrono-unit-harness-${{ github.run_id }}-${{ github.run_attempt }}
           path: ".chrono-harness/state/harness/"
           if-no-files-found: error
           retention-days: 1
   aggregate:
-    name: "Example / aggregate / ${{ github.event_name }}"
+    name: "Example / aggregate"
     needs: ["detect","unit_example","unit_harness"]
     if: ${{ always() }}
     runs-on: "ubuntu-24.04"
     timeout-minutes: 45
     steps:
       - name: Check out exact candidate
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.sha }}
-          fetch-depth: 2
+          fetch-depth: 0
           filter: blob:none
           persist-credentials: true
+      - name: Download registered startup artifact
+        if: ${{ needs.detect.result == 'success' && needs.detect.outputs.startup_artifact != '' }}
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          artifact-ids: ${{ needs.detect.outputs.startup_artifact }}
+          path: ".chrono-harness/startup/"
+          merge-multiple: true
+      - name: Install registered startup tools
+        shell: bash
+        env:
+          CHRONO_STARTUP_BINDING: ${{ needs.detect.outputs.startup_binding }}
+        run: |
+          'python3' '-B' '.chrono-harness/ci/full-round.py' 'collection'
       - name: Bootstrap registered tools
         shell: bash
         run: |
@@ -156,7 +209,7 @@ jobs:
           '.chrono-harness/bin/chrono-harness' 'check' '--collect'
       - name: Preserve actual check evidence
         if: ${{ always() }}
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: chrono-collection-${{ github.run_id }}-${{ github.run_attempt }}
           path: ".chrono-harness/state/collection/"

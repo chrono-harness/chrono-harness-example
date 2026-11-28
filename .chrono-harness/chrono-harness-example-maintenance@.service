@@ -1,8 +1,7 @@
 [Unit]
-Description=Drain Chrono Harness maintenance events in %f
+Description=Maintain Chrono Harness worktrees and PR reminders in %f
 
 [Service]
 Type=oneshot
-Environment="PATH=%f/.chrono-harness/bin:/usr/local/bin:/usr/bin:/bin"
 WorkingDirectory=%f
-ExecStart=/usr/bin/env %f/.chrono-harness/bin/chrono-worktree maintenance-service
+ExecStart=/bin/sh .chrono-harness/maintain.sh

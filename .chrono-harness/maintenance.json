@@ -1,5 +1,0 @@
-{
-  "schema": "chrono-unified-maintenance/v2",
-  "state_directory": ".chrono-harness/state/automatic-cleanup-v2/",
-  "socket": ".chrono-harness/state/maintenance.sock"
-}

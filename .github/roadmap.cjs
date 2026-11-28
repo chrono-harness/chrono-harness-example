@@ -2,26 +2,28 @@ const childProcess = require('node:child_process')
 
 function judge(command, query) {
   const input = JSON.stringify(query)
-  const inputBytes = Buffer.byteLength(input)
-  // Selection can echo the release tag and its version, and adds two indices per title.
-  const maxBuffer = query.operation === 'release-selection'
-    ? 3 * inputBytes + 64 * query.milestones.length + 1024
-    : inputBytes + 1024
   const bytes = childProcess.execFileSync('chrono-host-release', [command], {
     input, encoding: 'utf8', stdio: ['pipe', 'pipe', 'inherit'],
-    maxBuffer,
+    maxBuffer: Buffer.byteLength(input) + 1024,
   })
   return JSON.parse(bytes)
 }
 
 const roadmap = query => judge('roadmap-v1', query)
 
+const coreVersion = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/
+
 module.exports = async function syncRoadmap(github, context, plan) {
-  const rolling = roadmap({operation: 'rolling-plan', plan})
+  if (plan !== null && (typeof plan.version !== 'string' || !coreVersion.test(plan.version))) {
+    throw new Error('Expected version X.Y.Z in .chrono-harness/release.json')
+  }
   const repo = context.repo
   const issues = github.rest.issues
   const all = (method, parameters) => github.paginate(method, {...repo, per_page: 100, ...parameters})
   const releases = await all(github.rest.repos.listReleases, {})
+  const published = roadmap({operation: 'published', releases: releases.map(({draft, published_at}) => ({draft, published_at}))})
+    .map(index => releases[index])
+  const stable = new Map(published.filter(r => !r.prerelease).map(r => [r.tag_name, r]))
   const milestones = await all(issues.listMilestones, {state: 'all'})
 
   async function ensure(title) {
@@ -31,45 +33,66 @@ module.exports = async function syncRoadmap(github, context, plan) {
     milestones.push(data)
     return data
   }
-  const releasesForPlan = releases.map(({tag_name, draft, prerelease, published_at}) =>
-    ({tag_name, draft, prerelease, published_at}))
   let target = plan ? 'v' + plan.version : null
-  if (rolling) {
-    const latest = judge('template-latest-stable-v1', releasesForPlan)
+  if (plan?.version_policy === 'next_patch') {
+    if (plan.kind !== 'copier') throw new Error('next_patch requires a Copier source product')
+    const compare = (a, b) => {
+      for (let index = 0; index < 3; index++) {
+        if (a[index] !== b[index]) return a[index] > b[index] ? 1 : -1
+      }
+      return 0
+    }
+    const versions = [...stable.keys()].filter(tag => tag.startsWith('v') && coreVersion.test(tag.slice(1)))
+      .map(tag => tag.slice(1).split('.').map(BigInt)).sort(compare)
+    const latest = versions.at(-1)
     target = 'v' + judge('template-next-version-v1', {
-      floor: plan.version, latest: latest === null ? null : latest.slice(1),
+      floor: plan.version, latest: latest ? latest.join('.') : null,
     })
   }
-  const releaseEvent = context.payload.release?.tag_name
-  const selection = roadmap({
-    operation: 'release-selection', reconcile: true, releases: releasesForPlan,
-    event_tag: releaseEvent, target, milestones: milestones.map(m => m.title),
-  })
+  const next = target && !stable.has(target) ? target : 'Backlog'
   const unassigned = await all(issues.listForRepo, {state: 'open', milestone: 'none'})
   const numbers = roadmap({operation: 'unassigned',
     issues: unassigned.map(({number, state, pull_request, milestone}) => ({number, state, pull_request, milestone}))})
   for (const number of numbers) {
-    const milestone = await ensure(selection.destination)
+    const milestone = await ensure(next)
     await issues.update({...repo, issue_number: number, milestone: milestone.number})
   }
   // Publishers using GITHUB_TOKEN wake this workflow via workflow_run.
   // Use the newest public release even when this host has no version plan.
-  for (const title of selection.ensure) await ensure(title)
+  const newest = published.slice().sort((a, b) => b.published_at.localeCompare(a.published_at))[0]
+  const tag = context.payload.release?.tag_name || newest?.tag_name
+  const releasedVersion = tag?.split('-')[0]
+  if (target) await ensure(target)
+  if (releasedVersion?.startsWith('v') && coreVersion.test(releasedVersion.slice(1))) {
+    await ensure(releasedVersion)
+  }
 
   for (const known of milestones) {
-    if (!Object.hasOwn(selection.refresh, known.title)) continue
-    const indices = selection.refresh[known.title]
-    const final = releases[indices.final]
-    const preview = releases[indices.preview]
+    if (!known.title.startsWith('v') || !coreVersion.test(known.title.slice(1))) continue
+    const final = stable.get(known.title)
+    const preview = published.filter(r => r.prerelease && r.tag_name.startsWith(known.title + '-'))
+      .sort((a,b) => b.published_at.localeCompare(a.published_at))[0]
+    if (!final && !preview) continue
     const {data: milestone} = await issues.getMilestone({...repo, milestone_number: known.number})
-    const lines = []
+    const begin = '<!-- chrono-harness release -->'
+    const end = '<!-- /chrono-harness release -->'
+    const lines = [begin]
     if (preview) lines.push(`测试版 [${preview.tag_name}](${preview.html_url})`)
     if (final) lines.push(`正式版 [${final.tag_name}](${final.html_url})`)
-    const update = roadmap({operation: 'milestone-update', milestone: milestone.number,
-      original: milestone.description || '', lines, state: milestone.state,
-      final_release: Boolean(final), open_issues: milestone.open_issues})
-    if (update !== null) {
-      await issues.updateMilestone({...repo, milestone_number: known.number, ...update})
+    lines.push(end)
+    const block = lines.join('\n')
+    const original = milestone.description || ''
+    const start = original.indexOf(begin)
+    const stop = original.indexOf(end)
+    if ((start < 0) !== (stop < 0) || (start >= 0 && stop < start)) {
+      throw new Error('Incomplete release block in milestone ' + milestone.number)
+    }
+    const description = start >= 0
+      ? original.slice(0, start) + block + original.slice(stop + end.length)
+      : [original, block].filter(Boolean).join('\n\n')
+    const state = roadmap({operation: 'milestone', final_release: Boolean(final), open_issues: milestone.open_issues})
+    if (description !== original || state !== milestone.state) {
+      await issues.updateMilestone({...repo, milestone_number: known.number, description, state})
     }
   }
 }
@@ -94,7 +117,7 @@ module.exports.releaseIssue = async function releaseIssue(github, context) {
     case 'close': {
       const original = history.find(item => item.number === issue).body
       const recovery = `同次运行已恢复。[成功的第 ${run.run_attempt} 次尝试](${run.html_url}/attempts/${run.run_attempt})`
-      const body = roadmap({operation: 'recovery-body', original, recovery})
+      const body = original.includes(recovery) ? original : original + '\n\n' + recovery
       await issues.update({...repo, issue_number: issue, state: 'closed', body})
       return
     }

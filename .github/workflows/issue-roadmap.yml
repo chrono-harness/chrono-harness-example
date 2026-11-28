@@ -26,7 +26,7 @@ jobs:
       cancel-in-progress: false
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
@@ -35,12 +35,12 @@ jobs:
         run: |
           set -euo pipefail
           directory=$(mktemp -d "$RUNNER_TEMP/release-tool.XXXXXXXX")
-          curl --fail --silent --show-error --location "https://github.com/chrono-harness/chrono-harness-host-release/releases/download/v0.1.12/chrono-host-release-linux-x86_64" -o "$directory/chrono-host-release"
-          (cd "$directory" && echo "06f52284ad8b12a71d2402f9b844863af1a10f123b6373f6373b064487da7ab4  chrono-host-release" | sha256sum --check --status)
+          curl --fail --silent --show-error --location "https://github.com/chrono-harness/chrono-harness-host-release/releases/download/v0.1.0-alpha.9/chrono-host-release-linux-x86_64" -o "$directory/chrono-host-release"
+          (cd "$directory" && echo "1eea315204041feaa0ece605bef4c250ac693a76cc9fe1b4a1a8b1b64c04659b  chrono-host-release" | sha256sum --check --status)
           chmod 755 "$directory/chrono-host-release"
           echo "$directory" >> "$GITHUB_PATH"
 
-      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
+      - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
         with:
           script: await require('./.github/roadmap.cjs').releaseIssue(github, context)
   reconcile:
@@ -51,7 +51,7 @@ jobs:
       cancel-in-progress: false
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
@@ -60,12 +60,12 @@ jobs:
         run: |
           set -euo pipefail
           directory=$(mktemp -d "$RUNNER_TEMP/release-tool.XXXXXXXX")
-          curl --fail --silent --show-error --location "https://github.com/chrono-harness/chrono-harness-host-release/releases/download/v0.1.12/chrono-host-release-linux-x86_64" -o "$directory/chrono-host-release"
-          (cd "$directory" && echo "06f52284ad8b12a71d2402f9b844863af1a10f123b6373f6373b064487da7ab4  chrono-host-release" | sha256sum --check --status)
+          curl --fail --silent --show-error --location "https://github.com/chrono-harness/chrono-harness-host-release/releases/download/v0.1.0-alpha.9/chrono-host-release-linux-x86_64" -o "$directory/chrono-host-release"
+          (cd "$directory" && echo "1eea315204041feaa0ece605bef4c250ac693a76cc9fe1b4a1a8b1b64c04659b  chrono-host-release" | sha256sum --check --status)
           chmod 755 "$directory/chrono-host-release"
           echo "$directory" >> "$GITHUB_PATH"
 
-      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
+      - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
         with:
           script: |
             const fs = require('node:fs')
