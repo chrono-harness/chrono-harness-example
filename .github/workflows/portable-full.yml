@@ -1,7 +1,7 @@
 name: Portable full developer check
 on:
   push:
-    branches: [probe/portable-full-developer]
+    branches: [probe/mixed-78-stable-e7603c575a30]
 permissions:
   contents: read
 jobs:
@@ -19,7 +19,7 @@ jobs:
           path: acceptance
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 62aee3f3ecbd28d6836073d56e25e93d4af9d1cb
+          ref: e7603c575a307e9e211bf5c684c5474eaaf0b527
           fetch-depth: 0
           persist-credentials: false
           path: example
