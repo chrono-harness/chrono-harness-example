@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 (WHITESPACE, SCHEMA, OPERATION, OID_LENGTHS, OID_DIGITS, STORAGE, RUST, LINKS,
- BUSINESS_CASES) = (
+ BUSINESS_CASES, CONTEXT_ORDER, CONTEXT_EXPECTED) = (
     Path(__file__).with_name("installer_storage.rs").read_text(encoding="utf-8")
     .split('macro_rules! host_projection {\n    () => { r#"', 1)[1].split('"#', 1)[0].splitlines()
 )
@@ -41,18 +41,27 @@ def storage():
     return data
 
 
+def valid_oid(oid):
+    if not isinstance(oid, str):
+        raise TypeError("expected string or bytes-like object")
+    return len(oid) in OID_LENGTHS and OID_DIGITS.issuperset(oid)
+
+
 def full_context(raw):
     context = json.loads(raw)
-    if context["schema_version"] != int(SCHEMA) or context["operation"] != OPERATION:
-        raise ValueError("expected full check context schema 2")
-    for field in ("base", "candidate"):
-        oid = context[field]
-        if not isinstance(oid, str):
-            raise TypeError("expected string or bytes-like object")
-        if len(oid) not in OID_LENGTHS or not OID_DIGITS.issuperset(oid):
-            raise ValueError(f"invalid fixed {field}")
-    if context["base"] != context["dev_tip"]:
-        raise ValueError("the development tip differs from the base")
+    schema_error = "expected full check context schema 2"
+    checks = {
+        "S": (lambda: context["schema_version"] == int(SCHEMA), schema_error),
+        "O": (lambda: context["operation"] == OPERATION, schema_error),
+        "B": (lambda: valid_oid(context["base"]), "invalid fixed base"),
+        "C": (lambda: valid_oid(context["candidate"]), "invalid fixed candidate"),
+        "T": (lambda: context["base"] == context["dev_tip"],
+              "the development tip differs from the base"),
+    }
+    for step in CONTEXT_ORDER:
+        observes_valid, error = checks[step]
+        if not observes_valid():
+            raise ValueError(error)
     return context
 
 
