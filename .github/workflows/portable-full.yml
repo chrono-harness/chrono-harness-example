@@ -1,7 +1,7 @@
 name: Portable full developer check
 on:
   push:
-    branches: [probe/66-cost-exit-stable]
+    branches: [probe/69-cost-stable-candidate-41bc59516861]
 permissions:
   contents: read
 jobs:
@@ -19,7 +19,7 @@ jobs:
           path: acceptance
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 615acdfc30c1a5bcd78df064e983fbc8cab0eeb6
+          ref: 41bc595168610e4933f38df8d112f87bbc9b02aa
           fetch-depth: 0
           persist-credentials: false
           path: example
