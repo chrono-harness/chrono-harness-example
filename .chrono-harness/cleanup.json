@@ -41,7 +41,7 @@
         "path:message.py",
         "path:message.txt",
         "path:.chrono-harness/ci/host_decisions.py",
-        "path:.chrono-harness/ci/decision-values.txt"
+        "path:.chrono-harness/ci/installer_storage.rs"
       ],
       "writes": []
     },
@@ -51,7 +51,7 @@
         "path:message.py",
         "path:message.txt",
         "path:.chrono-harness/ci/host_decisions.py",
-        "path:.chrono-harness/ci/decision-values.txt"
+        "path:.chrono-harness/ci/installer_storage.rs"
       ],
       "writes": []
     }

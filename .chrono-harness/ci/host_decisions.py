@@ -7,7 +7,8 @@ from pathlib import Path
 
 (WHITESPACE, SCHEMA, OPERATION, OID_LENGTHS, OID_DIGITS, STORAGE, RUST, LINKS,
  BUSINESS_CASES) = (
-    Path(__file__).with_name("decision-values.txt").read_text(encoding="ascii").splitlines()
+    Path(__file__).with_name("installer_storage.rs").read_text(encoding="utf-8")
+    .split('macro_rules! host_projection {\n    () => { r#"', 1)[1].split('"#', 1)[0].splitlines()
 )
 TRIM_CHARS = "".join(chr(int(code, 16)) for code in WHITESPACE.split())
 OID_LENGTHS = frozenset(map(int, OID_LENGTHS.split()))
@@ -57,4 +58,6 @@ def full_context(raw):
 
 if __name__ == "__main__":
     # The suffix preserves a trailing newline in a directory passed through sh.
-    print(storage(), end=".")
+    data = storage()
+    print(RUST, LINKS)
+    print(data, end=".")

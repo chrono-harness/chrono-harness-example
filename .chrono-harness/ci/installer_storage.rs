@@ -4,11 +4,25 @@
 //! the proof toolchain to start.
 use vstd::prelude::*;
 
+// The Python and shell adapters load these rows before Verus is installed.
+macro_rules! host_projection {
+    () => { r#"0009 000A 000B 000C 000D 001C 001D 001E 001F 0020 0085 00A0 1680 2000 2001 2002 2003 2004 2005 2006 2007 2008 2009 200A 2028 2029 202F 205F 3000
+2
+validate.delta
+40 64
+0123456789abcdef
+01223333
+1101
+cfcfrrkk
+[["  hello  ","hello"],["\t\n",""],["  hello world\n","hello world"],["\u001c\u200aword\u3000","word"],["\u200bword\u200b","\u200bword\u200b"]]
+"# };
+}
+
 verus! {
 
 pub fn policy_inputs() -> [&'static str; 8] {
     [
-        include_str!("decision-values.txt"),
+        host_projection!(),
         include_str!("install.sh"),
         include_str!("host_decisions.py"),
         include_str!("check-install-location.py"),
@@ -112,7 +126,7 @@ proof fn business_cases() {
 // Boundaries of the lines consumed by the adapter. The proof checks their
 // separators as well as the complete contents of each interpreted field.
 spec fn projection() -> Seq<char> {
-    include_str!("decision-values.txt")@
+    host_projection!()@
 }
 
 proof fn reveal_projection()
@@ -132,7 +146,7 @@ proof fn reveal_projection()
             index == 184 || index == 193 || index == 198 || index == 207 || index == 351
             ==> #[trigger] projection()[index] == '\n',
 {
-    reveal_strlit(include_str!("decision-values.txt"));
+    reveal_strlit(host_projection!());
     reveal_strlit("0009 000A 000B 000C 000D 001C 001D 001E 001F 0020 0085 00A0 1680 2000 2001 2002 2003 2004 2005 2006 2007 2008 2009 200A 2028 2029 202F 205F 3000");
     reveal_strlit("validate.delta");
     reveal_strlit("40 64");

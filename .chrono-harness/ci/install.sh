@@ -16,21 +16,15 @@ ci_install_choice() {
 
 # Resolve and reject storage before any install or link changes.
 decision_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-MISE_DATA_DIR=$(python3 -B "$decision_dir/host_decisions.py")
+observed=$(python3 -B "$decision_dir/host_decisions.py")
+newline='
+'
+policy=${observed%%"$newline"*}
+MISE_DATA_DIR=${observed#*"$newline"}
 MISE_DATA_DIR=${MISE_DATA_DIR%.}
 export MISE_DATA_DIR
-
-# The last two projection rows select the hosted Rust scope and occupied-link policy.
-{
-    IFS= read -r whitespace
-    IFS= read -r schema
-    IFS= read -r operation
-    IFS= read -r lengths
-    IFS= read -r digits
-    IFS= read -r storage
-    IFS= read -r rust_choices
-    IFS= read -r link_choices
-} < "$decision_dir/decision-values.txt"
+rust_choices=${policy% *}
+link_choices=${policy#* }
 
 # Hosted jobs have a fresh filesystem. Fetch mise there when it is absent.
 if command -v mise >/dev/null 2>&1; then manager_available=1; else manager_available=0; fi

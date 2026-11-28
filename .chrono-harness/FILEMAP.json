@@ -530,6 +530,10 @@
       "edges": [
         {
           "kind": "test-execution",
+          "to": "test:example"
+        },
+        {
+          "kind": "test-execution",
           "to": "test:harness"
         }
       ],
@@ -574,31 +578,6 @@
       "surface": "product",
       "cost": "unmeasured",
       "edges": [
-        {
-          "kind": "test-execution",
-          "to": "test:harness"
-        }
-      ],
-      "verification": {
-        "role": "program",
-        "roots": [
-          {
-            "path": ".chrono-harness/ci/installer_storage.rs",
-            "operation": "verify.installer-storage"
-          }
-        ]
-      }
-    },
-    {
-      "path": ".chrono-harness/ci/decision-values.txt",
-      "owner": "host",
-      "surface": "product",
-      "cost": "unmeasured",
-      "edges": [
-        {
-          "kind": "test-execution",
-          "to": "test:example"
-        },
         {
           "kind": "test-execution",
           "to": "test:harness"
