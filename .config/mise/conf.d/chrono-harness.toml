@@ -137,11 +137,11 @@ macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-judge-wo
 
 
 [tools."http:chrono-pr"]
-version = "0.1.18"
+version = "0.1.19-alpha.163"
 bin = "chrono-pr"
 [tools."http:chrono-pr".platforms]
-linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-pr/releases/download/v0.1.18/chrono-pr-linux-x86_64", checksum = "sha256:0cce3f0cc1a189734520c25208d9b8f06ff72a36174d228cbe66ed86716faec0" }
-macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-pr/releases/download/v0.1.18/chrono-pr-macos-aarch64", checksum = "sha256:cfdc2ff96d07e13f31b1e29978af5d96934419ce937556cb43c7fe37c234d80b" }
+linux-x64 = { url = "https://github.com/chrono-harness/chrono-harness-pr/releases/download/v0.1.19-alpha.163/chrono-pr-linux-x86_64", checksum = "sha256:c84123ad493de47db97a1d11d18315e9058096e4ab026e7df2c1b53ed5f31fed" }
+macos-arm64 = { url = "https://github.com/chrono-harness/chrono-harness-pr/releases/download/v0.1.19-alpha.163/chrono-pr-macos-aarch64", checksum = "sha256:082b656120d735fac91f595262c7a9827575aa1e3febd017662ece85036c5f64" }
 
 
 [tools."http:chrono-test-git"]
