@@ -25,8 +25,21 @@
         {
           "kind": "test-execution",
           "to": "test:example"
+        },
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
         }
-      ]
+      ],
+      "verification": {
+        "role": "program",
+        "roots": [
+          {
+            "path": ".chrono-harness/ci/installer_storage.rs",
+            "operation": "verify.installer-storage"
+          }
+        ]
+      }
     },
     {
       "path": "check.py",
@@ -37,8 +50,21 @@
         {
           "kind": "test-execution",
           "to": "test:example"
+        },
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
         }
-      ]
+      ],
+      "verification": {
+        "role": "program",
+        "roots": [
+          {
+            "path": ".chrono-harness/ci/installer_storage.rs",
+            "operation": "verify.installer-storage"
+          }
+        ]
+      }
     },
     {
       "path": "message.txt",
@@ -153,7 +179,16 @@
           "kind": "test-execution",
           "to": "test:harness"
         }
-      ]
+      ],
+      "verification": {
+        "role": "program",
+        "roots": [
+          {
+            "path": ".chrono-harness/ci/installer_storage.rs",
+            "operation": "verify.installer-storage"
+          }
+        ]
+      }
     },
     {
       "path": ".github/workflows/dependabot-auto-merge.yml",
@@ -412,7 +447,21 @@
       "owner": "host",
       "surface": "product",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ],
+      "verification": {
+        "role": "program",
+        "roots": [
+          {
+            "path": ".chrono-harness/ci/installer_storage.rs",
+            "operation": "verify.installer-storage"
+          }
+        ]
+      }
     },
     {
       "path": ".github/ISSUE_TEMPLATE/bug.yml",
@@ -486,6 +535,77 @@
       ],
       "verification": {
         "role": "specification",
+        "roots": [
+          {
+            "path": ".chrono-harness/ci/installer_storage.rs",
+            "operation": "verify.installer-storage"
+          }
+        ]
+      }
+    },
+    {
+      "path": ".chrono-harness/ci/host_decisions.py",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:example"
+        },
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ],
+      "verification": {
+        "role": "program",
+        "roots": [
+          {
+            "path": ".chrono-harness/ci/installer_storage.rs",
+            "operation": "verify.installer-storage"
+          }
+        ]
+      }
+    },
+    {
+      "path": ".chrono-harness/ci/archive-context.py",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ],
+      "verification": {
+        "role": "program",
+        "roots": [
+          {
+            "path": ".chrono-harness/ci/installer_storage.rs",
+            "operation": "verify.installer-storage"
+          }
+        ]
+      }
+    },
+    {
+      "path": ".chrono-harness/ci/decision-values.txt",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:example"
+        },
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ],
+      "verification": {
+        "role": "program",
         "roots": [
           {
             "path": ".chrono-harness/ci/installer_storage.rs",

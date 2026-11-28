@@ -1,10 +1,11 @@
 from pathlib import Path
 from runpy import run_path
 
-# Load the checked-out source even when Python has cached this module.
-greeting = run_path(str(Path(__file__).with_name("message.py")))["greeting"]
+# Load the current source even when Python has cached this module.
+root = Path(__file__).parent
+greeting = run_path(str(root / "message.py"))["greeting"]
+cases = run_path(str(root / ".chrono-harness/ci/host_decisions.py"))["BUSINESS_CASES"]
 
 assert greeting(Path("message.txt").read_text()) == "hello"
-assert greeting("  hello  ") == "hello"
-assert greeting("\t\n") == ""
-assert greeting("  hello world\n") == "hello world"
+for text, expected in cases:
+    assert greeting(text) == expected, (text, expected)

@@ -1,0 +1,9 @@
+0009 000A 000B 000C 000D 001C 001D 001E 001F 0020 0085 00A0 1680 2000 2001 2002 2003 2004 2005 2006 2007 2008 2009 200A 2028 2029 202F 205F 3000
+2
+validate.delta
+40 64
+0123456789abcdef
+01223333
+1101
+cfcfrrkk
+[["  hello  ","hello"],["\t\n",""],["  hello world\n","hello world"],["\u001c\u200aword\u3000","word"],["\u200bword\u200b","\u200bword\u200b"]]

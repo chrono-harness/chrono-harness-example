@@ -39,7 +39,9 @@
     "example.program": {
       "reads": [
         "path:message.py",
-        "path:message.txt"
+        "path:message.txt",
+        "path:.chrono-harness/ci/host_decisions.py",
+        "path:.chrono-harness/ci/decision-values.txt"
       ],
       "writes": []
     },
@@ -47,7 +49,9 @@
       "reads": [
         "path:check.py",
         "path:message.py",
-        "path:message.txt"
+        "path:message.txt",
+        "path:.chrono-harness/ci/host_decisions.py",
+        "path:.chrono-harness/ci/decision-values.txt"
       ],
       "writes": []
     }
