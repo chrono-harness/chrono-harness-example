@@ -2,8 +2,6 @@
 
 组件的用途、开发仓库和示例见 [Chrono Harness 用户与开发者入口](https://github.com/chrono-harness/chrono-harness-main)。
 
-本仓分支、安装命令和工具入口见 [USAGE.md](.chrono-harness/USAGE.md)。
-
 本仓是 Python 业务示例。业务代码和登记检查分别由 example 与 harness 单元验证。
 
 ## 本仓开发
@@ -12,9 +10,28 @@
 
 本仓逐文件登记受 Git 跟踪的输入。升级模板或切换选项时，在同一提交更新 [FILEMAP](.chrono-harness/FILEMAP.json)，登记新增、删除或改名的文件，包括规则选择和随附许可。CI 用变更前后两个提交各自的登记检查实际文件。
 
+日常开发和 PR 使用 `dev`，正式版本从 `main` 发布。
+
+为 `profile/full` 采用发行件时，从当前 `origin/profile/full` 建立 `qualify/<产品>-<issue>-<通道>`，将 PR 提交到 `profile/full`。按 README 的完整配置配方，在 macOS 和 Linux 核对候选及落地提交的集成与交付结果。以 `dev` 为基线的 `integration/**` 推送由已登记的开发工作树提交上下文，供分片检查消费。
+
+首次检出时，在仓库根目录安装本仓选定的工具。
+
+```sh
+mise trust
+mise run harness-setup
+```
+
+本仓选装的工具为 `cache`、`ci`、`diagnostics`、`distribution`、`harness`、`host-bootstrap`、`host-release`、`inputs`、`instructions`、`judge-ci`、`judge-cost`、`judge-filemap`、`judge-mixed`、`judge-projects`、`registration`、`judge-routes`、`judge-workflow`、`pr`、`test-git`、`worktree`、`verus`。
+
+本仓安装选择保存在 `.chrono-harness/template-answers.yml`，版本和平台校验值保存在 `.config/mise/conf.d/chrono-harness.toml`。
+
+开始和结束任务时，用 `mise exec -- chrono-pr pr-reminders` 查看本工作树中自己打开的 PR。用 `mise exec -- chrono-pr pr-status --pr NUMBER --head-sha SHA` 核对指定候选。
+
 ## 基础指令
 
-规则选择在 `.chrono-harness/rules.json`。可在下方生成块外追加本仓说明。规则来源和许可见 [来源说明](docs/licenses/methodology-attribution.md) 和 [Apache-2.0](docs/licenses/trureturing-Apache-2.0.txt)。
+默认采用上游全部现有规则和以后新增的规则。`.chrono-harness/rules.json` 中的 `{"mode":"all"}` 表示全选。要屏蔽个别规则，在 all 模式设置 `exclude`。要只选几条，设置 `mode` 为 `only` 并填写 `include`。要关闭继承，使用 `{"mode":"off"}`。
+
+下方是本次检出可直接阅读的规则。开始任务时运行 `mise run harness-setup`，它会安装所选工具并按本仓规则选择刷新下方正文。成功后重新阅读本文件。上游暂时不可达时，命令报告失败并保留已有正文。本仓追加说明写在生成块外。规则来源与许可见 [来源说明](docs/licenses/methodology-attribution.md) 和 [Apache-2.0](docs/licenses/trureturing-Apache-2.0.txt)。
 
 <!-- chrono-instructions:begin -->
 本文件由登记规则生成。请修改登记源后重新生成，不要单独编辑本文件。生成成功不代表规则已被遵守或检查已执行。
@@ -37,10 +54,6 @@
 
 独立工作继续推进。某项依赖失败时，保留原始失败和恢复条件，只暂停沿已登记依赖关系受阻的工作，继续无关且已授权的任务。不得跳过必需验收或谎报通过。只使用现有权限，不新增或申请额外权限。依赖特殊权限、又没有必要的实际使用方的功能应当删除，不另建激活替代层；普通必要流程继续使用其已有权限。
 
-## communication.plain-language
-
-给第一次接手的人写。先说谁做了什么、读者现在能做什么。用短句和具体的文件、动作或数字。给抽象结论配一个读者能核实的例子。例如写“8 个测试过了 7 个。断网用例预期退出 2，实际退出 0”，并附上原始结果。用比喻时说清哪项行为相同、怎样检验、比喻到哪里就失效。例如文件锁像一把共用钥匙，第二个遵守协议的写者要等第一个释放锁。绕过锁的写者仍能修改文件。
-
 ## candidate.isolation
 
 保护已有工作，隔离候选。在已授权的隔离区域实施。dev 流程中的 feature 和 integration 分支从最新 dev 创建；稳定性、规则或门控改动先在新建的 integration 分支验证。固定基线和净改动，不能把持续变化的主检出读数当成固定证据。执行已授权删除前，立即重新核对目标身份、锁和声明的删除条件。
@@ -49,9 +62,7 @@
 
 先审查已有能力，再扩展。采用成熟、经过验证的软件工程方法，按 KISS、YAGNI、DRY 在现有负责位置简化、按需开发和复用。对照需求、当前 SPEC、实际使用方、已有能力和保留证据，核对职责归属、已登记依赖的影响，以及验证、CI 和存储成本。
 
-依次查本仓、固定版本的直接依赖和允许使用的外部来源，包括私有定义和仍有效的失败结论；核对接口、假设和适用范围。审查和测试限于实际风险与明确依赖；看不见不等于没有，考虑全局也不意味着每次都审查或测试全仓。
-
-提出新工具、脚本、定时任务或验收项之前，先问“维持现状，谁的哪项明确需求会落空？”按实际配置核对平台已有行为。说不出具体缺口就停止这项提议，已开始的重复工作也应撤回。系统已自动滚动、过期或淘汰产物时，交由系统处理，无需额外轮换缓存键、安排清理或逐项追踪删除。只有明确需求超出现有能力，或实际故障影响使用方时，才处理具体缺口。
+依次查本仓、固定版本的直接依赖和允许使用的外部来源，包括私有定义和仍有效的失败结论；核对接口、假设和适用范围。已有能力够用就复用。审查和测试限于实际风险与明确依赖；看不见不等于没有，考虑全局也不意味着每次都审查或测试全仓。
 
 ## registry.explicit
 
@@ -60,12 +71,6 @@
 ## evidence.failure
 
 先看实际失败。遇到失败、超时或没有结果时，先读取授权范围内已有的错误、输入、输出、退出状态和必要日志，再判断原因、选择修法。同时核对实际收到的输入是否符合派发任务的本意。没有输出、保持静默、CPU 使用率低或超时，都不能单独证明任务没在工作、已经卡死或很困难。证据不足时，就保留“尚未验证”的结论，不猜原因。
-
-## recovery.bounded
-
-在已有权限和预算内自行处置异常。保留原始输入、错误和退出状态。先查操作是否结束、是否已经写入。上传超时时，按请求标识查服务端记录，再核对内容摘要。目标已达成就继续。同一请求若有仍然有效的原子去重保证，可以用原键和原输入重放。否则，先确认旧请求已结束且没有生效。一时查无记录仍可能是在排队。结果仍未知就保留原句柄，等完成通知。有证据表明错误是暂时的、同一输入能安全重放，且剩余次数、时间和资源允许时，才重试受影响的操作。例如连接中断后重新读取同一版本的文件。每次重试都计入原预算。
-
-同一错误再现或已知能稳定复现时，带着首次失败的输入到负责处修复。编译错误看首个诊断，测试断言失败用原用例验证修法。写盘报空间不足时，核对目标卷，在已登记、可回收的目录释放空间。进程被系统终止时，先核实内存和同时运行的任务，再按实测容量调整并发。恢复后重做受影响的检查，读回实际结果。预算用尽或副作用无法核对时，交代原错、已做的事和恢复条件，继续能独立完成的工作。
 
 ## cost.measure
 
@@ -76,8 +81,6 @@
 ## owner.canonical
 
 在真正负责的位置重构。定义、状态、输出和操作各自应有唯一权威来源和实际产生者。审查证实职责归属或耦合有问题时，先在那里重构，移除已经确认的冗余，再扩展；没有问题就不强制重构。局部改动应只需了解自身输入、接口和明确依赖。链接与别名要登记并指向真正来源。历史交给版本库；叙述和来源说明不能反过来决定程序依赖，也不能成为运行时权威。
-
-采用共享 AI 指令时，同一跨仓规则在相应指令库按 ID 维护。模板分发由所选规则生成的首读指南，宿主声明选择、工具、登记入口和独有约束。宿主启用了规则同步时，按该宿主登记的入口刷新指令，再读取生效的根指南。
 
 ## core.small-projects
 
@@ -143,33 +146,19 @@
 
 ## collaboration.github-agent-identity
 
-在 GitHub 的 Issue、PR、评论和评审中记录实际动作或结果。先写给人看的正文，空一行，再在末尾追加以下三行。GitHub 页面显示中间的摘要，API 原文保留两个 HTML 注释及其中的关联 ID。事件也可单独成文。每行从第 1 列开始，字段顺序与空格固定，首尾使用同一个随机 event。
+在 GitHub 上标明发言的 agent 和会话。创建 Issue、PR、其评论和评审时，在正文后空一行，将下列格式作为最后一个非空行。以实际值替换尖括号占位符，使用固定字段顺序及单个 ASCII 空格，页脚为可见纯文本。
 
-~~~text
-<!-- chrono-agent:v4 event=<event> parent=<parent> task=<task> -->
-**Agent** `<agent>` · **session** `<session>` · **model** `<model>` · **action** `<action>` · **state** `<state>` · **target** `<target>`
-<!-- /chrono-agent:v4 event=<event> -->
-~~~
+Chrono-Agent-v1: agent=<agent> session=<session> parent=<parent>
 
-agent 写实际运行时和任务路径，至少两段，每段符合 [a-z0-9][a-z0-9_-]*。session 是会话首次建立时随机生成的公开小写 UUIDv4，同会话的重试复用；fork 新建 session 并接收直接父会话的公开 UUID，根写 parent=-。task 是同一实际任务沿用的公开随机 UUIDv4，父子共同工作时传递它。一个 task 可包含多个 session 和模型，同一 session 也可在事件之间切换模型。在可见摘要中写完整的公开专用 session UUID 和本次事件实际使用的模型 ID 或别名。model 符合 [A-Za-z0-9][A-Za-z0-9._/@:+-]*；运行时未提供实际型号时写 unknown。另行委派的独立任务新建 task，其委派事件可用 target=task/<新任务 UUID>。event 每个新动作或状态变化生成独立的公开随机 UUIDv4；传输重送复用原事件和相同字段。UUID 必须为小写标准形式、版本 4、变体 8/9/a/b。session、parent、task 和 event 的 UUID 两两不同。只使用这些公开专用 ID。
+agent 写实际运行时和层级任务路径，例如 codex/root/routes。用 / 分隔至少两段，每段符合 [a-z0-9][a-z0-9_-]*。会话首次使用时生成一个专供公开署名的小写随机 UUIDv4。同一会话继续工作或重试时复用该值；新会话或 fork 各自生成新值。直接委派者在派发时传递自己的公开 UUID，子会话把收到的真实直接父 UUID 写入 parent，用不同于自身的 UUID。根会话写 -。公开身份只使用这些专用值，私有运行时 ID、令牌和凭证留在本地。
 
-action 取 task、delegate、issue、pr、review、push、ci.wait、check、build、test、release 之一。state 取 started、waiting、progress、blocked、succeeded、failed、cancelled 之一。target 取 self（本条正文所在的 GitHub 对象，适合编号未分配时）、task/<UUIDv4>、owner/repo#正整数、owner/repo@完整小写 Git OID（40 或 64 位）、owner/repo/run/正整数（可接 /attempt/正整数）或 owner/repo/tag/ASCII标签。开始、等待、解除阻塞、进展和结束时记录真实发生的转换，沿用同一 task、以不同 event 区分。等待完成通知时只发一次 waiting。成功/失败/取消结束该动作；新试验用新的事件陈述重试。保留乱序到达的每条观察，按 GitHub 原对象及创建时间组织，不以最后到达推断状态。相同 event 及内容只计一次，相同 event 内容冲突记为未知。
-
-用 chrono-instructions event-format 将九字段 JSON 写成 v4，省略 model 时写 unknown。event-read 从 GitHub 原始正文读取九字段 JSON，也能读取已发布的 v3 和 v2，并为旧记录返回 model=unknown。event-regex 输出 Python、PCRE2 和 JavaScript 可直接使用的三行正则，捕获组 1 到 9 依次为 event、parent、task、agent、session、model、action、state、target，末行反向引用第 1 组。读取器核对顶层 Markdown、唯一的末尾记录、UUID 独立性及首尾一致，接受 LF 或 CRLF 和一个可选末尾换行。引用、围栏及 HTML 示例中的内容按 Markdown 处理。缺失、无效、截断和歧义均记为未知。GitHub 提供作者账号，事件记录自报信息。复制整个记录能通过语法校验，身份和执行结果须分别核实。
-
-## collaboration.github-contribution
-
-Issue 分类、工作分支命名、PR 标题、关联与关闭时机遵循本规则的完整说明。先读取负责仓登记的目标分支、标签、检查和交付要求。宿主可按本规则 ID 独立选择；工作事件另由 collaboration.github-agent-identity 定义。
-
-[GitHub 贡献约定](https://github.com/chrono-harness/chrono-harness-instructions/blob/dev/docs/contributing.md)
+GitHub 显示的账号是作者，页脚是 agent 对路径和会话的自报。授权依据 GitHub 权限及独立校验。编辑已有正文时保留原作者的页脚；其他会话另发带自身页脚的评论。识别时只接受一个满足上述要求的正文末尾署名。跳过 Markdown 引用、代码围栏和行内代码里的示例。缺失、格式错误或出现多个候选署名时记录 unknown，历史内容同样处理。
 
 ## candidate.landing
 
 小步完成交付，并确认实际落地。限制同时进行的工作，及时解决阻碍、合并符合验收的变更，不积压未交付 PR。按实际合并、发布和已验收范围报告进度。合并或发布后，要核对实际状态、落地 SHA、产物和必要的后续检查；提交、创建 PR、检查通过或状态为 CLOSED，都不能单独证明已交付。受验候选与落地树不同时，说明差异并核对受影响范围。生命周期由调用方负责时，要明确交接边界，不能把阶段完成说成已经交付。
 
 宿主默认并行验收、按依赖合并。独立 PR 不按编号或创建顺序排队，也不因目标分支单纯前移而强制追平、重建或重跑全部检查。GitHub 默认关闭 strict（要求分支追平），保留必需的汇总检查；PR 各作业检查同一个固定合并提交，以第一父提交为基线，并核对第二父提交是事件 head。目标分支 push 按完整 before／after 检查实际落地变化，不取消彼此独立的落地运行。真实冲突、有效输入或明确依赖变化时补验受影响范围；检查后并发合入产生的新树由落地检查检测并及时修复。这个默认方案不保证检查时与落地时严格同树；有此要求的发布或不可逆操作须另有明确、已验证的合并执行方案，不能把串行追平当成默认。
-
-宿主已采用可查询的 PR 提醒时，在开始任务和结束或交接前，通过登记入口查看自己尚未完成的 PR，按实际关联继续跟进或交接。
 
 ## artifact.results
 

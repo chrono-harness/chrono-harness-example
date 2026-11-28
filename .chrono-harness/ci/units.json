@@ -1,13 +1,11 @@
 {
-  "schema": "chrono-github-units/v1",
+  "schema": "chrono-github-units/v2",
   "collection": {
     "schema": "chrono-github-ci/v4",
     "workflow_path": ".github/workflows/chrono-ci.yml",
     "name": "Example / aggregate",
     "runs_on": "ubuntu-24.04",
     "push_branches": [
-      "dev",
-      "main",
       "integration/**"
     ],
     "pull_request_branches": [
@@ -15,8 +13,8 @@
       "main"
     ],
     "branch_creation_base_ref": "refs/heads/dev",
-    "checkout_action": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
-    "upload_artifact_action": "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+    "checkout_action": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+    "upload_artifact_action": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
     "timeout_minutes": 45,
     "bootstrap": [
       "/bin/sh",
@@ -24,7 +22,7 @@
     ],
     "runner": ".chrono-harness/bin/chrono-harness",
     "generator": ".chrono-harness/bin/chrono-ci",
-    "check_config": ".chrono-harness/ci/check.json",
+    "check_config": ".chrono-harness/config.json",
     "context_path": ".chrono-harness/state/collection/event.json",
     "artifact_directory": ".chrono-harness/state/collection/",
     "push_baselines": [
@@ -83,15 +81,62 @@
       "timeout_minutes": 45,
       "bootstrap": [
         "/bin/sh",
-        ".chrono-harness/ci/install.sh"
+        ".chrono-harness/ci/full-detector.sh"
       ],
       "sparse_checkout": [
         ".chrono-harness/",
         ".github/workflows/chrono-ci.yml",
         ".config/mise/conf.d/"
-      ]
+      ],
+      "bootstrap_github_token": true
     },
     "evidence_retention_days": 1,
-    "aggregate_name_by_event": true
-  }
+    "startup": {
+      "schema": "chrono-shared-startup/v1",
+      "directory": ".chrono-harness/startup/",
+      "artifact": "full-round",
+      "download_action": "actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093",
+      "retention_days": 1,
+      "consumers": {
+        "unit_example": {
+          "need": "original full context and endpoint inputs from this attempt",
+          "output_use": "check the submitted fixed endpoints",
+          "install": [
+            "python3",
+            "-B",
+            ".chrono-harness/ci/full-round.py",
+            "example"
+          ]
+        },
+        "unit_harness": {
+          "need": "original full context and endpoint inputs from this attempt",
+          "output_use": "check the submitted fixed endpoints",
+          "install": [
+            "python3",
+            "-B",
+            ".chrono-harness/ci/full-round.py",
+            "harness"
+          ]
+        },
+        "aggregate": {
+          "need": "original full context and endpoint inputs from this attempt",
+          "output_use": "check the submitted fixed endpoints",
+          "install": [
+            "python3",
+            "-B",
+            ".chrono-harness/ci/full-round.py",
+            "collection"
+          ]
+        }
+      }
+    }
+  },
+  "full_contexts": {
+    "collection": ".chrono-harness/state/collection/full.json",
+    "units": {
+      "example": ".chrono-harness/state/example/full.json",
+      "harness": ".chrono-harness/state/harness/full.json"
+    }
+  },
+  "requirements_program": ".chrono-harness/bin/chrono-judge-ci"
 }

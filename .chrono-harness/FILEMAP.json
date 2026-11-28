@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "status": "proposed",
+  "status": "active",
   "files": [
     {
       "path": ".gitignore",
@@ -18,7 +18,7 @@
     },
     {
       "path": "message.py",
-      "owner": "host",
+      "owner": "message",
       "surface": "product",
       "cost": "unmeasured",
       "edges": [
@@ -27,23 +27,34 @@
           "to": "test:example"
         },
         {
-          "kind": "test-execution",
-          "to": "test:harness"
+          "kind": "runtime-input",
+          "to": "script:message"
+        },
+        {
+          "kind": "runtime-input",
+          "to": "script:example"
         }
-      ],
-      "verification": {
-        "role": "program",
-        "roots": [
-          {
-            "path": ".chrono-harness/ci/installer_storage.rs",
-            "operation": "verify.installer-storage"
-          }
-        ]
-      }
+      ]
     },
     {
       "path": "check.py",
-      "owner": "host",
+      "owner": "example",
+      "surface": "test",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:example"
+        },
+        {
+          "kind": "runtime-input",
+          "to": "script:example"
+        }
+      ]
+    },
+    {
+      "path": "message.txt",
+      "owner": "message",
       "surface": "product",
       "cost": "unmeasured",
       "edges": [
@@ -52,66 +63,94 @@
           "to": "test:example"
         },
         {
-          "kind": "test-execution",
-          "to": "test:harness"
-        }
-      ],
-      "verification": {
-        "role": "program",
-        "roots": [
-          {
-            "path": ".chrono-harness/ci/installer_storage.rs",
-            "operation": "verify.installer-storage"
-          }
-        ]
-      }
-    },
-    {
-      "path": "message.txt",
-      "owner": "host",
-      "surface": "product",
-      "cost": "unmeasured",
-      "edges": [
+          "kind": "runtime-input",
+          "to": "script:message"
+        },
         {
-          "kind": "test-execution",
-          "to": "test:example"
+          "kind": "runtime-input",
+          "to": "script:example"
         }
       ]
     },
     {
       "path": ".chrono-harness/config.json",
       "owner": "host",
-      "surface": "product",
+      "surface": "judge-policy",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     },
     {
       "path": ".chrono-harness/projects.json",
       "owner": "host",
-      "surface": "product",
+      "surface": "judge-policy",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     },
     {
       "path": ".chrono-harness/FILEMAP.json",
       "owner": "host",
-      "surface": "product",
+      "surface": "membership",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     },
     {
       "path": ".chrono-harness/judges.json",
       "owner": "host",
-      "surface": "product",
+      "surface": "judge-policy",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     },
     {
       "path": ".chrono-harness/workflow.json",
       "owner": "host",
-      "surface": "product",
+      "surface": "judge-policy",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     },
     {
       "path": ".chrono-harness/worktree.json",
@@ -123,7 +162,7 @@
     {
       "path": ".chrono-harness/ci/check.json",
       "owner": "host",
-      "surface": "product",
+      "surface": "judge-policy",
       "cost": "unmeasured",
       "edges": [
         {
@@ -133,6 +172,14 @@
         {
           "kind": "test-execution",
           "to": "test:harness"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
         }
       ]
     },
@@ -150,7 +197,7 @@
     },
     {
       "path": ".chrono-harness/ci/install.sh",
-      "owner": "host",
+      "owner": "installer",
       "surface": "product",
       "cost": "unmeasured",
       "edges": [
@@ -158,70 +205,19 @@
           "kind": "test-execution",
           "to": "test:harness"
         }
-      ],
-      "verification": {
-        "role": "program",
-        "roots": [
-          {
-            "path": ".chrono-harness/ci/installer_storage.rs",
-            "operation": "verify.installer-storage"
-          }
-        ]
-      }
+      ]
     },
     {
       "path": ".chrono-harness/ci/check-install-location.py",
-      "owner": "host",
-      "surface": "product",
+      "owner": "harness",
+      "surface": "test",
       "cost": "unmeasured",
       "edges": [
         {
           "kind": "test-execution",
           "to": "test:harness"
         }
-      ],
-      "verification": {
-        "role": "program",
-        "roots": [
-          {
-            "path": ".chrono-harness/ci/installer_storage.rs",
-            "operation": "verify.installer-storage"
-          }
-        ]
-      }
-    },
-    {
-      "path": ".github/workflows/dependabot-auto-merge.yml",
-      "owner": "host",
-      "surface": "product",
-      "cost": "unmeasured",
-      "edges": [],
-      "verification": {
-        "role": "data",
-        "roots": []
-      }
-    },
-    {
-      "path": ".github/dependabot.yml",
-      "owner": "host",
-      "surface": "product",
-      "cost": "unmeasured",
-      "edges": [],
-      "verification": {
-        "role": "data",
-        "roots": []
-      }
-    },
-    {
-      "path": ".github/requirements.txt",
-      "owner": "host",
-      "surface": "product",
-      "cost": "unmeasured",
-      "edges": [],
-      "verification": {
-        "role": "data",
-        "roots": []
-      }
+      ]
     },
     {
       "path": ".github/workflows/chrono-ci.yml",
@@ -284,7 +280,7 @@
       ]
     },
     {
-      "path": ".chrono-harness/chrono-harness-example-maintenance@.socket",
+      "path": ".chrono-harness/chrono-harness-example-maintenance@.timer",
       "owner": "host",
       "surface": "product",
       "cost": "unmeasured",
@@ -351,18 +347,6 @@
       ]
     },
     {
-      "path": ".config/mise/conf.d/selected-chrono-harness.toml",
-      "owner": "host",
-      "surface": "product",
-      "cost": "unmeasured",
-      "edges": [
-        {
-          "kind": "test-execution",
-          "to": "test:harness"
-        }
-      ]
-    },
-    {
       "path": ".chrono-harness/rules.json",
       "owner": "host",
       "surface": "product",
@@ -384,7 +368,7 @@
       "edges": []
     },
     {
-      "path": ".chrono-harness/maintenance.json",
+      "path": ".chrono-harness/maintain.sh",
       "owner": "host",
       "surface": "product",
       "cost": "unmeasured",
@@ -443,63 +427,87 @@
       "edges": []
     },
     {
-      "path": ".github/workflows/full-round.yml",
+      "path": ".chrono-harness/full/macos-aarch64.json",
       "owner": "host",
-      "surface": "product",
+      "surface": "judge-policy",
       "cost": "unmeasured",
       "edges": [
         {
           "kind": "test-execution",
           "to": "test:harness"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
         }
-      ],
-      "verification": {
-        "role": "program",
-        "roots": [
-          {
-            "path": ".chrono-harness/ci/installer_storage.rs",
-            "operation": "verify.installer-storage"
-          }
-        ]
-      }
+      ]
     },
     {
-      "path": ".github/ISSUE_TEMPLATE/bug.yml",
+      "path": ".chrono-harness/full/judges-macos-aarch64.json",
       "owner": "host",
-      "surface": "documentation",
+      "surface": "judge-policy",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     },
     {
-      "path": ".github/ISSUE_TEMPLATE/documentation.yml",
+      "path": ".chrono-harness/full/linux-x86_64.json",
       "owner": "host",
-      "surface": "documentation",
+      "surface": "judge-policy",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     },
     {
-      "path": ".github/ISSUE_TEMPLATE/enhancement.yml",
+      "path": ".chrono-harness/full/judges-linux-x86_64.json",
       "owner": "host",
-      "surface": "documentation",
+      "surface": "judge-policy",
       "cost": "unmeasured",
-      "edges": []
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:registration"
+        },
+        {
+          "kind": "judge-trigger",
+          "to": "judge:workflow"
+        }
+      ]
     },
     {
-      "path": ".github/ISSUE_TEMPLATE/question.yml",
-      "owner": "host",
-      "surface": "documentation",
-      "cost": "unmeasured",
-      "edges": []
-    },
-    {
-      "path": ".github/PULL_REQUEST_TEMPLATE.md",
-      "owner": "host",
-      "surface": "documentation",
-      "cost": "unmeasured",
-      "edges": []
-    },
-    {
-      "path": ".chrono-harness/install-tools.sh",
+      "path": ".chrono-harness/ci/full-round.py",
       "owner": "host",
       "surface": "product",
       "cost": "unmeasured",
@@ -511,7 +519,7 @@
       ]
     },
     {
-      "path": ".config/mise/conf.d/.gitignore",
+      "path": ".chrono-harness/ci/full-detector.sh",
       "owner": "host",
       "surface": "product",
       "cost": "unmeasured",
@@ -519,6 +527,38 @@
         {
           "kind": "test-execution",
           "to": "test:harness"
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/full-round.yml",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:harness"
+        }
+      ]
+    },
+    {
+      "path": ".chrono-harness/ci/host_decisions.py",
+      "owner": "host",
+      "surface": "product",
+      "cost": "unmeasured",
+      "edges": [
+        {
+          "kind": "test-execution",
+          "to": "test:example"
+        },
+        {
+          "kind": "runtime-input",
+          "to": "script:message"
+        },
+        {
+          "kind": "runtime-input",
+          "to": "script:example"
         }
       ]
     },
@@ -533,44 +573,14 @@
           "to": "test:example"
         },
         {
-          "kind": "test-execution",
-          "to": "test:harness"
-        }
-      ],
-      "verification": {
-        "role": "specification",
-        "roots": [
-          {
-            "path": ".chrono-harness/ci/installer_storage.rs",
-            "operation": "verify.installer-storage"
-          }
-        ]
-      }
-    },
-    {
-      "path": ".chrono-harness/ci/host_decisions.py",
-      "owner": "host",
-      "surface": "product",
-      "cost": "unmeasured",
-      "edges": [
-        {
-          "kind": "test-execution",
-          "to": "test:example"
+          "kind": "runtime-input",
+          "to": "script:message"
         },
         {
-          "kind": "test-execution",
-          "to": "test:harness"
+          "kind": "runtime-input",
+          "to": "script:example"
         }
-      ],
-      "verification": {
-        "role": "program",
-        "roots": [
-          {
-            "path": ".chrono-harness/ci/installer_storage.rs",
-            "operation": "verify.installer-storage"
-          }
-        ]
-      }
+      ]
     },
     {
       "path": ".chrono-harness/ci/archive-context.py",
@@ -580,21 +590,178 @@
       "edges": [
         {
           "kind": "test-execution",
-          "to": "test:harness"
+          "to": "test:example"
         }
-      ],
-      "verification": {
-        "role": "program",
-        "roots": [
-          {
-            "path": ".chrono-harness/ci/installer_storage.rs",
-            "operation": "verify.installer-storage"
-          }
-        ]
-      }
+      ]
     }
   ],
-  "project_edges": [],
+  "project_edges": [
+    {
+      "from": "environment:CHRONO_CHECK_SOURCE",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:GH_TOKEN",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:HOME",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:HOME",
+      "to": "script:installer",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:PATH",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:PATH",
+      "to": "script:installer",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:PATH",
+      "to": "test:harness",
+      "kind": "test-execution"
+    },
+    {
+      "from": "environment:SSH_AUTH_SOCK",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "environment:TMPDIR",
+      "to": "test:harness",
+      "kind": "test-execution"
+    },
+    {
+      "from": "input:ci-units-policy",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "input:worktree-policy",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:bash",
+      "to": "script:installer",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:chrono-ci",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:chrono-ci",
+      "to": "test:harness",
+      "kind": "test-execution"
+    },
+    {
+      "from": "tool:chrono-judge-filemap",
+      "to": "judge:filemap",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:chrono-judge-projects",
+      "to": "judge:projects",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:chrono-judge-registration",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:chrono-judge-routes",
+      "to": "judge:routes",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:chrono-worktree",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:git",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:git",
+      "to": "judge:workflow",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:python3",
+      "to": "script:installer",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:python3",
+      "to": "script:message",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "tool:python3",
+      "to": "test:example",
+      "kind": "test-execution"
+    },
+    {
+      "from": "tool:python3",
+      "to": "test:harness",
+      "kind": "test-execution"
+    },
+    {
+      "from": "input:ci-executable",
+      "to": "judge:registration",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "input:python-executable",
+      "to": "script:message",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "input:python-executable",
+      "to": "test:example",
+      "kind": "test-execution"
+    },
+    {
+      "from": "input:python-executable",
+      "to": "script:installer",
+      "kind": "runtime-input"
+    },
+    {
+      "from": "input:python-executable",
+      "to": "test:harness",
+      "kind": "test-execution"
+    },
+    {
+      "from": "input:ci-executable",
+      "to": "test:harness",
+      "kind": "test-execution"
+    },
+    {
+      "from": "script:message",
+      "kind": "test-execution",
+      "to": "test:example"
+    },
+    {
+      "from": "script:installer",
+      "kind": "test-execution",
+      "to": "test:harness"
+    }
+  ],
   "cost_models": {
     "unmeasured": {
       "cpu_ms": null,
@@ -624,7 +791,6 @@
     },
     "test:harness": {
       "operations": [
-        "verify.installer-storage",
         "installer.check-location",
         "ci.verify"
       ],

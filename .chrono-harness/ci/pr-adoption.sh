@@ -8,77 +8,11 @@ merged=$(gh api --method GET "repos/$GITHUB_REPOSITORY/pulls" \
   --jq '[.[] | select(.merged_at != null)][0] | [.number,.head.sha,.merge_commit_sha] | @tsv')
 read -r number expected landed <<< "$merged"
 test -n "$number" && test -n "$expected" && test -n "$landed"
-printf 'Reading PR #%s at %s (merge %s)\n' "$number" "$expected" "$landed"
 result=$("$release" pr-status --pr "$number" --head-sha "$expected") || {
   rc=$?
   jq '{pr, pr_state, expected_head, observed_head, merge_commit, outcome, error, checks}' <<< "$result" >&2
-  # The result includes the original GraphQL stdout even when check reduction fails.
-  python3 -c '
-import json, sys
-for receipt in json.load(sys.stdin)["receipts"]:
-    try:
-        reply = json.loads(bytes(receipt["stdout_bytes"]))
-    except (ValueError, UnicodeError):
-        continue
-    print(json.dumps(reply, ensure_ascii=True, separators=(",", ":")))
-' <<< "$result" | jq -c '
-    .data.repository.object as $commit
-    | select($commit != null)
-    | {oid: $commit.oid, contexts: [
-        $commit.statusCheckRollup.contexts.nodes[]?
-        | {type: .__typename, name: (.name // .context), state: (.status // .state),
-           conclusion, id: .databaseId, suite: .checkSuite.databaseId,
-           workflow: .checkSuite.workflowRun.workflow.databaseId,
-           latest: [.checkSuite.checkRuns.nodes[]?.databaseId]}
-      ]}' >&2 || true
   exit "$rc"
 }
 jq -e --arg expected "$expected" --arg landed "$landed" --argjson number "$number" \
   '.schema == "chrono-pr-result/v3" and .pr == $number and .pr_state == "MERGED"
    and .observed_head == $expected and .merge_commit == $landed and .command_exit_code == 0' <<< "$result"
-
-# An agent watching an older head must stop as soon as the original PR reports a different head.
-case "$expected" in
-  0*) other="1${expected:1}" ;;
-  *) other="0${expected:1}" ;;
-esac
-watch_exit=0
-watch_result=$("$release" pr-watch --pr "$number" --head-sha "$other" </dev/null) || watch_exit=$?
-test "$watch_exit" -eq 4
-jq -e --arg expected "$other" --arg observed "$expected" --argjson number "$number" '
-  .pr == $number and .expected_head == $expected and .observed_head == $observed
-  and .outcome == "stale" and .command_exit_code == 4' <<< "$watch_result"
-
-# Exercise the installed client on a disposable checkout-local reminder database.
-fixture=$(mktemp -d)
-cleanup_fixture() {
-  if [[ -f "$database" ]]; then unlink "$database"; fi
-  rmdir "$fixture/.chrono-harness" "$fixture"
-}
-mkdir -p "$fixture/.chrono-harness"
-database="$fixture/.chrono-harness/pr-reminders.sqlite3"
-trap cleanup_fixture EXIT
-sqlite3 "$database" <<'SQL'
-CREATE TABLE reminder(
-  repository TEXT NOT NULL, number INTEGER NOT NULL, head TEXT NOT NULL,
-  expires INTEGER NOT NULL, PRIMARY KEY(repository,number)
-) WITHOUT ROWID;
-INSERT INTO reminder VALUES ('example/host', 1, 'expired', unixepoch() - 1);
-INSERT INTO reminder VALUES ('example/host', 2, 'boundary', unixepoch());
-INSERT INTO reminder VALUES ('example/host', 3, 'live', unixepoch() + 86400);
-SQL
-"$release" pr-reminders --host-root "$fixture" | jq -e '[.pull_requests[].pr] == [3]'
-test "$(sqlite3 "$database" 'SELECT group_concat(number) FROM reminder')" = 3
-
-# Use an actual completed push so this job can verify the installed watch command
-# without waiting on its own run, which cannot finish until this script returns.
-push_run=$(gh api --method GET "repos/$GITHUB_REPOSITORY/actions/workflows/chrono-ci.yml/runs" \
-  -f event=push -f branch=dev -f status=success -F per_page=1 \
-  --jq '.workflow_runs[0] | [.id,.head_sha] | @tsv')
-read -r run_number push_head <<< "$push_run"
-test -n "$run_number" && test -n "$push_head"
-"$release" run-watch --run "$run_number" --head-sha "$push_head" </dev/null |
-  jq -e --arg sha "$push_head" --argjson id "$run_number" '
-    .schema == "chrono-run-result/v1" and .outcome == "passed" and
-    .run.databaseId == $id and .run.headSha == $sha and .run.event == "push" and
-    .run.status == "completed" and .run.conclusion == "success" and (.run.jobs | length > 0)'

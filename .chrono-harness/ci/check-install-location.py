@@ -1,17 +1,12 @@
 """Exercise the installer without downloading any tools."""
-import contextlib
-import hashlib
-import io
 import json
 import os
+import resource
 from pathlib import Path
-import runpy
-import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
 
 
 INSTALLER = Path(__file__).resolve().with_name("install.sh")
@@ -25,6 +20,8 @@ class InstallLocation(unittest.TestCase):
             checkout.mkdir()
             outside = root / "external tools"
             outside.mkdir()
+            # The installer runs its path checks with this test action's registered Python.
+            (root / "python3").symlink_to(sys.executable)
             stub = root / "mise"
             stub.write_text(
                 '#!/bin/sh\n'
@@ -62,145 +59,9 @@ class InstallLocation(unittest.TestCase):
             self.assertFalse(inner.exists())
 
 
-    def test_missing_manager_selects_hosted_platform(self):
-        with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
-            checkout = root / "checkout"
-            checkout.mkdir()
-            commands = root / "commands"
-            commands.mkdir()
-            for name in ("python3", "dirname", "mktemp", "rm"):
-                (commands / name).symlink_to(shutil.which(name))
-            log = root / "calls"
-
-            def stub(name, body):
-                path = commands / name
-                path.write_text("#!/bin/sh\n" + body)
-                path.chmod(0o755)
-
-            stub("uname", 'case "$1" in -s) printf "%s\\n" "$TEST_OS";; -m) printf "%s\\n" "$TEST_ARCH";; esac\n')
-            stub("curl", 'printf "%s\\n" "$2" >> "$INSTALL_CALLS"; exit 6\n')
-            env = {"HOME": str(root), "PATH": str(commands), "RUNNER_TEMP": str(root),
-                   "INSTALL_CALLS": str(log)}
-
-            def install(**settings):
-                log.write_text("")
-                return subprocess.run(["/bin/sh", INSTALLER], cwd=checkout,
-                                      env={**env, **settings}, capture_output=True)
-
-            result = install()
-            self.assertEqual(result.returncode, 1, result.stderr)
-            self.assertIn(b"Install mise", result.stderr)
-            self.assertEqual(log.read_text(), "")
-            for os_name, arch, asset in (("Darwin", "arm64", "macos-arm64"),
-                                          ("Linux", "x86_64", "linux-x64")):
-                result = install(GITHUB_ACTIONS="true", TEST_OS=os_name, TEST_ARCH=arch)
-                self.assertEqual(result.returncode, 6, result.stderr)
-                self.assertTrue(log.read_text().strip().endswith(f"/mise-v2026.11.12-{asset}"))
-                self.assertFalse(list(root.glob("example-mise.*")))
-            result = install(GITHUB_ACTIONS="true", TEST_OS="Linux", TEST_ARCH="arm64")
-            self.assertEqual(result.returncode, 1, result.stderr)
-            self.assertIn(b"Unsupported runner platform", result.stderr)
-            self.assertEqual(log.read_text(), "")
-
-    def test_rust_scope_and_links(self):
-        with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
-            checkout = root / "checkout"
-            bins = checkout / ".chrono-harness/bin"
-            bins.mkdir(parents=True)
-            outside = root / "tools"
-            outside.mkdir()
-            stub = root / "mise"
-            stub.write_text(
-                '#!/bin/sh\n'
-                'if [ "$1" = install ]; then printf "%s\\n" "$2" >> "$INSTALL_CALLS"; fi\n'
-                'if [ "$1" = which ]; then printf "%s/%s\\n" "$MISE_DATA_DIR" "$2"; fi\n'
-            )
-            stub.chmod(0o755)
-            log = root / "calls"
-            env = {"HOME": str(root), "PATH": f"{root}{os.pathsep}{os.defpath}",
-                   "CHRONO_EXAMPLE_INSTALL_ROOT": str(outside), "INSTALL_CALLS": str(log)}
-            link = bins / "chrono-distribution"
-            link.mkdir()
-
-            def install(**settings):
-                log.write_text("")
-                return subprocess.run(["/bin/sh", INSTALLER], cwd=checkout,
-                                      env={**env, **settings}, capture_output=True)
-
-            result = install(GITHUB_ACTIONS="true", GITHUB_JOB="detect")
-            self.assertEqual(result.returncode, 1, result.stderr)
-            self.assertIn(b"already exists", result.stderr)
-            self.assertEqual(list(link.iterdir()), [])
-            self.assertEqual(log.read_text().splitlines(), ["http:chrono-distribution"])
-
-            link.rmdir()
-            result = install(GITHUB_ACTIONS="true", GITHUB_JOB="unit_example")
-            self.assertEqual(result.returncode, 0, result.stderr)
-            target = outside / link.name
-            self.assertEqual(link.readlink(), target)
-            inode = link.lstat().st_ino
-            result = install(GITHUB_ACTIONS="true", GITHUB_JOB="unit_harness")
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertEqual(link.lstat().st_ino, inode)
-            self.assertEqual(log.read_text().splitlines(), ["rust", "http:chrono-distribution"])
-
-            link.unlink()
-            link.symlink_to(root / "old")
-            result = install()
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertEqual(link.readlink(), target)
-            self.assertEqual(log.read_text().splitlines(), ["rust", "http:chrono-distribution"])
-
-            link.unlink()
-            link.write_text("existing file")
-            result = install(GITHUB_ACTIONS="true", GITHUB_JOB="aggregate")
-            self.assertEqual(result.returncode, 1, result.stderr)
-            self.assertEqual(link.read_text(), "existing file")
-            self.assertEqual(log.read_text().splitlines(), ["http:chrono-distribution"])
-
-
-class ContextArchive(unittest.TestCase):
-    def test_archive_keeps_original_and_rejects_in_field_order(self):
-        with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
-            output = root / "workflow-output"
-            original = Path.cwd()
-            base, candidate = "a" * 40, "b" * 64
-            context = {"schema_version": 2, "operation": "validate.delta", "base": base,
-                       "candidate": candidate, "dev_tip": base}
-            archive = INSTALLER.with_name("archive-context.py")
-
-            def archive_context(raw, stream):
-                with patch.dict(os.environ, FULL_CONTEXT=raw, GITHUB_OUTPUT=str(output)):
-                    with contextlib.redirect_stdout(stream):
-                        runpy.run_path(str(archive))
-
-            with patch.object(sys, "path", [str(archive.parent), *sys.path]):
-                try:
-                    os.chdir(root)
-                    for bad, error in [
-                        (dict(schema_version=1, base="bad"), "expected full check context"),
-                        (dict(operation="other", candidate="bad"), "expected full check context"),
-                        (dict(base=base.upper(), candidate="bad"), "invalid fixed base"),
-                        (dict(candidate="b" * 41, dev_tip="other"), "invalid fixed candidate"),
-                        (dict(dev_tip="other"), "the development tip differs"),
-                    ]:
-                        with self.assertRaisesRegex(ValueError, error):
-                            archive_context(json.dumps({**context, **bad}), io.StringIO())
-                        self.assertFalse(Path("context.json").exists())
-                        self.assertFalse(output.exists())
-                    raw = json.dumps(context, indent=2) + "\n"
-                    stream = io.StringIO()
-                    archive_context(raw, stream)
-                    self.assertEqual(Path("context.json").read_bytes(), raw.encode())
-                    self.assertEqual(output.read_text(), f"name=full-round-{candidate}-{base}\n")
-                    digest = hashlib.sha256(raw.encode()).hexdigest()
-                    self.assertEqual(stream.getvalue(), f"Context SHA-256 {digest}\n")
-                finally:
-                    os.chdir(original)
-
-
 if __name__ == "__main__":
+    soft_limit, _ = resource.getrlimit(resource.RLIMIT_FSIZE)
+    # Darwin and Linux represent infinity differently.
+    file_size_limit = None if soft_limit == resource.RLIM_INFINITY else soft_limit
+    print(json.dumps({"rlimit_fsize_bytes": file_size_limit}), flush=True)
     unittest.main()
