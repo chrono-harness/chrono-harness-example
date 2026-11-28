@@ -37,7 +37,7 @@
     {
       "id": "projects",
       "executable": ".chrono-harness/bin/chrono-judge-projects",
-      "sha256": "b40dc972738aaf2910933c68d2430e735e0ac1e9bb14839749ab04e17404eeae",
+      "sha256": "7691c4caca1ab15fdbe0951571c771da9300b30575094379b324a9ad2660f2e4",
       "argv": [
         "--protocol",
         "chrono-judge/v1"
@@ -51,7 +51,7 @@
       "modes": [
         "evaluate"
       ],
-      "version": "0.1.9"
+      "version": "0.1.10"
     },
     {
       "id": "routes",
