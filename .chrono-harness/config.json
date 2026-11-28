@@ -106,7 +106,7 @@
       "version_argv": [
         "--version"
       ],
-      "expected_version": "chrono-ci 0.1.5"
+      "expected_version": "chrono-ci 0.1.6"
     },
     {
       "id": "git",
