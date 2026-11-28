@@ -72,7 +72,8 @@ for mode in ("integration_run", "delivery"):
     print("actual findings", [(f["code"], f["message"][:220]) for f in report["findings"]], flush=True)
     verdict = report["judges"][-1]["response"]["outputs"]["workflow"]
     actual = (report["base"], report["candidate"], verdict["mode"])
-    expected = (baseline, tip, mode)
+    expected_mode = "integration_run" if mode == "integration_run" else "ordinary_delta"
+    expected = (baseline, tip, expected_mode)
     print("full identity", json.dumps({"expected": expected, "actual": actual}), flush=True)
     (stage / f"example-{mode}.report.json").write_bytes(report_path.read_bytes())
     if mode == "integration_run":
@@ -82,7 +83,11 @@ for mode in ("integration_run", "delivery"):
     assert len(report["judges"]) == 7 and all(j["state"] == "executed" and j["exit_code"] == 0 for j in report["judges"])
     assert {x["operation"] for x in report["tests"]["executed"]} == {"example.check", "installer.check-location", "ci.verify"}
     cert_sha = hashlib.sha256((state / "integration.json").read_bytes()).hexdigest()
-    assert verdict["integration"]["sha256"] == cert_sha
+    assert verdict["integration_required"] is False
+    if mode == "integration_run":
+        assert verdict["integration"]["sha256"] == cert_sha
+    else:
+        assert verdict["integration"] is None
     print(json.dumps({"mode": mode, "base": baseline, "candidate": tip, "tree": report["candidate_tree"], "report": hashlib.sha256((candidate / report["report_path"]).read_bytes()).hexdigest(), "certificate": cert_sha, "executed": len(report["judges"]), "completeness": verdict["input_completeness_proven"]}))
     if mode == "integration_run":
         current.update(run_kind="delivery", integration_evidence=cert_sha)
