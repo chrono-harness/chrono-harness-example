@@ -1,7 +1,7 @@
 name: Portable full developer check
 on:
   push:
-    branches: [probe/portable-full-developer]
+    branches: [probe/workflow-78-preview-1af15e95d57c]
 permissions:
   contents: read
 jobs:
@@ -19,7 +19,7 @@ jobs:
           path: acceptance
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 62aee3f3ecbd28d6836073d56e25e93d4af9d1cb
+          ref: 1af15e95d57cae89cc3eaf9b509c5b7fc3de8433
           fetch-depth: 0
           persist-credentials: false
           path: example
