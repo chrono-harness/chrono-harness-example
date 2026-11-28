@@ -1,7 +1,7 @@
 name: Portable full developer check
 on:
   push:
-    branches: [probe/portable-full-developer]
+    branches: [probe/portable-full-registration-134-stable]
 permissions:
   contents: read
 jobs:
@@ -19,7 +19,7 @@ jobs:
           path: acceptance
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 62aee3f3ecbd28d6836073d56e25e93d4af9d1cb
+          ref: a718b25cf5a15c79041b6292009da094fc51b9e1
           fetch-depth: 0
           persist-credentials: false
           path: example
@@ -108,3 +108,6 @@ jobs:
           assert set(records)=={'integration_run','delivery'}
           print('COST_PROTOCOL '+json.dumps(records,sort_keys=True))
           PYVERIFY
+      - name: Check scheduling and collection queries against the installed registration
+        working-directory: example
+        run: /usr/bin/python3 -B ../acceptance/.github/original.py "$RUNNER_TEMP"

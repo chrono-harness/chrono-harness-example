@@ -1,5 +1,6 @@
 """Exercise the example's fixed full policy using only independently installed releases."""
 import hashlib
+import shutil
 import json
 import os
 from pathlib import Path
@@ -35,7 +36,10 @@ def installed(repo):
     for binary in binaries.iterdir():
         target = binary.resolve(strict=True)
         assert seed not in target.parents and candidate not in target.parents
-        (directory / binary.name).symlink_to(target)
+        if binary.name == "chrono-harness":
+            shutil.copy2(target,directory / binary.name)
+        else:
+            (directory / binary.name).symlink_to(target)
     (repo / ".chrono-harness/state/inputs").mkdir(parents=True, exist_ok=True)
 
 def head(repo):
