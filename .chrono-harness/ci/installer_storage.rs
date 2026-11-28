@@ -15,6 +15,8 @@ validate.delta
 1101
 cfcfrrkk
 [["  hello  ","hello"],["\t\n",""],["  hello world\n","hello world"],["\u001c\u200aword\u3000","word"],["\u200bword\u200b","\u200bword\u200b"]]
+SOBCT
+SSSSSSSSSSSSSSSSOOOOOOOOBBBBCCT+
 "# };
 }
 
@@ -123,6 +125,26 @@ proof fn business_cases() {
     assert(strips("\u{200b}word\u{200b}"@, 0, 6, "\u{200b}word\u{200b}"@));
 }
 
+// Cumulative acceptance rests on the first failed observation. Schema and
+// operation are distinct observations with the same reported error.
+spec fn context_contract(schema: bool, operation: bool, base: bool, candidate: bool, tip: bool) -> char {
+    if !schema { 'S' } else if !operation { 'O' } else if !base { 'B' }
+    else if !candidate { 'C' } else if !tip { 'T' } else { '+' }
+}
+
+proof fn all_context_observations(schema: bool, operation: bool, base: bool, candidate: bool, tip: bool) {
+    reveal_projection();
+    reveal_strlit("SOBCT");
+    reveal_strlit("SSSSSSSSSSSSSSSSOOOOOOOOBBBBCCT+");
+    let order = projection().subrange(352, 357);
+    let first = if !schema { order[0] } else if !operation { order[1] }
+        else if !base { order[2] } else if !candidate { order[3] }
+        else if !tip { order[4] } else { '+' };
+    let key = 16 * bit(schema) + 8 * bit(operation) + 4 * bit(base) + 2 * bit(candidate) + bit(tip);
+    assert(first == context_contract(schema, operation, base, candidate, tip));
+    assert(projection().subrange(358, 390)[key] == first);
+}
+
 // Boundaries of the lines consumed by the adapter. The proof checks their
 // separators as well as the complete contents of each interpreted field.
 spec fn projection() -> Seq<char> {
@@ -131,7 +153,7 @@ spec fn projection() -> Seq<char> {
 
 proof fn reveal_projection()
     ensures
-        projection().len() == 352,
+        projection().len() == 391,
         projection().subrange(0, 144) == "0009 000A 000B 000C 000D 001C 001D 001E 001F 0020 0085 00A0 1680 2000 2001 2002 2003 2004 2005 2006 2007 2008 2009 200A 2028 2029 202F 205F 3000"@,
         projection()[145] == '2',
         projection().subrange(147, 161) == "validate.delta"@,
@@ -141,9 +163,12 @@ proof fn reveal_projection()
         projection().subrange(194, 198) == "1101"@,
         projection().subrange(199, 207) == "cfcfrrkk"@,
         projection().subrange(208, 351) == r#"[["  hello  ","hello"],["\t\n",""],["  hello world\n","hello world"],["\u001c\u200aword\u3000","word"],["\u200bword\u200b","\u200bword\u200b"]]"#@,
+        projection().subrange(352, 357) == "SOBCT"@,
+        projection().subrange(358, 390) == "SSSSSSSSSSSSSSSSOOOOOOOOBBBBCCT+"@,
         forall|index: int|
             index == 144 || index == 146 || index == 161 || index == 167 ||
-            index == 184 || index == 193 || index == 198 || index == 207 || index == 351
+            index == 184 || index == 193 || index == 198 || index == 207 || index == 351 ||
+            index == 357 || index == 390
             ==> #[trigger] projection()[index] == '\n',
 {
     reveal_strlit(host_projection!());
@@ -154,6 +179,8 @@ proof fn reveal_projection()
     reveal_strlit("01223333");
     reveal_strlit("1101");
     reveal_strlit("cfcfrrkk");
+    reveal_strlit("SOBCT");
+    reveal_strlit("SSSSSSSSSSSSSSSSOOOOOOOOBBBBCCT+");
     reveal_strlit(r#"[["  hello  ","hello"],["\t\n",""],["  hello world\n","hello world"],["\u001c\u200aword\u3000","word"],["\u200bword\u200b","\u200bword\u200b"]]"#);
     assert(projection().subrange(0, 144) =~= "0009 000A 000B 000C 000D 001C 001D 001E 001F 0020 0085 00A0 1680 2000 2001 2002 2003 2004 2005 2006 2007 2008 2009 200A 2028 2029 202F 205F 3000"@);
     assert(projection().subrange(147, 161) =~= "validate.delta"@);
@@ -162,6 +189,8 @@ proof fn reveal_projection()
     assert(projection().subrange(185, 193) =~= "01223333"@);
     assert(projection().subrange(194, 198) =~= "1101"@);
     assert(projection().subrange(199, 207) =~= "cfcfrrkk"@);
+    assert(projection().subrange(352, 357) =~= "SOBCT"@);
+    assert(projection().subrange(358, 390) =~= "SSSSSSSSSSSSSSSSOOOOOOOOBBBBCCT+"@);
     assert(projection().subrange(208, 351) =~= r#"[["  hello  ","hello"],["\t\n",""],["  hello world\n","hello world"],["\u001c\u200aword\u3000","word"],["\u200bword\u200b","\u200bword\u200b"]]"#@);
 }
 
