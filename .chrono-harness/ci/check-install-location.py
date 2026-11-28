@@ -2,6 +2,7 @@
 import contextlib
 import hashlib
 import io
+from itertools import product
 import json
 import os
 from pathlib import Path
@@ -180,17 +181,23 @@ class ContextArchive(unittest.TestCase):
             with patch.object(sys, "path", [str(archive.parent), *sys.path]):
                 try:
                     os.chdir(root)
-                    for bad, error in [
-                        (dict(schema_version=1, base="bad"), "expected full check context"),
-                        (dict(operation="other", candidate="bad"), "expected full check context"),
-                        (dict(base=base.upper(), candidate="bad"), "invalid fixed base"),
-                        (dict(candidate="b" * 41, dev_tip="other"), "invalid fixed candidate"),
-                        (dict(dev_tip="other"), "the development tip differs"),
-                    ]:
-                        with self.assertRaisesRegex(ValueError, error):
-                            archive_context(json.dumps({**context, **bad}), io.StringIO())
-                        self.assertFalse(Path("context.json").exists())
-                        self.assertFalse(output.exists())
+                    expected = runpy.run_path(str(archive.with_name(
+                        "host_decisions.py")))["CONTEXT_EXPECTED"]
+                    errors = {"S": "expected full check context", "O": "expected full check context",
+                              "B": "invalid fixed base", "C": "invalid fixed candidate",
+                              "T": "the development tip differs"}
+                    invalid = (1, "other", base.upper(), "b" * 41, "other")
+                    for flags, first_failure in zip(product((False, True), repeat=5), expected):
+                        if first_failure == "+":
+                            continue
+                        supplied = {field: value if good else bad
+                                    for (field, value), good, bad in
+                                    zip(context.items(), flags, invalid)}
+                        with self.subTest(supplied=supplied):
+                            with self.assertRaisesRegex(ValueError, errors[first_failure]):
+                                archive_context(json.dumps(supplied), io.StringIO())
+                            self.assertFalse(Path("context.json").exists())
+                            self.assertFalse(output.exists())
                     raw = json.dumps(context, indent=2) + "\n"
                     stream = io.StringIO()
                     archive_context(raw, stream)
