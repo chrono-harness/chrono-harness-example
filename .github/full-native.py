@@ -63,15 +63,22 @@ current = json.loads(origin_file.read_bytes())
 current["retained_inputs"] = purpose + "-pair.json"
 origin_file.write_text(json.dumps(current) + "\n")
 for mode in ("integration_run", "delivery"):
-    try:
-        run([".chrono-harness/bin/chrono-harness", "check"], candidate, summary=True)
-    finally:
-        report_path = state / "report.json"
-        if report_path.is_file():
-            report = json.loads(report_path.read_bytes())
-            print("actual findings", [(f["code"], f["message"][:220]) for f in report["findings"]], flush=True)
+    output = run([".chrono-harness/bin/chrono-harness", "check"], candidate, summary=True)
+    printed_paths = [line.removeprefix("Original report: ") for line in output.splitlines()
+                     if line.startswith("Original report: ")]
+    report_path = (candidate / printed_paths[-1]).resolve()
+    assert report_path.is_relative_to(state)
+    report = json.loads(report_path.read_bytes())
+    print("actual findings", [(f["code"], f["message"][:220]) for f in report["findings"]], flush=True)
     verdict = report["judges"][-1]["response"]["outputs"]["workflow"]
-    assert report["base"] == baseline and report["candidate"] == tip and verdict["mode"] == mode
+    actual = (report["base"], report["candidate"], verdict["mode"])
+    expected = (baseline, tip, mode)
+    print("full identity", json.dumps({"expected": expected, "actual": actual}), flush=True)
+    (stage / f"example-{mode}.report.json").write_bytes(report_path.read_bytes())
+    if mode == "integration_run":
+        context_path = state / "local/context.json"
+        (stage / "example-profile-context.json").write_bytes(context_path.read_bytes())
+    assert actual == expected, (actual, expected, verdict)
     assert len(report["judges"]) == 7 and all(j["state"] == "executed" and j["exit_code"] == 0 for j in report["judges"])
     assert {x["operation"] for x in report["tests"]["executed"]} == {"example.check", "installer.check-location", "ci.verify"}
     cert_sha = hashlib.sha256((state / "integration.json").read_bytes()).hexdigest()

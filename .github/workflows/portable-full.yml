@@ -29,16 +29,10 @@ jobs:
       - name: Run the captured development and delivery checks
         run: /usr/bin/python3 acceptance/.github/full-native.py example "$RUNNER_TEMP" 4a852277abfd651186126d4188c57cfc30d7dd85
 
-      - name: Preserve the context produced by the native check
-        shell: bash
-        run: |
-          shopt -s nullglob
-          files=("$RUNNER_TEMP"/full-public-*/integration/.chrono-harness/state/local/context.json)
-          test "${#files[@]}" = 1
-          cp "${files[0]}" context.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
         with:
-          name: example-full-548-context-${{ matrix.runner }}
-          path: context.json
+          name: example-full-548-origins-${{ matrix.runner }}
+          path: ${{ runner.temp }}/example-*.json
           retention-days: 1
           if-no-files-found: error
